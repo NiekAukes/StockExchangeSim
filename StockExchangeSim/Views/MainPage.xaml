@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="StockExchangeSim.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    mc:Ignorable="d">
+    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+        
+            <!--
+                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
+                Place your content here.
+            -->
+            <TextBlock Text="years: 0" x:Name="years"></TextBlock>
+            <ScrollViewer 
+                  HorizontalScrollBarVisibility="Auto" 
+                  VerticalScrollBarVisibility="Auto" Margin="0,24,750,0">
+                <TextBlock Text="cp" x:Name="cpinfo"></TextBlock>
+            </ScrollViewer>
+            <Slider x:Name="slider" Header="Speed (years/second):" Margin="974,151,341,835"
+                ValueChanged="slider_ValueChanged"
+                Minimum="0.1" Maximum="5" StepFrequency="0.01" FlowDirection="LeftToRight" Value="4"/>
+            <StackPanel Orientation="Horizontal" Margin="1025,4,392,934">
+                <Button Content="Start" Height="50" Width="150" Margin="5,0,5,0"/>
+                <Button Content="Stop" Height="50" Width="150" Margin="5,0,5,0"/>
+                <Button Content="Reset" Height="50" Width="150" Margin="5,0,5,0"/>
+            </StackPanel>
+        </Grid>
+</Page>
