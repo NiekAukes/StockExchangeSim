@@ -7,9 +7,83 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Eco
 {
+    public class Time
+    {
+        UInt64 seconds = 0;
+        public Time(UInt64 Seconds)
+        {
+            seconds = Seconds;
+        }
+        public UInt64 GetSeconds()
+        {
+            return seconds;
+        }
+        public float GetMinutes()
+        {
+            return seconds / 60.0f;
+        }
+        public float GetHours()
+        {
+            return seconds / 60.0f / 60;
+
+        }
+        public float GetDays()
+        {
+
+            return seconds / 60.0f / 60/ 24;
+        }
+        public float GetMonths()
+        {
+            return seconds / 60.0f / 60 / 365.25f * 12;
+
+        }
+        public float GetYears()
+        {
+            return seconds / 60.0f / 60 / 365.25f;
+
+        }
+
+        public string ParseTime()
+        {
+            //seconds
+            if (seconds > 60)
+            {
+                //minutes
+                if (seconds > 60*60)
+                {
+                    //hours
+                    if (seconds > 60 * 60 * 24)
+                    {
+                        //days
+                        if (seconds > 60 * 60 * 24 * 365.25)
+                        {
+                            //years
+                        }
+                    }
+                    else
+                    {
+                        double hours = Math.Floor(seconds / 60.0 / 60.0);
+                        return hours.ToString() + " : " + (((seconds / 60 / 60) - hours) * 60).ToString();
+                    }
+                }
+                else
+                {
+                    double mins = Math.Floor(seconds / 60.0);
+                    return mins.ToString() + " : " + (((seconds / 60) - mins) * 60).ToString();
+                }
+            }
+            else
+            {
+                return seconds.ToString() + " seconds";
+            }
+            return "";
+        }
+        
+    }
     public class Master
     {
         public static Int32 Seed = (new Random()).Next();
@@ -18,7 +92,7 @@ namespace Eco
         {
             TPS = 2103840 * YearPerSec;
         }
-        
+        public Time time;
         public int FieldAmount;
         public int TraderAmount;
         public int HFTAmount;
