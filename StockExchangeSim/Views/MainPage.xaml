@@ -12,7 +12,7 @@
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.
             -->
-            <TextBlock Text="years: 0" x:Name="years"></TextBlock>
+            <TextBlock Text="Years: 0" x:Name="years"></TextBlock>
             
             
             <StackPanel Orientation="Horizontal" Width="600" Height="100" >
