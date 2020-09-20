@@ -42,7 +42,7 @@ namespace StockExchangeSim.Views
     }
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        public Master master;
+        public static Master master = null;
         public static MainPage inst;
         double _year;
         public double year
@@ -69,7 +69,8 @@ namespace StockExchangeSim.Views
         public MainPage()
         {
             InitializeComponent();
-            master = new Master(1, 1, 1);
+            if (master == null)
+                master = new Master(1, 1, 1);
             inst = this;
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.1));
             UpdateYear();

@@ -259,7 +259,7 @@ namespace Eco
                 }
                 else
                 {
-                    if (MainPage.inst.master.TPS > 0.1 * 2103840)
+                    if (MainPage.master.TPS > 0.1 * 2103840)
                     {
                         //decemille
                         double lastgain = Math.Floor(startcompanies[i].LastDeceMilleGain * 1000 * 1000) / 1000;
@@ -269,7 +269,7 @@ namespace Eco
                             ",\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
-                    else if (MainPage.inst.master.TPS > 0.005 * 2103840)
+                    else if (MainPage.master.TPS > 0.005 * 2103840)
                     {
                         //mille
                         double lastgain = Math.Floor(startcompanies[i].LastMilleGain * 1000 * 1000) / 1000;
