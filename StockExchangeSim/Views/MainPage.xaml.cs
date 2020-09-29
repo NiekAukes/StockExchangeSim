@@ -104,7 +104,7 @@ namespace StockExchangeSim.Views
                     //messageDialog = null;
                 }
                 double f = slider.Value;
-                master.SetTickEveryX((f * f * 0.1));
+                master.SetSecondsPerTick((f * f * 0.1));
             }
 
         }

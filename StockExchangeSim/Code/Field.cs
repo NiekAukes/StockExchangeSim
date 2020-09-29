@@ -54,8 +54,8 @@ namespace Eco
         {
             CurrentTick++;
             //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            value += LastTickGain;
-            LastTickGain += -LastTickGain * 0.00001;
+            value += LastTickGain * MainPage.master.SecondsPerTick;
+            LastTickGain += -LastTickGain * 0.00001 * MainPage.master.SecondsPerTick;
 
 
             if (CurrentTick % 10 == 0)
@@ -136,7 +136,7 @@ namespace Eco
 
         public double Innovation = 1.0;
         public double Scandals = 0.2;
-        public float ScandalSeverity = 3;
+        public float ScandalSeverity = 1;
 
         int startamount;
         List<Company> companies = new List<Company>();
@@ -158,10 +158,10 @@ namespace Eco
         }
         public void Update()
         {
-            //calculate innovation
-            if (rn.NextDouble() < Innovation / 1450.461994) // 5617.61515
+            //calculate innovation (FIXED)
+            if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick/ 15 / 1450.461994) // 5617.61515
             {
-                if (rn.NextDouble() < Innovation / 1450.461994) //5617.61515
+                if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) //5617.61515
                 {
                     //an innovation can create a new company
                     if (rn.NextDouble() < 0.2)
@@ -190,9 +190,9 @@ namespace Eco
             }
 
             //calculate scandals
-            if (rn.NextDouble() < Scandals / 1450.461994)
+            if (rn.NextDouble() < Scandals * MainPage.master.SecondsPerTick / 15 / 1450.461994)
             {
-                if (rn.NextDouble() < Scandals / 1450.461994)
+                if (rn.NextDouble() < Scandals * MainPage.master.SecondsPerTick / 15 / 1450.461994)
                 {
                     //impact is based on company value
                     Company cp = companies[rn.Next(companies.Count)];
@@ -217,7 +217,7 @@ namespace Eco
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)
             {
-                double tick = 1.0 / (24.0 * 60.0 * 4);
+                double tick = MainPage.master.SecondsPerTick / (24.0 * 60.0 * 60);
                 companies[i].age += tick;
                 companies[i].Update();
                 if (companies[i].value < -300)
@@ -259,7 +259,7 @@ namespace Eco
                 }
                 else
                 {
-                    if (MainPage.master.TPS > 0.1 * 2103840)
+                    if (MainPage.master.SecondsPerTick >= 15)
                     {
                         //decemille
                         double lastgain = Math.Floor(startcompanies[i].LastDeceMilleGain * 1000 * 1000) / 1000;
@@ -269,7 +269,7 @@ namespace Eco
                             ",\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
-                    else if (MainPage.master.TPS > 0.005 * 2103840)
+                    else if (MainPage.master.SecondsPerTick >= 7.5)
                     {
                         //mille
                         double lastgain = Math.Floor(startcompanies[i].LastMilleGain * 1000 * 1000) / 1000;

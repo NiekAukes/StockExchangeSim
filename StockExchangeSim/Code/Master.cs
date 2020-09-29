@@ -88,15 +88,16 @@ namespace Eco
     {
         public static Int32 Seed = (new Random()).Next();
         System.Threading.Thread thread;
-        public void SetTickEveryX(double YearPerSec) //2103840 = 1 year per second
+        public void SetSecondsPerTick(double Seconds) //2103840 = 1 year per second
         {
-            TPS = 2103840 * YearPerSec;
+            SecondsPerTick = Seconds;
         }
         public Time time;
+        public double SecondsPerTick = 15.0;
         public int FieldAmount;
         public int TraderAmount;
         public int HFTAmount;
-        public double TPS = 2103840; //ticks per second. 1577880 = 20s per year
+        //public double TPS = 2103840; //ticks per second. 1577880 = 20s per year
         public double Year;
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
@@ -138,7 +139,7 @@ namespace Eco
                 {
                     Fields[j].Update();
                 }
-                Year = i / (365.25 * 24 * 60 * 4);
+                Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
                 if (i % 100000 == 0)
                 {
                     for (int j = 0; j < FieldAmount; j++)
@@ -147,17 +148,17 @@ namespace Eco
                         Fields[j].print();
                     }
                 }
-                int tickpass = 1000;
-                if (i % tickpass == 0 && i != 0)
-                {
-                    sw.Stop();
-                    if ((sw.ElapsedMicroseconds * 0.001) < (tickpass * 1000.0 / TPS))
-                    {
-                        Thread.Sleep((int)( (tickpass * 1000.0 / TPS) - sw.ElapsedMicroseconds / 1000));
-                    }
-                    sw.Reset();
-                    sw.Start();
-                }
+                //int tickpass = 1000;
+                //if (i % tickpass == 0 && i != 0)
+                //{
+                //    sw.Stop();
+                //    if ((sw.ElapsedMicroseconds * 0.001) < (tickpass * 1000.0 / TPS))
+                //    {
+                //        Thread.Sleep((int)( (tickpass * 1000.0 / TPS) - sw.ElapsedMicroseconds / 1000));
+                //    }
+                //    sw.Reset();
+                //    sw.Start();
+                //}
             }
 
             for (int j = 0; j < FieldAmount; j++)
