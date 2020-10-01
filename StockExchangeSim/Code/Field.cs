@@ -13,11 +13,17 @@ namespace Eco
     class Company
     {
         Random rn = new Random(Master.Seed);
-
+        Stock CompanyStock = null;
 
         //setup values
         public int id;
+        public Company()
+        {
+            CompanyStock = new Stock(this, 100);
 
+            //calculate cumulative demand (cumulatieve vraag)
+            //so you can calculate
+        }
         //variable values
         #region variableValues
         public void SetValue(double val)
@@ -54,7 +60,7 @@ namespace Eco
         {
             CurrentTick++;
             //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            value += LastTickGain;
+            value += LastTickGain * CompanyStock.Percentage;
             LastTickGain += -LastTickGain * 0.00001;
 
 
