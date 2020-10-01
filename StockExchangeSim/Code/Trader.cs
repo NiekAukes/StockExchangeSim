@@ -9,9 +9,13 @@ namespace Eco
     
     public class Trader
     {
-
+        public List<Company.Stock> stocks = new List<Company.Stock>();
+        public void Update()
+        {
+            
+        }
     }
-    public class HFTrader
+    public class HFTrader : Trader
     {
 
     }

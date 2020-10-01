@@ -7,17 +7,24 @@ using System.Threading.Tasks;
 using Windows.Data.Json;
 using StockExchangeSim;
 using StockExchangeSim.Views;
+using Telerik.UI.Xaml.Controls.Data;
 
 namespace Eco
 {
-    class Company
+    public class Company
     {
         Random rn = new Random(Master.Seed);
-
+        Stock CompanyStock = null;
 
         //setup values
         public int id;
+        public Company()
+        {
+            CompanyStock = CreateStock(100);
 
+            //calculate cumulative demand (cumulatieve vraag)
+            //so you can calculate
+        }
         //variable values
         #region variableValues
         public void SetValue(double val)
@@ -121,11 +128,11 @@ namespace Eco
             }
         }
 
-        public Stock CreateStock(double percentage)
+        private Stock CreateStock(double percentage)
         {
             Stock ret = new Stock(this, percentage);
             return ret;
-        }
+        }     
     }
     public class Field
     {
