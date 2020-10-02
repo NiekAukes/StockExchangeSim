@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockExchangeSim", "StockEx
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockExchangeSim.Core", "StockExchangeSim.Core\StockExchangeSim.Core.csproj", "{7F366EF4-E762-43E8-A32F-51D7B3A3B6C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,26 +69,6 @@ Global
 		{7F366EF4-E762-43E8-A32F-51D7B3A3B6C3}.Release|x64.Build.0 = Release|Any CPU
 		{7F366EF4-E762-43E8-A32F-51D7B3A3B6C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F366EF4-E762-43E8-A32F-51D7B3A3B6C3}.Release|x86.Build.0 = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|ARM.Build.0 = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|x64.Build.0 = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Debug|x86.Build.0 = Debug|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|ARM.ActiveCfg = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|ARM.Build.0 = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|ARM64.Build.0 = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|x64.ActiveCfg = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|x64.Build.0 = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|x86.ActiveCfg = Release|Any CPU
-		{344A06E8-0C02-4103-BC0B-B3026BEDD7CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
