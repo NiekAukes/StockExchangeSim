@@ -32,11 +32,11 @@
             <Slider x:Name="slider" Header="Speed (years/second):" 
                 ValueChanged="slider_ValueChanged" Width="300" Height="60"
                 Minimum="0.1" Maximum="50" StepFrequency="0.01" FlowDirection="LeftToRight" Value="16"/>
-            <ScrollViewer Margin="10,10,10,10" 
+            <!--<ScrollViewer Margin="10,10,10,10" 
                   HorizontalScrollBarVisibility="Auto" 
                   VerticalScrollBarVisibility="Auto">
                 <TextBlock Text="cp" x:Name="cpinfo"></TextBlock>
-            </ScrollViewer>
+            </ScrollViewer>-->
                     
         </StackPanel>
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
