@@ -119,10 +119,8 @@ namespace Eco
                 {
                 #if DEBUG
                     throw new Exception("Stock didn't have same company");
+                #endif
                     return;
-#else
-                    return;
-#endif
                 }
                 Percentage += stock.Percentage;
             }
