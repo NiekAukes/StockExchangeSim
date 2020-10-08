@@ -217,7 +217,7 @@ namespace Eco
             //ordinary things
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].LastTickGain += value * 0.0001;
+            companies[select].LastTickGain += (value * 0.0001) * (companies[select].value * 0.0001);
 
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)
