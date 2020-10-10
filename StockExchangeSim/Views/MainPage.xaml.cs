@@ -50,7 +50,10 @@ namespace StockExchangeSim.Views
             get { return _year; }
             set
             {
-                years.Text = "years: " + value.ToString();
+                double days = (value - Math.Floor(value)) * 365.25;
+                double Hours = ((days - Math.Floor(days)) * 24);
+                int minutes = (int)((Hours - Math.Floor(Hours)) * 60);
+                years.Text = "Years: " + Math.Floor(value).ToString() + " Days: " + Math.Floor(days).ToString() + " Time: " + Math.Floor(Hours).ToString() + ":" + minutes.ToString();
                 _year = value;
             }
         }
@@ -72,7 +75,7 @@ namespace StockExchangeSim.Views
             if (master == null)
                 master = new Master(1, 1, 1);
             inst = this;
-            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.1));
+            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01));
             UpdateYear();
 
 
@@ -104,7 +107,7 @@ namespace StockExchangeSim.Views
                     //messageDialog = null;
                 }
                 double f = slider.Value;
-                master.SetSecondsPerTick((f * f * 0.1));
+                master.SetSecondsPerTick((f * f * 0.01));
             }
 
         }

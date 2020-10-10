@@ -8,6 +8,7 @@ using Windows.Data.Json;
 using StockExchangeSim;
 using StockExchangeSim.Views;
 using Telerik.UI.Xaml.Controls.Data;
+using Windows.Security.Authentication.Web.Provider;
 
 namespace Eco
 {
@@ -15,6 +16,7 @@ namespace Eco
     {
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
+        public double stockprice = 0;
 
         //setup values
         public int id;
@@ -61,9 +63,8 @@ namespace Eco
         {
             CurrentTick++;
             //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            value += LastTickGain * MainPage.master.SecondsPerTick;
             LastTickGain += -LastTickGain * 0.00001 * MainPage.master.SecondsPerTick;
-
+            value += CompanyStock.Collect();
 
             if (CurrentTick % 10 == 0)
             {
@@ -96,7 +97,9 @@ namespace Eco
         {
             public Company company { get; private set; }
             public double value { get { return company.value * Percentage / 100; }}
+            public double tradevalue { get { return company.stockprice * Percentage; } }
             public double Percentage { get; private set; }
+            public double Collected { get; private set; }
             public Stock(Company cp, double percentage)
             {
                 //create new stock from company
@@ -124,8 +127,20 @@ namespace Eco
                 }
                 Percentage += stock.Percentage;
             }
+            public void Update()
+            {
+
+                Collected += company.LastTickGain * MainPage.master.SecondsPerTick;
+            }
+            public double Collect()
+            {
+                double ret = Collected;
+                Collected = 0;
+                return ret;
+            }
         }
 
+        
         private Stock CreateStock(double percentage)
         {
             Stock ret = new Stock(this, percentage);
@@ -214,7 +229,7 @@ namespace Eco
                 startcompanies.Add(newcp);
             }
 
-            //ordinary things
+            //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
             companies[select].LastTickGain += (value * 0.0001) * (companies[select].value * 0.0001);
