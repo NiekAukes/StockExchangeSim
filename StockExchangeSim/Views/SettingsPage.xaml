@@ -51,7 +51,11 @@
                     </RadioButton>
                 </StackPanel>
             </StackPanel>
-
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="CustomSeed" Content="Custom Seed" Width="200" Click="CustomSeed_Click"/>
+                <TextBox x:Name="Seed"  Width="200" Header="Seed:" LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
+            </StackPanel>
+            
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
 
             <StackPanel Margin="{StaticResource XSmallTopMargin}">

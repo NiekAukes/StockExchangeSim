@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Reflection.Metadata.Ecma335;
+using StockExchangeSim.Views;
 
 namespace Eco
 {
@@ -86,8 +87,10 @@ namespace Eco
     }
     public class Master
     {
+        public static bool fCustomSeed = false;
+        public static Int32 CustomSeed = 0;
         public static Int32 Seed = (new Random()).Next();
-        System.Threading.Thread thread;
+        Thread thread;
         public void SetSecondsPerTick(double Seconds) //2103840 = 1 year per second
         {
             SecondsPerTick = Seconds;
@@ -105,16 +108,21 @@ namespace Eco
 
         public Master(int fields, int traders, int hftraders)
         {
+            if (fCustomSeed)
+            {
+                Seed = CustomSeed;
+            }
             //set vars
             FieldAmount = fields;
             TraderAmount = traders;
             HFTAmount = hftraders;
 
+            
+
             //construction
             for (int i = 0; i < fields; i++)
             {
-                Fields.Add(new Field());
-                Fields[0].id = i;
+                Fields.Add(new Field(i));
             }
             for (int i = 0; i < traders; i++)
             {
@@ -122,49 +130,53 @@ namespace Eco
             }
 
             thread = new System.Threading.Thread(Update);
+            thread.Name = "Master Thread";
             thread.Start();
         }
-
+        public bool active = false;
+        public bool alive = true;
         public void Update()
         {
 
             MicroStopwatch sw = new MicroStopwatch();
             sw.Start();
-            for (int i = 0; i < 100000000000; i++)
-            {   
-                
-                
+            for (long i = 0; i < 100000000000 && alive; i++)
+            {
 
-                for (int j = 0; j < FieldAmount; j++)
+                if (active)
                 {
-                    Fields[j].Update();
-                }
-                Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
-                if (i % 100000 == 0)
-                {
+
                     for (int j = 0; j < FieldAmount; j++)
                     {
-                        System.Diagnostics.Debug.WriteLine(i / (365.25 * 24 * 60 * 4) + " years past");
-                        Fields[j].print();
+                        Fields[j].Update();
                     }
-                }
-                //int tickpass = 1000;
-                //if (i % tickpass == 0 && i != 0)
-                //{
-                //    sw.Stop();
-                //    if ((sw.ElapsedMicroseconds * 0.001) < (tickpass * 1000.0 / TPS))
-                //    {
-                //        Thread.Sleep((int)( (tickpass * 1000.0 / TPS) - sw.ElapsedMicroseconds / 1000));
-                //    }
-                //    sw.Reset();
-                //    sw.Start();
-                //}
-            }
+                    Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
+                    if (i % 1000000 == 0)
+                    {
+                        for (int j = 0; j < FieldAmount; j++)
+                        {
+                            //System.Diagnostics.Debug.WriteLine(i / (365.25 * 24 * 60 * 4) + " years past");
+                            //Fields[j].print();
+                        }
+                    }
+                    //int tickpass = 1000;
+                    //if (i % tickpass == 0 && i != 0)
+                    //{
+                    //    sw.Stop();
+                    //    if ((sw.ElapsedMicroseconds * 0.001) < (tickpass * 1000.0 / TPS))
+                    //    {
+                    //        Thread.Sleep((int)( (tickpass * 1000.0 / TPS) - sw.ElapsedMicroseconds / 1000));
+                    //    }
+                    //    sw.Reset();
+                    //    sw.Start();
+                    //}
 
-            for (int j = 0; j < FieldAmount; j++)
-            {
-                System.Diagnostics.Debug.WriteLine(100000000000 / (365.25 * 24 * 60 * 60) + " years past");
-                Fields[j].print();
+                }
+                else
+                {
+                    i--;
+                    Thread.Sleep(10);
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ namespace Eco
     {
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
+        public double value = 50; 
         public double stockprice = 0;
 
         //setup values
@@ -23,7 +24,6 @@ namespace Eco
         public Company()
         {
             CompanyStock = CreateStock(100);
-
             //calculate cumulative demand (cumulatieve vraag)
             //so you can calculate
         }
@@ -41,21 +41,20 @@ namespace Eco
         public double age = 0;
         public bool Bankrupt = false;
 
-        public double value = 50; 
-        public double LastDecemValue;
-        public double LastCentumValue;
-        public double LastMilleValue;
-        public double LastDeceMilleValue;
-        public double LastCentuMilleValue;
+        public double LastDecemValue = 0;
+        public double LastCentumValue = 0;
+        public double LastMilleValue = 0;
+        public double LastDeceMilleValue = 0;
+        public double LastCentuMilleValue = 0;
 
         //Gain Calculation
         public double LastTickGain = 0.0; //value Gained per tick
         public double LastTickSlope = 0.0; // gain Gained per tick
-        public double LastDecemGain;
-        public double LastCentumGain;
-        public double LastMilleGain;
-        public double LastDeceMilleGain;
-        public double LastCentuMilleGain;
+        public double LastDecemGain = 0;
+        public double LastCentumGain = 0;
+        public double LastMilleGain = 0;
+        public double LastDeceMilleGain = 0;
+        public double LastCentuMilleGain = 0;
         #endregion
 
         UInt64 CurrentTick = 0;
@@ -64,6 +63,7 @@ namespace Eco
             CurrentTick++;
             //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
             LastTickGain += -LastTickGain * 0.00001 * MainPage.master.SecondsPerTick;
+            CompanyStock.Update();
             value += CompanyStock.Collect();
 
             if (CurrentTick % 10 == 0)
@@ -91,15 +91,16 @@ namespace Eco
                 LastCentuMilleGain = -(LastCentuMilleValue - value) / LastCentuMilleValue;
                 LastCentuMilleValue = value;
             }
+            
         }
 
         public class Stock
         {
-            public Company company { get; private set; }
+            public Company company = null;
             public double value { get { return company.value * Percentage / 100; }}
             public double tradevalue { get { return company.stockprice * Percentage; } }
-            public double Percentage { get; private set; }
-            public double Collected { get; private set; }
+            public double Percentage = 0;
+            public double Collected = 0;
             public Stock(Company cp, double percentage)
             {
                 //create new stock from company
@@ -149,12 +150,12 @@ namespace Eco
     }
     public class Field
     {
-        Random rn = new Random(Master.Seed);
+        Random rn = null;
 
         public int id;
         public int companyAmount;
 
-        public double Innovation = 1.0;
+        public double Innovation = 1.5;
         public double Scandals = 0.2;
         public float ScandalSeverity = 1;
 
@@ -162,15 +163,17 @@ namespace Eco
         List<Company> companies = new List<Company>();
         List<Company> startcompanies = null;
 
-        public Field()
+        public Field(int Id)
         {
-            
+            id = Id;
+            rn = new Random(Master.Seed * (Id + 1));
             companyAmount = rn.Next(1, 5);
             for (int i = 0; i < companyAmount; i++)
             {
                 Company cp = new Company();
                 cp.id = i;
                 cp.SetValue(rn.NextDouble() * 2000);
+                cp.stockprice = cp.value / 100;
                 companies.Add(cp);
             }
             startcompanies = new List<Company>(companies);
@@ -198,8 +201,9 @@ namespace Eco
                     }
                     else
                     {
+                        Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        companies[rn.Next(companies.Count)].LastTickGain += highvalue * 0.2;
+                        cp.LastTickGain -= highvalue * (cp.value + 300) / 1000 *0.2;
 
                         for (int i = 0; i < companies.Count; i++)
                         {
@@ -217,7 +221,7 @@ namespace Eco
                     //impact is based on company value
                     Company cp = companies[rn.Next(companies.Count)];
                     double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
-                    cp.LastTickGain -= highvalue * cp.value * 0.0002 * ScandalSeverity;
+                    cp.LastTickGain -= highvalue * (cp.value + 300) * 0.0002 * ScandalSeverity;
                 }
             }
             if (companies.Count < 1 || (companies.Count == 1 && companies[0].value < 500))
@@ -232,7 +236,7 @@ namespace Eco
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].LastTickGain += (value * 0.0001) * (companies[select].value * 0.0001);
+            companies[select].LastTickGain += ((value * 0.001) + ((value * 0.001) * companies[select].value * 0.001)) * MainPage.master.SecondsPerTick;
 
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)
@@ -275,14 +279,14 @@ namespace Eco
             {
                 if (startcompanies[i].Bankrupt)
                 {
-                    displaay += "\nCompany " + startcompanies[i].id + ": BANKRUPT,\t Time alive: " + startcompanies[i].age + " days";
+                    displaay += "\nCompany " + startcompanies[i].id + ": BANKRUPT,\t Time alive: " + Math.Floor(startcompanies[i].age) + " days";
                 }
                 else
                 {
                     if (MainPage.master.SecondsPerTick >= 15)
                     {
                         //decemille
-                        double lastgain = Math.Floor(startcompanies[i].LastDeceMilleGain * 1000 * 1000) / 1000;
+                        double lastgain = Math.Floor(startcompanies[i].LastDeceMilleGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
                         displaay += "\nCompany " + startcompanies[i].id +
                             ": " + Math.Floor(startcompanies[i].LastDeceMilleValue) +
@@ -292,7 +296,7 @@ namespace Eco
                     else if (MainPage.master.SecondsPerTick >= 7.5)
                     {
                         //mille
-                        double lastgain = Math.Floor(startcompanies[i].LastMilleGain * 1000 * 1000) / 1000;
+                        double lastgain = Math.Floor(startcompanies[i].LastMilleGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
 
                         displaay += "\nCompany " + startcompanies[i].id +
@@ -303,11 +307,11 @@ namespace Eco
                     else
                     {
                         //centum
-                        double lastgain = Math.Floor(startcompanies[i].LastCentumGain * 1000 * 1000) / 1000;
+                        double lastgain = Math.Floor(startcompanies[i].LastCentumGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
                         displaay += "\nCompany " + startcompanies[i].id +
                         ": " + Math.Floor(startcompanies[i].LastCentumValue) +
-                        ",\t gain: " + lastgainstr +
+                        ",\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 + 
                         ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                 }
@@ -315,7 +319,7 @@ namespace Eco
             
             
 
-            return displaay;
+            return displaay + "\n\n";
         }
     }
 }
