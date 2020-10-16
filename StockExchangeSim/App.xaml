@@ -16,6 +16,13 @@
                 <Setter Property="Height" Value="auto"/>
                 <Setter Property="Width" Value="auto"/>
             </Style>
+
+            <Style x:Key="textBoxSimStyle" TargetType="TextBox" x:Name="TextBoxSimStyle">
+                <Setter Property="Height" Value="auto" />
+                <Setter Property="Width" Value="auto"/>
+                <Setter Property="Margin" Value="5,0,5,0"/>
+                <Setter Property="Padding" Value="5,5,5,5"/>
+            </Style>
             
             <Style x:Key="buttonSimStyle" TargetType="Button" x:Name="ButtonSimStyle">
                 <Setter Property="Height" Value="50" />

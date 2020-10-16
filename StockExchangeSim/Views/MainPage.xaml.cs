@@ -58,6 +58,15 @@ namespace StockExchangeSim.Views
             }
         }
 
+        private int field = 1, trader = 1, hftrader = 1;
+
+        public Master CreateMaster()
+        {
+            master = new Master(field, 1, 1);
+            SetSliderValue();
+            return master;
+        }
+
         string _display;
         public string display
         {
@@ -72,14 +81,21 @@ namespace StockExchangeSim.Views
         public MainPage()
         {
             InitializeComponent();
-            if (master == null)
-                master = new Master(1, 1, 1);
             inst = this;
+            if (master == null)
+                CreateMaster();
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01));
             UpdateYear();
 
-
+            
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+           SetSliderValue();
+           //master.active = true;
+        }
+
         public async Task UpdateYear()
         {
             UInt64 ticks = 0;
@@ -89,7 +105,12 @@ namespace StockExchangeSim.Views
                 year = master.Year;
                 if (ticks % 20 == 0)
                 {
-                    display = master.Fields[0].getInfo();
+                    string dis = "";
+                    for (int i = 0; i < master.Fields.Count; i++)
+                    {
+                        dis += master.Fields[i].getInfo();
+                    }
+                    display = dis;
                 }
                 await Task.Delay(5);
             }
@@ -111,6 +132,11 @@ namespace StockExchangeSim.Views
             }
 
         }
+        public void SetSliderValue()
+        {
+            double f = slider.Value;
+            master.SetSecondsPerTick((f * f * 0.01));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -126,5 +152,55 @@ namespace StockExchangeSim.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            master.active = false;
+            master.alive = false;
+            CreateMaster();
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            master.active = false;
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            master.active = true;
+        }
+
+        private async void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
+        {
+            
+            int val = 0;
+            TextBox box = (TextBox)sender;
+            try
+            {
+                val = int.Parse(box.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageDialog messageDialog = new MessageDialog("Invalid seed");
+                messageDialog.Commands.Add(new UICommand("Close"));
+                await messageDialog.ShowAsync();
+                return;
+            }
+
+            if (box.Name == "FieldsAm")
+            {
+                field = val;
+            }
+
+            if (box.Name == "TraderAm")
+            {
+                trader = val;
+            }
+
+            if (box.Name == "HFTradersAm")
+            {
+                hftrader = val;
+            }
+        }
     }
 }

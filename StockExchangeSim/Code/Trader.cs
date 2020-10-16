@@ -20,7 +20,7 @@ namespace Eco
         public List<Company.Stock> stocks = new List<Company.Stock>();
         public double Money = 100;
         public double ReactionTime = 200 + rn.NextDouble() * 200;
-        public double ActivityTime
+        public double ActivityTime = 0;
         
         public void Update()
         {

@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
+using Eco;
 using StockExchangeSim.Helpers;
 using StockExchangeSim.Services;
 
+using Windows.UI.Popups;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -38,6 +39,8 @@ namespace StockExchangeSim.Views
         public SettingsPage()
         {
             InitializeComponent();
+            CustomSeed.IsChecked = Master.fCustomSeed;
+            Seed.Text = Master.CustomSeed.ToString();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -85,5 +88,29 @@ namespace StockExchangeSim.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
+        private void CustomSeed_Click(object sender, RoutedEventArgs e)
+        {
+            Master.fCustomSeed = CustomSeed.IsChecked.Value;
+        }
+
+        private async void Seed_TextChanged(object sender, RoutedEventArgs e)
+        {
+            //parse naar getal
+            Int32 seed = 0;
+            try
+            {
+                seed = Int32.Parse(Seed.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageDialog messageDialog = new MessageDialog("Invalid seed");
+                messageDialog.Commands.Add(new UICommand("Close"));
+                await messageDialog.ShowAsync();
+                return;
+            }
+            Master.CustomSeed = seed;
+        }
     }
 }
