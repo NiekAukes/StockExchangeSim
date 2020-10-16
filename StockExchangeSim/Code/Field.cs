@@ -62,7 +62,7 @@ namespace Eco
         {
             CurrentTick++;
             //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            LastTickGain += -LastTickGain * 0.00001 * MainPage.master.SecondsPerTick;
+            LastTickGain += -LastTickGain * 0.001 * MainPage.master.SecondsPerTick;
             CompanyStock.Update();
             value += CompanyStock.Collect();
 
@@ -182,7 +182,7 @@ namespace Eco
         public void Update()
         {
             //calculate innovation (FIXED)
-            if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick/ 15 / 1450.461994) // 5617.61515
+            if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) // 5617.61515
             {
                 if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) //5617.61515
                 {
@@ -203,7 +203,7 @@ namespace Eco
                     {
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        cp.LastTickGain -= highvalue * (cp.value + 300) / 1000 *0.2;
+                        cp.LastTickGain -= highvalue * (cp.value + 300) / 1000 * 0.2;
 
                         for (int i = 0; i < companies.Count; i++)
                         {
@@ -212,16 +212,21 @@ namespace Eco
                     }
                 }
             }
-
+            int scandaltick = 0;
             //calculate scandals
-            if (rn.NextDouble() < Scandals * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+            if (rn.NextDouble() < Scandals * 100 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
             {
-                if (rn.NextDouble() < Scandals * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+                if (rn.NextDouble() < Scandals * 100 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
                 {
-                    //impact is based on company value
-                    Company cp = companies[rn.Next(companies.Count)];
-                    double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
-                    cp.LastTickGain -= highvalue * (cp.value + 300) * 0.0002 * ScandalSeverity;
+                    scandaltick++;
+                    if (scandaltick > 9999)
+                    {
+                        //impact is based on company value
+                        Company cp = companies[rn.Next(companies.Count)];
+                        double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
+                        cp.LastTickGain -= highvalue * (cp.value + 300) * 0.0002 * ScandalSeverity;
+                        scandaltick = 0;
+                    }
                 }
             }
             if (companies.Count < 1 || (companies.Count == 1 && companies[0].value < 500))
@@ -236,7 +241,7 @@ namespace Eco
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].LastTickGain += ((value * 0.001) + ((value * 0.001) * companies[select].value * 0.001)) * MainPage.master.SecondsPerTick;
+            companies[select].LastTickGain += ((value * 0.001) + ((value * 0.001) * companies[select].value * 0.001));
 
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)

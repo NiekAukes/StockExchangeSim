@@ -84,7 +84,7 @@ namespace StockExchangeSim.Views
             inst = this;
             if (master == null)
                 CreateMaster();
-            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01));
+            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
             UpdateYear();
 
             
