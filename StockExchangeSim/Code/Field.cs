@@ -12,7 +12,13 @@ using Windows.Security.Authentication.Web.Provider;
 
 namespace Eco
 {
-    public class Company
+    public interface IStockOwner
+    {
+        Stock[] GetStocks();
+        void AddStock(Stock stock);
+        void UpdateHoldings();
+    }
+    public class Company : IStockOwner
     {
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
@@ -94,59 +100,76 @@ namespace Eco
             
         }
 
-        public class Stock
-        {
-            public Company company = null;
-            public double value { get { return company.value * Percentage / 100; }}
-            public double tradevalue { get { return company.stockprice * Percentage; } }
-            public double Percentage = 0;
-            public double Collected = 0;
-            public Stock(Company cp, double percentage)
-            {
-                //create new stock from company
-                company = cp;
-                Percentage = percentage;
-            }
-
-            public Stock(Stock s, double percentage)
-            {
-                //create new stock from other stock
-            }
-            public Stock SplitStock(double percentage)
-            {
-                Stock ret = new Stock(this, percentage);
-                return ret;
-            }
-            public void CombineStock(Stock stock)
-            {
-                if (company != stock.company)
-                {
-                #if DEBUG
-                    throw new Exception("Stock didn't have same company");
-                #endif
-                    return;
-                }
-                Percentage += stock.Percentage;
-            }
-            public void Update()
-            {
-
-                Collected += company.LastTickGain * MainPage.master.SecondsPerTick;
-            }
-            public double Collect()
-            {
-                double ret = Collected;
-                Collected = 0;
-                return ret;
-            }
-        }
+       
 
         
         private Stock CreateStock(double percentage)
         {
             Stock ret = new Stock(this, percentage);
             return ret;
-        }     
+        }
+
+        public Stock[] GetStocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddStock(Stock stock)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateHoldings()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class Stock
+    {
+        public IStockOwner Owner;
+        public Company company = null;
+        public double value { get { return company.value * Percentage / 100; } }
+        public double tradevalue { get { return company.stockprice * Percentage; } }
+        public double Percentage = 0;
+        public double Collected = 0;
+        public Stock(Company cp, double percentage)
+        {
+            //create new stock from company
+            company = cp;
+            Percentage = percentage;
+        }
+
+        public Stock(Stock s, double percentage)
+        {
+            //create new stock from other stock
+        }
+        public Stock SplitStock(double percentage)
+        {
+            Stock ret = new Stock(this, percentage);
+            return ret;
+        }
+        public void CombineStock(Stock stock)
+        {
+            if (company != stock.company)
+            {
+#if DEBUG
+                throw new Exception("Stock didn't have same company");
+#endif
+                return;
+            }
+            Percentage += stock.Percentage;
+        }
+        public void Update()
+        {
+
+            Collected += company.LastTickGain * MainPage.master.SecondsPerTick;
+        }
+        public double Collect()
+        {
+            double ret = Collected;
+            Collected = 0;
+            return ret;
+        }
     }
     public class Field
     {

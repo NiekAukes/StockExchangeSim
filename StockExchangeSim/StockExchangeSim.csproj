@@ -136,6 +136,7 @@
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
+    <Compile Include="Code\Exchange.cs" />
     <Compile Include="Code\Field.cs" />
     <Compile Include="Code\Master.cs" />
     <Compile Include="Code\MicroTimers.cs" />
