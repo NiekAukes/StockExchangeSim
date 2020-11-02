@@ -12,165 +12,6 @@ using Windows.Security.Authentication.Web.Provider;
 
 namespace Eco
 {
-    public interface IStockOwner
-    {
-        Stock[] GetStocks();
-        void AddStock(Stock stock);
-        void UpdateHoldings();
-    }
-    public class Company : IStockOwner
-    {
-        Random rn = new Random(Master.Seed);
-        Stock CompanyStock = null;
-        public double value = 50; 
-        public double stockprice = 0;
-
-        //setup values
-        public int id;
-        public Company()
-        {
-            CompanyStock = CreateStock(100);
-            //calculate cumulative demand (cumulatieve vraag)
-            //so you can calculate
-        }
-        //variable values
-        #region variableValues
-        public void SetValue(double val)
-        {
-            value = val;
-            LastDecemValue = val;
-            LastCentumValue = val;
-            LastMilleValue = val;
-            LastDeceMilleValue = val;
-            LastCentuMilleValue = val;
-        }
-        public double age = 0;
-        public bool Bankrupt = false;
-
-        public double LastDecemValue = 0;
-        public double LastCentumValue = 0;
-        public double LastMilleValue = 0;
-        public double LastDeceMilleValue = 0;
-        public double LastCentuMilleValue = 0;
-
-        //Gain Calculation
-        public double LastTickGain = 0.0; //value Gained per tick
-        public double LastTickSlope = 0.0; // gain Gained per tick
-        public double LastDecemGain = 0;
-        public double LastCentumGain = 0;
-        public double LastMilleGain = 0;
-        public double LastDeceMilleGain = 0;
-        public double LastCentuMilleGain = 0;
-        #endregion
-
-        UInt64 CurrentTick = 0;
-        public void Update()
-        {
-            CurrentTick++;
-            //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            LastTickGain += -LastTickGain * 0.001 * MainPage.master.SecondsPerTick;
-            CompanyStock.Update();
-            value += CompanyStock.Collect();
-
-            if (CurrentTick % 10 == 0)
-            {
-                LastDecemGain = -(LastDecemValue - value) / LastDecemValue;
-                LastDecemValue = value;
-            }
-            if (CurrentTick % 100 == 0)
-            {
-                LastCentumGain = -(LastCentumValue - value) / LastCentumValue;
-                LastCentumValue = value;
-            }
-            if (CurrentTick % 1000 == 0)
-            {
-                LastMilleGain = -(LastMilleValue - value) / LastMilleValue;
-                LastMilleValue = value;
-            }
-            if (CurrentTick % 10000 == 0)
-            {
-                LastDeceMilleGain = -(LastDeceMilleValue - value) / LastDeceMilleValue;
-                LastDeceMilleValue = value;
-            }
-            if (CurrentTick % 100000 == 0)
-            {
-                LastCentuMilleGain = -(LastCentuMilleValue - value) / LastCentuMilleValue;
-                LastCentuMilleValue = value;
-            }
-            
-        }
-
-       
-
-        
-        private Stock CreateStock(double percentage)
-        {
-            Stock ret = new Stock(this, percentage);
-            return ret;
-        }
-
-        public Stock[] GetStocks()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddStock(Stock stock)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateHoldings()
-        {
-            throw new NotImplementedException();
-        }
-    }
-    public class Stock
-    {
-        public IStockOwner Owner;
-        public Company company = null;
-        public double value { get { return company.value * Percentage / 100; } }
-        public double tradevalue { get { return company.stockprice * Percentage; } }
-        public double Percentage = 0;
-        public double Collected = 0;
-        public Stock(Company cp, double percentage)
-        {
-            //create new stock from company
-            company = cp;
-            Percentage = percentage;
-        }
-
-        public Stock(Stock s, double percentage)
-        {
-            //create new stock from other stock
-        }
-        public Stock SplitStock(double percentage)
-        {
-            Stock ret = new Stock(this, percentage);
-            return ret;
-        }
-        public void CombineStock(Stock stock)
-        {
-            if (company != stock.company)
-            {
-#if DEBUG
-                throw new Exception("Stock didn't have same company");
-#endif
-                return;
-            }
-            Percentage += stock.Percentage;
-        }
-        public void Update()
-        {
-
-            Collected += company.LastTickGain * MainPage.master.SecondsPerTick;
-        }
-        public double Collect()
-        {
-            double ret = Collected;
-            Collected = 0;
-            return ret;
-        }
-    }
     public class Field
     {
         Random rn = null;
@@ -182,8 +23,12 @@ namespace Eco
         public double Scandals = 0.2;
         public float ScandalSeverity = 1;
 
+        public double MarketShare = 100;
+        public double TotalCompetitiveness = 0;
+        public double TotalValue = 0;
+
         int startamount;
-        List<Company> companies = new List<Company>();
+        public List<Company> companies = new List<Company>();
         List<Company> startcompanies = null;
 
         public Field(int Id)
@@ -193,15 +38,20 @@ namespace Eco
             companyAmount = rn.Next(1, 5);
             for (int i = 0; i < companyAmount; i++)
             {
-                Company cp = new Company();
+                Company cp = new Company(this);
                 cp.id = i;
                 cp.SetValue(rn.NextDouble() * 2000);
-                cp.stockprice = cp.value / 100;
+                cp.stockprice = cp.Value / 100;
+
+                Master.exchange.RegisterCompany(cp);
+                cp.BecomePublic();
+
                 companies.Add(cp);
             }
             startcompanies = new List<Company>(companies);
             startamount = companyAmount;
         }
+        int scandaltick = 0;
         public void Update()
         {
             //calculate innovation (FIXED)
@@ -212,11 +62,11 @@ namespace Eco
                     //an innovation can create a new company
                     if (rn.NextDouble() < 0.2)
                     {
-                        Company newcp = new Company();
+                        Company newcp = new Company(this);
                         newcp.id = companyAmount++;
-                        newcp.SetValue(rn.NextDouble() * 300);
+                        newcp.SetValue(rn.NextDouble() * 600);
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        newcp.LastTickGain += highvalue * 0.2;
+                        newcp.Competitiveness += highvalue * 200;
                         companies.Add(newcp);
                         startcompanies.Add(newcp);
 
@@ -226,20 +76,16 @@ namespace Eco
                     {
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        cp.LastTickGain -= highvalue * (cp.value + 300) / 1000 * 0.2;
+                        cp.Competitiveness += highvalue * 200;
 
-                        for (int i = 0; i < companies.Count; i++)
-                        {
-                            companies[i].LastTickGain -= highvalue * 0.1 * 1/companies.Count;
-                        }
                     }
                 }
             }
-            int scandaltick = 0;
+            
             //calculate scandals
-            if (rn.NextDouble() < Scandals * 100 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+            if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
             {
-                if (rn.NextDouble() < Scandals * 100 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+                if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
                 {
                     scandaltick++;
                     if (scandaltick > 9999)
@@ -247,16 +93,16 @@ namespace Eco
                         //impact is based on company value
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
-                        cp.LastTickGain -= highvalue * (cp.value + 300) * 0.0002 * ScandalSeverity;
+                        cp.Competitiveness -= highvalue * 100 * ScandalSeverity;
                         scandaltick = 0;
                     }
                 }
             }
-            if (companies.Count < 1 || (companies.Count == 1 && companies[0].value < 500))
+            if (companies.Count < 1 || (companies.Count == 1 && companies[0].Value < 1000 * (Master.Conjucture - 0.01 * MainPage.master.Year)))
             {
-                Company newcp = new Company();
+                Company newcp = new Company(this);
                 newcp.id = companyAmount++;
-                newcp.SetValue(rn.NextDouble() * 300);
+                newcp.SetValue(rn.NextDouble() * 500);
                 companies.Add(newcp);
                 startcompanies.Add(newcp);
             }
@@ -264,15 +110,24 @@ namespace Eco
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].LastTickGain += ((value * 0.001) + ((value * 0.001) * companies[select].value * 0.001));
+            companies[select].Competitiveness += value * 0.01;
+
+            TotalCompetitiveness = 0;
+            TotalValue = 0;
+
+            double tick = MainPage.master.SecondsPerTick / (24.0 * 60.0 * 60);
 
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)
             {
-                double tick = MainPage.master.SecondsPerTick / (24.0 * 60.0 * 60);
+                TotalCompetitiveness += companies[i].Competitiveness;
+                TotalValue += companies[i].Value;
+            }
+            for (int i = 0; i < companies.Count; i++)
+            {
                 companies[i].age += tick;
                 companies[i].Update();
-                if (companies[i].value < -300)
+                if (companies[i].Value < -300)
                 {
                     //BANKRUPT
                     companies[i].Bankrupt = true;
@@ -294,7 +149,7 @@ namespace Eco
                 }
                 else
                 {
-                    Debug.WriteLine("Company " + startcompanies[i].id + ": " + startcompanies[i].value + ", age: " + startcompanies[i].age + " days");
+                    Debug.WriteLine("Company " + startcompanies[i].id + ": " + startcompanies[i].Value + ", age: " + startcompanies[i].age + " days");
                 }
             }
         }

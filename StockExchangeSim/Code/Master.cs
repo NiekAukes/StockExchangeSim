@@ -12,6 +12,7 @@ using StockExchangeSim.Views;
 
 namespace Eco
 {
+
     public class Time
     {
         UInt64 seconds = 0;
@@ -90,6 +91,7 @@ namespace Eco
         public static bool fCustomSeed = false;
         public static Int32 CustomSeed = 0;
         public static Int32 Seed = (new Random()).Next();
+        public static Random rn = new Random(Seed);
         Thread thread;
         public void SetSecondsPerTick(double Seconds) //2103840 = 1 year per second
         {
@@ -105,6 +107,10 @@ namespace Eco
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
+        public static Exchange exchange = new Exchange();
+
+        public static double Conjucture { get { return (Math.Sin(MainPage.master.Year * 100) + 0.01 * MainPage.master.Year + 1) * Math.E; } set { } }
+        public static double TotalShare = 0;
 
         public Master(int fields, int traders, int hftraders)
         {
@@ -116,13 +122,13 @@ namespace Eco
             FieldAmount = fields;
             TraderAmount = traders;
             HFTAmount = hftraders;
-
-            
+            Conjucture = 1;
 
             //construction
             for (int i = 0; i < fields; i++)
             {
                 Fields.Add(new Field(i));
+                TotalShare += 100;
             }
             for (int i = 0; i < traders; i++)
             {
@@ -135,23 +141,48 @@ namespace Eco
         }
         public bool active = false;
         public bool alive = true;
+        public static long ticks = 0;
         public void Update()
         {
 
             MicroStopwatch sw = new MicroStopwatch();
             sw.Start();
-            for (long i = 0; i < 100000000000 && alive; i++)
+            for (; ticks < 100000000000 && alive; ticks++)
             {
 
                 if (active)
                 {
+                    //recalculate total market share
+                    TotalShare = 0;
+                    for (int j = 0; j < FieldAmount; j++)
+                    {
+                        TotalShare += Fields[j].MarketShare;
+                    }
 
                     for (int j = 0; j < FieldAmount; j++)
                     {
                         Fields[j].Update();
                     }
+
+                    int n = Traders.Count;
+                    while (n > 1)
+                    {
+                        n--;
+                        int k = rn.Next(n + 1);
+                        Trader value = Traders[k];
+                        Traders[k] = Traders[n];
+                        Traders[n] = value;
+                    }
+
+                    for (int j = 0; j < TraderAmount; j++)
+                    {
+                        Traders[j].Update();
+                    }
+
                     Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
-                    if (i % 1000000 == 0)
+
+                    
+                    if (ticks % 1000000 == 0)
                     {
                         for (int j = 0; j < FieldAmount; j++)
                         {
@@ -174,7 +205,7 @@ namespace Eco
                 }
                 else
                 {
-                    i--;
+                    ticks--;
                     Thread.Sleep(10);
                 }
             }
