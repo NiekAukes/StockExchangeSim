@@ -16,7 +16,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Syncfusion.UI.Xaml.Charts;
 using Eco;
+using System.Collections.ObjectModel;
 
 namespace StockExchangeSim.Views
 {
@@ -40,11 +42,33 @@ namespace StockExchangeSim.Views
             _ranger = ranger;
         }
     }
+
+    public class CPValueData
+    {
+        public double Year { get; set; }
+        public double Value { get; set; }
+        public CPValueData(double year, double value)
+        {
+            Year = year;
+            Value = value;
+        }
+
+        
+    }
+    public class CompanyViewModel
+    {
+        
+
+        public ObservableCollection<CPValueData> Data = new ObservableCollection<CPValueData>();
+
+    }
+
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         public static Master master = null;
         public static MainPage inst;
         double _year;
+        LineSeries series = null;
         public double year
         {
             get { return _year; }
@@ -77,14 +101,39 @@ namespace StockExchangeSim.Views
                 _display = value;
             }
         }
-
+        public CompanyViewModel vm = new CompanyViewModel();
+        public CompanyViewModel vm2 = new CompanyViewModel();
         public MainPage()
         {
             InitializeComponent();
             inst = this;
             if (master == null)
                 CreateMaster();
-            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01));
+            slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
+            //DataContext = master;
+            
+            axisside.Header = "value (in $)";//master.Fields[0].companies[0].Value;
+            axismain.Header = "Time (in years)";
+
+            series = new LineSeries()
+            {
+                ItemsSource = vm.Data,
+                XBindingPath = "Year",
+                YBindingPath = "Value"
+            };
+            //SplineSeries spline = new SplineSeries()
+            //{
+            //    ItemsSource = vm2.Data,
+            //    XBindingPath = "Year",
+            //    YBindingPath = "Value"
+            //};
+            //spline.ListenPropertyChange = true;
+            series.ListenPropertyChange = true;
+            //chart.Series.Add(spline);
+            chart.Series.Add(series);
+            DataContext = this;
+
+            
             UpdateYear();
 
             
@@ -103,16 +152,26 @@ namespace StockExchangeSim.Views
             {
                 ticks++;
                 year = master.Year;
-                if (ticks % 20 == 0)
+                string dis = "";
+                for (int i = 0; i < master.Fields.Count; i++)
                 {
-                    string dis = "";
-                    for (int i = 0; i < master.Fields.Count; i++)
-                    {
-                        dis += master.Fields[i].getInfo();
-                    }
-                    display = dis;
+                    dis += master.Fields[i].getInfo();
+                }
+                display = dis;
+
+
+                vm.Data.Add(new CPValueData(year, master.Fields[0].companies[0].Value));
+                vm2.Data.Add(new CPValueData(year, Master.Conjucture));
+                if (vm.Data.Count > 300)
+                {
+                    vm.Data.RemoveAt(0);
+                }
+                if (vm2.Data.Count > 300)
+                {
+                    vm2.Data.RemoveAt(0);
                 }
                 await Task.Delay(5);
+
             }
         }
         MessageDialog messageDialog = null;
@@ -137,6 +196,7 @@ namespace StockExchangeSim.Views
             double f = slider.Value;
             master.SetSecondsPerTick((f * f * 0.01));
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

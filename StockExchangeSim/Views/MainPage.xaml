@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ch="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:qc="using:Ailon.QuickCharts"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
@@ -50,5 +52,22 @@
                     VerticalScrollBarVisibility="Auto">
             <TextBlock Text="cp" x:Name="cpinfo"></TextBlock>
         </ScrollViewer>
+        <!--<qc:SerialChart x:Name="chart" CategoryValueMemberPath="XAxisData"
+                        Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
+            <qc:SerialChart.Graphs>
+                <qc:LineGraph Title="Sample" ValueMemberPath="Sam" x:Name="graph"/>
+            </qc:SerialChart.Graphs>
+        </qc:SerialChart>-->
+
+        <ch:SfChart x:Name="chart" 
+            Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,0,0,60">
+            <ch:SfChart.PrimaryAxis>
+                <ch:NumericalAxis x:Name="axismain"/>
+            </ch:SfChart.PrimaryAxis>
+            <ch:SfChart.SecondaryAxis>
+                <ch:NumericalAxis x:Name="axisside"/>
+            </ch:SfChart.SecondaryAxis>
+
+        </ch:SfChart>
     </Grid>
 </Page>
