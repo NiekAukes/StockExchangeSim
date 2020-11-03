@@ -53,10 +53,10 @@
                             <xaml:ElementTheme>Default</xaml:ElementTheme>
                         </RadioButton.CommandParameter>
                     </RadioButton>
-                    <CheckBox x:Name="asyncFieldFlag" Click="asyncFieldFlagClicked">
+                    <CheckBox x:Name="asyncFieldFlag" Click="asyncFieldFlag_Click">
                         <TextBlock Text="Calculate Fields asynchronously (will increase performance on multicore devices, particularly with many fields)"/>
                     </CheckBox>
-                    <CheckBox x:Name="asyncCompaniesFlag" Click="asyncCompaniesFlagClicked">
+                    <CheckBox x:Name="asyncCompaniesFlag" Click="asyncCompaniesFlag_Click">
                         <TextBlock Text="Calculate Companies asynchronously (will increase performance with a large amount of companies)"/>
                     </CheckBox>
                 </StackPanel>
