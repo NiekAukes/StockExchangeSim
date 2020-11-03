@@ -52,24 +52,9 @@ namespace Eco
             }
             Percentage += stock.Percentage;
         }
-        public void Update()
+        public void Update(double totalProfit)
         {
-            double modifier = 0.0000001;
-            bool loan = false;
-            if (company.Value < 100)
-            {
-                company.Value += 500;
-                loan = true;
-            }
-
-            Collected +=
-                ((company.Competitiveness / company.field.TotalCompetitiveness) * //calculate Competitivenessquote
-                //(company.Value * company.Value / company.field.TotalValue) * //calculate Valuequote
-                (company.field.MarketShare / Master.TotalShare) * Master.Conjucture //multiply by conjucture
-                -
-                company.Value * 0.5) * modifier * MainPage.master.SecondsPerTick; //times modifiers
-            if (loan)
-                company.Value -= 500;
+            Collected += totalProfit * Percentage * 0.01;
         }
         public double Collect()
         {

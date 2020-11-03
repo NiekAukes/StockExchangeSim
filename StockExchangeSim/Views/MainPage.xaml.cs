@@ -111,15 +111,24 @@ namespace StockExchangeSim.Views
                 CreateMaster();
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
             //DataContext = master;
-            
+
             axisside.Header = "value (in $)";//master.Fields[0].companies[0].Value;
             axismain.Header = "Time (in years)";
 
-            series = new LineSeries()
+            //series = new LineSeries()
+            //{
+            //    ItemsSource = vm.Data,
+            //    XBindingPath = "Year",
+            //    YBindingPath = "Value"
+            //};
+            CandleSeries candle = new CandleSeries()
             {
-                ItemsSource = vm.Data,
+                ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
                 XBindingPath = "Year",
-                YBindingPath = "Value"
+                High = "High",
+                Low = "Low",
+                Open = "Open",
+                Close = "Close"
             };
             //SplineSeries spline = new SplineSeries()
             //{
@@ -127,10 +136,10 @@ namespace StockExchangeSim.Views
             //    XBindingPath = "Year",
             //    YBindingPath = "Value"
             //};
-            //spline.ListenPropertyChange = true;
-            series.ListenPropertyChange = true;
-            //chart.Series.Add(spline);
-            chart.Series.Add(series);
+            candle.ListenPropertyChange = true;
+            //series.ListenPropertyChange = true;
+            chart.Series.Add(candle);
+            //chart.Series.Add(series);
             DataContext = this;
 
             
@@ -161,15 +170,15 @@ namespace StockExchangeSim.Views
 
 
                 vm.Data.Add(new CPValueData(year, master.Fields[0].companies[0].Value));
-                vm2.Data.Add(new CPValueData(year, Master.Conjucture));
+                //vm2.Data.Add(new CPValueData(year, Master.Conjucture));
                 if (vm.Data.Count > 300)
                 {
                     vm.Data.RemoveAt(0);
                 }
-                if (vm2.Data.Count > 300)
-                {
-                    vm2.Data.RemoveAt(0);
-                }
+                //if (vm2.Data.Count > 300)
+                //{
+                //    vm2.Data.RemoveAt(0);
+                //}
                 await Task.Delay(5);
 
             }

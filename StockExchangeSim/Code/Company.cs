@@ -1,14 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using StockExchangeSim;
 using StockExchangeSim.Views;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace Eco
 {
+    public class StockPrices
+    {
+        public double Year { get; set; }
+        public double Open { get; set; }
+        public double Close { get; set; }
+        public double High { get; set; }
+        public double Low { get; set; }
+        public StockPrices(double year, double open, double close, double high, double low)
+        {
+            Year = year;
+            Open = open;
+            Close = close;
+            High = high;
+            Low = low;
+        }
+    }
+    public class StockViewModel
+    {
+        public ObservableCollection<StockPrices> prices = new ObservableCollection<StockPrices>();
+    }
     public class Company : IStockOwner
     {
         public Field field = null;
@@ -19,6 +42,8 @@ namespace Eco
         public double stockprice = 0;
         public double Competitiveness = 100;
 
+        public StockViewModel stockViewModel = new StockViewModel();
+
         //setup values
         public int id;
         public Company(Field f)
@@ -26,6 +51,7 @@ namespace Eco
             CompanyStock = CreateStock(100);
             field = f;
 
+            open = Value;
         }
 
         public void BecomePublic()
@@ -68,13 +94,30 @@ namespace Eco
         public double money { get { return Value; } set { Value = value; } }
 
 
-
+        double open = 0;
+        double high = 0;
+        double low = 0;
         public void Update()
         {
             CurrentTick++;
-            //value += Math.Pow((rn.NextDouble() - 0.5) * 5, 3); 
-            Competitiveness += -(Competitiveness - 100) * 0.00001 * MainPage.master.SecondsPerTick;
-            CompanyStock.Update();
+            Competitiveness += -(Competitiveness - 100) * 0.000001 * MainPage.master.SecondsPerTick;
+
+            double modifier = 1 / 2629743.8;
+            double usableValue = Value;
+
+            if (Value < 100)
+            {
+                usableValue += 500;
+            }
+
+            double totalprofit =
+                (Math.Pow((Competitiveness / field.TotalCompetitiveness)
+                * field.companies.Count, 2) * //calculate Competitive Position
+                Master.Conjucture //multiply by conjucture and Economic growth
+                - 1) * usableValue * //times value
+                modifier * MainPage.master.SecondsPerTick;
+
+            CompanyStock.Update(totalprofit);
             Value += CompanyStock.Collect();
 
             if (CurrentTick % 10 == 0)
@@ -101,6 +144,35 @@ namespace Eco
             {
                 LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
                 LastCentuMilleValue = Value;
+            }
+            //check high and low
+            if (CurrentTick % 100 == 0)
+            {
+                if (Value > high)
+                    high = Value;
+                if (Value < low)
+                    low = Value;
+            }
+            //register datapoint
+            if (CurrentTick % 500000 == 0)
+            {
+                StockPrices sp = new StockPrices(MainPage.master.Year, open, Value, high, low);
+                var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                {
+                    
+                    stockViewModel.prices.Add(sp);
+
+                    if (stockViewModel.prices.Count > 20)
+                    {
+                        stockViewModel.prices.RemoveAt(0);
+                    }
+
+                    
+                });
+
+                high = Value;
+                low = Value;
+                open = Value;
             }
 
         }

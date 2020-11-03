@@ -18,12 +18,13 @@ namespace Eco
 
         public int id;
         public int companyAmount;
+        public int maxCompanyStartAmount = 12;
 
         public double Innovation = 1.5;
         public double Scandals = 0.2;
         public float ScandalSeverity = 1;
 
-        public double MarketShare = 100;
+        public double MarketShare = 1.1;
         public double TotalCompetitiveness = 0;
         public double TotalValue = 0;
 
@@ -35,7 +36,7 @@ namespace Eco
         {
             id = Id;
             rn = new Random(Master.Seed * (Id + 1));
-            companyAmount = rn.Next(1, 5);
+            companyAmount = rn.Next(1, maxCompanyStartAmount);
             for (int i = 0; i < companyAmount; i++)
             {
                 Company cp = new Company(this);
@@ -52,7 +53,7 @@ namespace Eco
             startamount = companyAmount;
         }
         int scandaltick = 0;
-        public void Update()
+        public async Task Update()
         {
             //calculate innovation (FIXED)
             if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) // 5617.61515
@@ -60,7 +61,7 @@ namespace Eco
                 if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) //5617.61515
                 {
                     //an innovation can create a new company
-                    if (rn.NextDouble() < 0.2)
+                    if (rn.NextDouble() < 0.4)
                     {
                         Company newcp = new Company(this);
                         newcp.id = companyAmount++;
@@ -98,7 +99,8 @@ namespace Eco
                     }
                 }
             }
-            if (companies.Count < 1 || (companies.Count == 1 && companies[0].Value < 1000 * (Master.Conjucture - 0.01 * MainPage.master.Year)))
+            if (companies.Count < 1 || (companies.Count == 1 && companies[0].Value < 2000 *
+                (companies[0].Competitiveness / 100) / Master.Conjucture))
             {
                 Company newcp = new Company(this);
                 newcp.id = companyAmount++;
@@ -110,7 +112,7 @@ namespace Eco
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].Competitiveness += value * 0.01;
+            companies[select].Competitiveness += value;
 
             TotalCompetitiveness = 0;
             TotalValue = 0;

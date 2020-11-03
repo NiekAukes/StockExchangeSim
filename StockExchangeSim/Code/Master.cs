@@ -89,6 +89,8 @@ namespace Eco
     public class Master
     {
         public static bool fCustomSeed = false;
+        public static bool fAsyncFields = false;
+        public static bool fAsyncCompanies = false;
         public static Int32 CustomSeed = 0;
         public static Int32 Seed = (new Random()).Next();
         public static Random rn = new Random(Seed);
@@ -109,7 +111,7 @@ namespace Eco
         public List<Trader> Traders = new List<Trader>();
         public static Exchange exchange = new Exchange();
 
-        public static double Conjucture { get { return (Math.Sin(MainPage.master.Year * 100) + 0.01 * MainPage.master.Year + 1) * Math.E; } set { } }
+        public static double Conjucture { get; set; }
         public static double TotalShare = 0;
 
         public Master(int fields, int traders, int hftraders)
@@ -142,7 +144,7 @@ namespace Eco
         public bool active = false;
         public bool alive = true;
         public static long ticks = 0;
-        public void Update()
+        public async void Update()
         {
 
             MicroStopwatch sw = new MicroStopwatch();
@@ -159,10 +161,24 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    for (int j = 0; j < FieldAmount; j++)
+                    Conjucture = (0.2 * Math.Sin(MainPage.master.Year * 100) + 1);
+
+                    if (fAsyncFields)
                     {
-                        Fields[j].Update();
+                        Parallel.ForEach(Fields, async (currentfield) =>
+                        {
+                            await currentfield.Update();
+                        });
                     }
+                    else
+                    {
+                        foreach(var field in Fields)
+                        {
+                            await field.Update();
+                        }
+                    }
+
+                    //await Task.WhenAll(tasks);
 
                     int n = Traders.Count;
                     while (n > 1)
@@ -190,18 +206,9 @@ namespace Eco
                             //Fields[j].print();
                         }
                     }
-                    //int tickpass = 1000;
-                    //if (i % tickpass == 0 && i != 0)
-                    //{
-                    //    sw.Stop();
-                    //    if ((sw.ElapsedMicroseconds * 0.001) < (tickpass * 1000.0 / TPS))
-                    //    {
-                    //        Thread.Sleep((int)( (tickpass * 1000.0 / TPS) - sw.ElapsedMicroseconds / 1000));
-                    //    }
-                    //    sw.Reset();
-                    //    sw.Start();
-                    //}
 
+                    //await Task.WhenAll(tasks);
+                    //tasks.Clear();
                 }
                 else
                 {

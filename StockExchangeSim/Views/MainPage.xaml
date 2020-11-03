@@ -67,7 +67,6 @@
             <ch:SfChart.SecondaryAxis>
                 <ch:NumericalAxis x:Name="axisside"/>
             </ch:SfChart.SecondaryAxis>
-
         </ch:SfChart>
     </Grid>
 </Page>
