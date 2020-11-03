@@ -250,7 +250,7 @@ namespace StockExchangeSim.Views
             }
             catch (Exception ex)
             {
-                MessageDialog messageDialog = new MessageDialog("Invalid seed");
+                MessageDialog messageDialog = new MessageDialog("Invalid input in Fields, Traders or HFTraders.");
                 messageDialog.Commands.Add(new UICommand("Close"));
                 await messageDialog.ShowAsync();
                 return;
