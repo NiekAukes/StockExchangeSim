@@ -12,8 +12,12 @@
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="251*"/>
+            <RowDefinition Height="830*"/>
+        </Grid.RowDefinitions>
         <StackPanel
-            x:Name="ContentArea">
+            x:Name="ContentArea" Grid.RowSpan="2">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
@@ -27,7 +31,7 @@
                         GroupName="AppTheme" >
                         <RadioButton.CommandParameter>
                             <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter> 
+                        </RadioButton.CommandParameter>
                     </RadioButton>
                     <RadioButton 
                         x:Uid="Settings_Theme_Dark"
@@ -49,13 +53,20 @@
                             <xaml:ElementTheme>Default</xaml:ElementTheme>
                         </RadioButton.CommandParameter>
                     </RadioButton>
+                    <CheckBox x:Name="asyncFieldFlag" Click="asyncFieldFlagClicked">
+                        <TextBlock Text="Calculate Fields asynchronously (will increase performance on multicore devices, particularly with many fields)"/>
+                    </CheckBox>
+                    <CheckBox x:Name="asyncCompaniesFlag" Click="asyncCompaniesFlagClicked">
+                        <TextBlock Text="Calculate Companies asynchronously (will increase performance with a large amount of companies)"/>
+                    </CheckBox>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="CustomSeed" Content="Custom Seed" Width="200" Click="CustomSeed_Click"/>
-                <TextBox x:Name="Seed"  Width="200" Header="Seed:" LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
+                <CheckBox x:Name="CustomSeed" Click="CustomSeed_Click" Margin="0,0,0,0" Width="15" Content="Custom seed"/>
+                <TextBlock Text="Seed:" Height="auto" VerticalAlignment="Center" Margin="50,0,10,0" Padding="0,0,0,5"/>
+                <TextBox x:Name="Seed"  Width="200"  LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
             </StackPanel>
-            
+
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
 
             <StackPanel Margin="{StaticResource XSmallTopMargin}">

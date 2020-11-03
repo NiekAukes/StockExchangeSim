@@ -112,5 +112,15 @@ namespace StockExchangeSim.Views
             }
             Master.CustomSeed = seed;
         }
+
+        private void asyncCompaniesFlag_Click(object sender, RoutedEventArgs e)
+        {
+            Master.fAsyncCompanies = asyncCompaniesFlag.IsChecked.Value;
+        }
+
+        private void asyncFieldFlag_Click(object sender, RoutedEventArgs e)
+        {
+            Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
+        }
     }
 }
