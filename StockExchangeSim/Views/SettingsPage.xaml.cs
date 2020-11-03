@@ -89,12 +89,6 @@ namespace StockExchangeSim.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-
-        private void CustomSeed_Click(object sender, RoutedEventArgs e)
-        {
-            Master.fCustomSeed = CustomSeed.IsChecked.Value;
-        }
-
         private async void Seed_TextChanged(object sender, RoutedEventArgs e)
         {
             //parse naar getal
@@ -113,14 +107,10 @@ namespace StockExchangeSim.Views
             Master.CustomSeed = seed;
         }
 
-        private void asyncCompaniesFlag_Click(object sender, RoutedEventArgs e)
-        {
-            Master.fAsyncCompanies = asyncCompaniesFlag.IsChecked.Value;
-        }
+        private void CustomSeed_Click(object sender, RoutedEventArgs e)         => Master.fCustomSeed = CustomSeed.IsChecked.Value;
 
-        private void asyncFieldFlag_Click(object sender, RoutedEventArgs e)
-        {
-            Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
-        }
+        private void asyncCompaniesFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncCompanies = asyncCompaniesFlag.IsChecked.Value;
+
+        private void asyncFieldFlag_Click(object sender, RoutedEventArgs e)     => Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
     }
 }
