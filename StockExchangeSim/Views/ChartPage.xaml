@@ -12,7 +12,24 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid
+
+            <GridView x:Name="thisGridView" IsItemClickEnabled="True">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid
+                            x:Name="thisItemsWrapGrid"
+                            Orientation="Horizontal"
+                            MaximumRowsOrColumns="5"
+                        />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                
+                <TextBlock Text="bruh 1"/>
+                <TextBlock Text="bruh 2"/>
+                <TextBlock Text="bruh 3"/>
+            </GridView>
+
+            <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
 
             <syncfusion:SfChart x:Name="chart" Height="auto" Width="auto">

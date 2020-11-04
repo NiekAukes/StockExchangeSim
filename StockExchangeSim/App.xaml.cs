@@ -1,12 +1,15 @@
 ﻿using System;
 
 using StockExchangeSim.Services;
-
+using Syncfusion;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 
 namespace StockExchangeSim
 {
+
+    
+
     public sealed partial class App : Application
     {
         private Lazy<ActivationService> _activationService;
@@ -18,6 +21,7 @@ namespace StockExchangeSim
 
         public App()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ2NDQ3QDMxMzgyZTMzMmUzMEMwRXJDb1hnRUJhcHo1RFZBWXBKQ2owT0F1ME1DQ3dmMGhWNFhjVU1ZMWc9");
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
 
