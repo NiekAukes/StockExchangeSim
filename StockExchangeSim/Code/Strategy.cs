@@ -83,7 +83,7 @@ namespace Eco
                 List<StockPriceGraph> avHighs = new List<StockPriceGraph>();
                 List<StockPriceGraph> avLows = new List<StockPriceGraph>();
 
-                for (int i = 0)
+                //for (int i = 0)
 
                 //channel pattern
                 //            _              H  H-h  H-h  H-h
@@ -93,7 +93,7 @@ namespace Eco
                 //  /
                 // /
 
-                if ()
+                //if ()
 
 
                 //headnshoulders pattern

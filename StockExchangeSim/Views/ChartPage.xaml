@@ -11,13 +11,11 @@
     xmlns:tc="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d">
 
-   
-
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
 
-            <syncfusion:SfChart x:Name="chart">
+            <syncfusion:SfChart x:Name="chart" Height="auto" Width="auto">
 
                 <syncfusion:SfChart.PrimaryAxis>
 
