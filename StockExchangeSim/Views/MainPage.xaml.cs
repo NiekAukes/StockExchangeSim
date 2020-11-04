@@ -86,7 +86,7 @@ namespace StockExchangeSim.Views
         
         public Master CreateMaster()
         {
-            master = new Master(field, 1, 1);
+            master = new Master(field, trader, 1);
             SetSliderValue();
             chart.Series.Clear();
             for (int i = 0; i < master.Fields[0].companies.Count; i++)
