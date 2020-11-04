@@ -13,7 +13,7 @@
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <VariableSizedWrapGrid MaximumRowsOrColumns="8">
-            <RelativePanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <RelativePanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <TextBlock Text="TestField1"  VariableSizedWrapGrid.ColumnSpan="1" 
             VariableSizedWrapGrid.RowSpan="1" Style="{StaticResource fieldTextBlockStyle}"/>
             
