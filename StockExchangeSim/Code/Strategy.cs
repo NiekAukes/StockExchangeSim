@@ -49,11 +49,13 @@ namespace Eco
                 //price exploration
                 double money = trader.money;
                 double scale = 1;
-                Company cp = exchange.StocksForSale.Keys.ToArray()[rn.Next(exchange.StocksForSale.Count - 1)]; //invest in this company
-                List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
-                if (cp.stockPrices.Count < 50)
+                Company cp = interestedCompanies[rn.Next(interestedCompanies.Count)]; //invest in this company
+               
+                if (cp.stockPrices.Count < 51) //safeguard
                     return;
-                for(int i = 0; i < 50; i++)
+
+                List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
+                for (int i = 0; i < 50; i++)
                 {
                     stockPrices.Add(cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)]);
                 }
@@ -83,11 +85,12 @@ namespace Eco
                 List<StockPriceGraph> avHighs = new List<StockPriceGraph>();
                 List<StockPriceGraph> avLows = new List<StockPriceGraph>();
 
-
-                for (int i = 0; i < 50; i += 5)
+                if (highs.Count < 5 || lows.Count < 5)
+                    return;
+                for (float i = 0; i < avHighs.Count; i += 5.0f/avHighs.Count)
                 {
-                    avHighs.Add(highs[i]);
-                    avLows.Add(lows[i]);
+                    avHighs.Add(highs[(int)i]);
+                    avLows.Add(lows[(int)i]);
                 }
 
                 //channel pattern

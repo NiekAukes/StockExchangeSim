@@ -165,7 +165,7 @@ namespace StockExchangeSim.Views
         }
         public void GatherData()
         {
-            for(int tick = 0; master.alive ;tick++)
+            for(int tick = 0; true ;tick++)
             {
                 
                 if (master.active)
