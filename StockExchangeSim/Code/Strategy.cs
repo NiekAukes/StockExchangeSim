@@ -20,7 +20,7 @@ namespace Eco
             public override void StrategyOutcome(Trader trader, Exchange exchange)
             {
                 double money = trader.money;
-                Company cp = exchange.StocksForSale.Keys.ToArray()[rn.Next(exchange.StocksForSale.Count - 1)]; //invest in this company
+                Company cp = exchange.Companies[rn.Next(exchange.StocksForSale.Count - 1)]; //invest in this company
 
                 Stock s = exchange.GetCheapestStock(cp);
                 if (s.SellPrice <= cp.Value * 0.01 * s.Percentage) //if stock is right price

@@ -71,8 +71,8 @@ namespace Eco
     //doel van exchange is om informatie te verkrijgen en bij te houden. Dit is de class waar andere classes "handelen", net als in een echte exchange
     public class Exchange
     {
-        private List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
-        private List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
+        public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
+        public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
         public Dictionary<Company, List<Stock>> StocksForSale = new Dictionary<Company, List<Stock>>(); //Lijst van alle stocks die te koop staan ingedeeld per bedrijf
 
         public List<Company> GetCompanies() { return Companies; }
