@@ -83,7 +83,12 @@ namespace Eco
                 List<StockPriceGraph> avHighs = new List<StockPriceGraph>();
                 List<StockPriceGraph> avLows = new List<StockPriceGraph>();
 
-                for (int i = 0)
+
+                for (int i = 0; i < 50; i += 5)
+                {
+                    avHighs.Add(highs[i]);
+                    avLows.Add(lows[i]);
+                }
 
                 //channel pattern
                 //            _              H  H-h  H-h  H-h
@@ -93,7 +98,21 @@ namespace Eco
                 //  /
                 // /
 
-                if ()
+
+
+                if (avHighs[4].High > avHighs[0].High && avLows[4].Low > avLows[0].Low)
+                {
+                    //first check
+                    if (avHighs[2].High > avHighs[0].High && avLows[2].Low > avLows[0].Low)
+                    {
+                        //second check
+                        if (avHighs[2].High < avHighs[4].High && avLows[2].Low < avLows[4].Low)
+                        {
+                            //Satisfied, BUY!!
+
+                        }
+                    }
+                }
 
 
                 //headnshoulders pattern
@@ -103,6 +122,15 @@ namespace Eco
                 //  /
                 // /
 
+                if (avLows[1].Low - avLows[3].Low < 0.01)
+                {
+                    //lows are same height
+                    if (avHighs[1].High > avHighs[2].High && avHighs[2].High < avHighs[3].High)
+                    {
+                        //probably headnshoulders, try to sell at profit
+                    }
+                }
+
                 //flag pattern
                 //          Flat top        H  H-s  H-s
                 //    _    _  _               L  L-h  L-h
@@ -110,12 +138,30 @@ namespace Eco
                 //  /   \/
                 // /
 
+                if (avHighs[0].High - avHighs[4].High < 0.02)
+                {
+                    //flat top, first satisfaction
+                    if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
+                    {
+                        //FLAG!!! BUY BUY BUY!!!!!!!
+                    }
+                }
+
                 //wedge pattern
                 //          Flat top
                 //    /\      
                 //   /  \    /\  /\__       ======> direction of break uncertain
                 //  /    \  /  \/
                 // /      \/
+
+                if (avHighs[0].High > avHighs[2].High && avHighs[2].High > avHighs[4].High)
+                {
+                    //decreasing highs
+                    if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
+                    {
+                        //Wedge, maybe buy
+                    }
+                }
 
                 //breakout fase
             }
