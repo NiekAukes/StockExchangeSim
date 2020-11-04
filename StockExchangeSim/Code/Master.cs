@@ -12,7 +12,7 @@ using StockExchangeSim.Views;
 
 namespace Eco
 {
-
+    
     public class Time
     {
         UInt64 seconds = 0;
@@ -89,6 +89,7 @@ namespace Eco
     public class Master
     {
         public static bool fCustomSeed = false;
+        public static Master inst = null;
         public static bool fAsyncFields = false;
         public static bool fAsyncCompanies = false;
         public static Int32 CustomSeed = 0;
@@ -116,6 +117,7 @@ namespace Eco
 
         public Master(int fields, int traders, int hftraders)
         {
+            inst = this;
             if (fCustomSeed)
             {
                 Seed = CustomSeed;
@@ -129,7 +131,8 @@ namespace Eco
             //construction
             for (int i = 0; i < fields; i++)
             {
-                Fields.Add(new Field(i));
+                Field field = new Field(i);
+                Fields.Add(field);
                 TotalShare += 100;
             }
             for (int i = 0; i < traders; i++)
@@ -144,11 +147,10 @@ namespace Eco
         public bool active = false;
         public bool alive = true;
         public static long ticks = 0;
-        public async void Update()
+        public void Update()
         {
 
-            MicroStopwatch sw = new MicroStopwatch();
-            sw.Start();
+            
             for (; ticks < 100000000000 && alive; ticks++)
             {
 
@@ -161,24 +163,16 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    Conjucture = (0.2 * Math.Sin(MainPage.master.Year * 100) + 1);
+                    Conjucture = (0.000 * Math.Sin(MainPage.master.Year * 1) + 1);
 
-                    if (fAsyncFields)
-                    {
-                        Parallel.ForEach(Fields, async (currentfield) =>
-                        {
-                            await currentfield.Update();
-                        });
-                    }
-                    else
-                    {
-                        foreach(var field in Fields)
-                        {
-                            await field.Update();
-                        }
-                    }
 
-                    //await Task.WhenAll(tasks);
+                    for (int j = 0; j < Fields.Count; j++)
+                    {
+                        Fields[j].Update();
+                    }
+                        
+
+                    
 
                     int n = Traders.Count;
                     while (n > 1)
@@ -198,17 +192,8 @@ namespace Eco
                     Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
 
                     
-                    if (ticks % 1000000 == 0)
-                    {
-                        for (int j = 0; j < FieldAmount; j++)
-                        {
-                            //System.Diagnostics.Debug.WriteLine(i / (365.25 * 24 * 60 * 4) + " years past");
-                            //Fields[j].print();
-                        }
-                    }
 
-                    //await Task.WhenAll(tasks);
-                    //tasks.Clear();
+                    
                 }
                 else
                 {

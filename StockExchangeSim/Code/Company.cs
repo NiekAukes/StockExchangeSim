@@ -12,14 +12,14 @@ using Windows.UI.Xaml;
 
 namespace Eco
 {
-    public class StockPrices
+    public class StockPriceGraph
     {
         public double Year { get; set; }
         public double Open { get; set; }
         public double Close { get; set; }
         public double High { get; set; }
         public double Low { get; set; }
-        public StockPrices(double year, double open, double close, double high, double low)
+        public StockPriceGraph(double year, double open, double close, double high, double low)
         {
             Year = year;
             Open = open;
@@ -28,9 +28,23 @@ namespace Eco
             Low = low;
         }
     }
+    public class ValueGraph
+    {
+        public double Year { get; set; }
+        public double Value { get; set; }
+        public ValueGraph(double year, double value)
+        {
+            Year = year;
+            Value = value;
+        }
+    }
     public class StockViewModel
     {
-        public ObservableCollection<StockPrices> prices = new ObservableCollection<StockPrices>();
+        public ObservableCollection<StockPriceGraph> prices = new ObservableCollection<StockPriceGraph>();
+    }
+    public class ValueViewModel
+    {
+        public ObservableCollection<StockPriceGraph> values = new ObservableCollection<StockPriceGraph>();
     }
     public class Company : IStockOwner
     {
@@ -43,6 +57,9 @@ namespace Eco
         public double Competitiveness = 100;
 
         public StockViewModel stockViewModel = new StockViewModel();
+        public ValueViewModel ValueviewModel = new ValueViewModel();
+        public List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
+        public List<ValueGraph> values = new List<ValueGraph>();
 
         //setup values
         public int id;
@@ -57,7 +74,12 @@ namespace Eco
         public void BecomePublic()
         {
             if (CompanyStock.Percentage == 100)
-                Master.exchange.SellStock(CompanyStock.SplitStock(1), stockprice);
+            {
+                for (int i = 0; i < 1000; i++)
+                {
+                    Master.exchange.SellStock(CompanyStock.SplitStock(1 / 1000), stockprice);
+                }
+            }
         }
         //variable values
         #region variableValues
@@ -97,11 +119,8 @@ namespace Eco
         double open = 0;
         double high = 0;
         double low = 0;
-        public void Update()
+        double calcprof()
         {
-            CurrentTick++;
-            Competitiveness += -(Competitiveness - 100) * 0.000001 * MainPage.master.SecondsPerTick;
-
             double modifier = 1 / 2629743.8;
             double usableValue = Value;
 
@@ -110,73 +129,97 @@ namespace Eco
                 usableValue += 500;
             }
 
-            double totalprofit =
+            return
                 (Math.Pow((Competitiveness / field.TotalCompetitiveness)
                 * field.companies.Count, 2) * //calculate Competitive Position
                 Master.Conjucture //multiply by conjucture and Economic growth
-                - 1) * usableValue * //times value
+                - 1) * Math.Sqrt(usableValue / 100) * 100 * //times value
                 modifier * MainPage.master.SecondsPerTick;
+        }
+        public void Update()
+        {
+            CurrentTick++;
+            Competitiveness += -(Competitiveness - 100) * 0.0000005 * MainPage.master.SecondsPerTick;
+
+            double totalprofit = calcprof();
 
             CompanyStock.Update(totalprofit);
             Value += CompanyStock.Collect();
 
-            if (CurrentTick % 10 == 0)
+            
+
+        }
+        public void Data(int tick)
+        {
+            if (tick % 10 == 0)
             {
                 LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
                 LastDecemValue = Value;
             }
-            if (CurrentTick % 100 == 0)
+            if (tick % 100 == 0)
             {
                 LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
                 LastCentumValue = Value;
             }
-            if (CurrentTick % 1000 == 0)
+            if (tick % 1000 == 0)
             {
                 LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
                 LastMilleValue = Value;
             }
-            if (CurrentTick % 10000 == 0)
+            if (tick % 10000 == 0)
             {
                 LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
                 LastDeceMilleValue = Value;
             }
-            if (CurrentTick % 100000 == 0)
+            if (tick % 100000 == 0)
             {
                 LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
                 LastCentuMilleValue = Value;
             }
+
             //check high and low
-            if (CurrentTick % 100 == 0)
+            if (tick % 20 == 0)
             {
-                if (Value > high)
-                    high = Value;
-                if (Value < low)
-                    low = Value;
-            }
-            //register datapoint
-            if (CurrentTick % 500000 == 0)
-            {
-                StockPrices sp = new StockPrices(MainPage.master.Year, open, Value, high, low);
-                var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
-                {
-                    
-                    stockViewModel.prices.Add(sp);
+                Stock st = Master.exchange.GetCheapestStock(this);
+                if (st != null) {
+                    double currentprice = st.SellPrice;
+                    if (currentprice > high)
+                        high = Value;
+                    if (currentprice < low)
+                        low = Value;
 
-                    if (stockViewModel.prices.Count > 20)
+                    //register datapoint
+                    if (tick % 100 == 0)
                     {
-                        stockViewModel.prices.RemoveAt(0);
+                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                        stockPrices.Add(sp);
+                        ValueGraph vg = new ValueGraph(MainPage.master.Year, currentprice);
+                        values.Add(vg);
+
                     }
+                    if (tick % 20000 == 0)
+                    {
+                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                        var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                        {
 
-                    
-                });
+                            stockViewModel.prices.Add(sp);
 
-                high = Value;
-                low = Value;
-                open = Value;
+                            if (stockViewModel.prices.Count > 300)
+                            {
+                                stockViewModel.prices.RemoveAt(0);
+                            }
+
+
+                        });
+
+                        high = currentprice;
+                        low = currentprice;
+                        open = currentprice;
+                    }
+                }
             }
-
         }
-
 
 
 

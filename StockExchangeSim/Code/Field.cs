@@ -9,6 +9,7 @@ using StockExchangeSim;
 using StockExchangeSim.Views;
 using Telerik.UI.Xaml.Controls.Data;
 using Windows.Security.Authentication.Web.Provider;
+using System.Threading;
 
 namespace Eco
 {
@@ -32,6 +33,8 @@ namespace Eco
         public List<Company> companies = new List<Company>();
         List<Company> startcompanies = null;
 
+
+
         public Field(int Id)
         {
             id = Id;
@@ -51,9 +54,11 @@ namespace Eco
             }
             startcompanies = new List<Company>(companies);
             startamount = companyAmount;
+
         }
         int scandaltick = 0;
-        public async Task Update()
+
+        public void Update()
         {
             //calculate innovation (FIXED)
             if (rn.NextDouble() < Innovation * MainPage.master.SecondsPerTick / 15 / 1450.461994) // 5617.61515
@@ -82,7 +87,7 @@ namespace Eco
                     }
                 }
             }
-            
+
             //calculate scandals
             if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
             {
@@ -109,10 +114,10 @@ namespace Eco
                 startcompanies.Add(newcp);
             }
 
-            //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE
+            //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE => CHECK
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].Competitiveness += value;
+            companies[select].Competitiveness += value * 0.5;
 
             TotalCompetitiveness = 0;
             TotalValue = 0;
@@ -133,11 +138,21 @@ namespace Eco
                 {
                     //BANKRUPT
                     companies[i].Bankrupt = true;
+                    if (MainPage.inst != null)
+                    {
+                        Company cp = companies[i];
+                        var ignore = MainPage.inst.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            cp.stockViewModel.prices.Clear();
+                        });
+                    }
                     companies.RemoveAt(i);
 
+                    
                 }
             }
         }
+        
         public void print()
         {
             

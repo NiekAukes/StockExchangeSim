@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using Syncfusion.UI.Xaml.Charts;
 using Eco;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace StockExchangeSim.Views
 {
@@ -68,7 +69,6 @@ namespace StockExchangeSim.Views
         public static Master master = null;
         public static MainPage inst;
         double _year;
-        LineSeries series = null;
         public double year
         {
             get { return _year; }
@@ -83,11 +83,24 @@ namespace StockExchangeSim.Views
         }
 
         private int field = 1, trader = 1, hftrader = 1;
-
+        
         public Master CreateMaster()
         {
             master = new Master(field, 1, 1);
             SetSliderValue();
+            chart.Series.Clear();
+            for (int i = 0; i < master.Fields[0].companies.Count; i++)
+            {
+                LineSeries series = new LineSeries()
+                {
+                    ItemsSource = master.Fields[0].companies[i].stockViewModel.prices,
+                    XBindingPath = "Year",
+                    YBindingPath = "Close"
+                };
+                series.ListenPropertyChange = true;
+                chart.Series.Add(series);
+            }
+
             return master;
         }
 
@@ -103,6 +116,7 @@ namespace StockExchangeSim.Views
         }
         public CompanyViewModel vm = new CompanyViewModel();
         public CompanyViewModel vm2 = new CompanyViewModel();
+        public Thread dataThread = null;
         public MainPage()
         {
             InitializeComponent();
@@ -115,37 +129,66 @@ namespace StockExchangeSim.Views
             axisside.Header = "value (in $)";//master.Fields[0].companies[0].Value;
             axismain.Header = "Time (in years)";
 
-            //series = new LineSeries()
+            
+            //LineSeries series1 = new LineSeries()
             //{
-            //    ItemsSource = vm.Data,
+            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
             //    XBindingPath = "Year",
-            //    YBindingPath = "Value"
+            //    YBindingPath = "Close"
             //};
-            CandleSeries candle = new CandleSeries()
-            {
-                ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
-                XBindingPath = "Year",
-                High = "High",
-                Low = "Low",
-                Open = "Open",
-                Close = "Close"
-            };
+            //CandleSeries candle = new CandleSeries()
+            //{
+            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
+            //    XBindingPath = "Year",
+            //    High = "High",
+            //    Low = "Low",
+            //    Open = "Open",
+            //    Close = "Close"
+            //};
             //SplineSeries spline = new SplineSeries()
             //{
             //    ItemsSource = vm2.Data,
             //    XBindingPath = "Year",
             //    YBindingPath = "Value"
             //};
-            candle.ListenPropertyChange = true;
-            //series.ListenPropertyChange = true;
-            chart.Series.Add(candle);
-            //chart.Series.Add(series);
+            //candle.ListenPropertyChange = true;
+            
             DataContext = this;
 
             
             UpdateYear();
+            dataThread = new Thread(GatherData);
+            dataThread.Name = "dataThread";
+            dataThread.Start();
 
-            
+
+        }
+        public void GatherData()
+        {
+            for(int tick = 0; master.alive ;tick++)
+            {
+                
+                if (master.active)
+                {
+                    if (tick % 1000 == 0)
+                    {
+                        for (int i = 0; i < master.Fields.Count; i++)
+                        {
+                            Field field = master.Fields[i];
+                            //do Information Gathering from fields
+                            for (int j = 0; j < field.companies.Count; j++)
+                            {
+                                Company cp = master.Fields[i].companies[j];
+                                cp.Data((int)(tick / 1000));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Thread.Sleep(10);
+                }
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -169,16 +212,7 @@ namespace StockExchangeSim.Views
                 display = dis;
 
 
-                vm.Data.Add(new CPValueData(year, master.Fields[0].companies[0].Value));
-                //vm2.Data.Add(new CPValueData(year, Master.Conjucture));
-                if (vm.Data.Count > 300)
-                {
-                    vm.Data.RemoveAt(0);
-                }
-                //if (vm2.Data.Count > 300)
-                //{
-                //    vm2.Data.RemoveAt(0);
-                //}
+                
                 await Task.Delay(5);
 
             }

@@ -40,6 +40,7 @@ namespace StockExchangeSim.Views
         {
             InitializeComponent();
             CustomSeed.IsChecked = Master.fCustomSeed;
+            asyncFieldFlag.IsChecked = Master.fAsyncFields;
             Seed.Text = Master.CustomSeed.ToString();
         }
 

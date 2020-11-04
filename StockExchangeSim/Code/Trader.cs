@@ -33,7 +33,7 @@ namespace Eco
         public double ActivityTime = 0;
         public double ActionTime; //in seconds
 
-        Strategy strat = new SimpleStrategy();
+        Strategy strat = new PatternStrategy();
 
         public Trader()
         {
@@ -64,8 +64,8 @@ namespace Eco
             {
                 Money += stockArr[i].Collect();
             }
-
-            strat.StrategyOutcome(this, Master.exchange);
+            if (ActionTime > 0)
+                strat.StrategyOutcome(this, Master.exchange);
 
 
         }

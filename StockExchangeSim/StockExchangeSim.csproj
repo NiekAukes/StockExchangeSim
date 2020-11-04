@@ -177,8 +177,20 @@
     <Compile Include="Views\ChartPage.xaml.cs">
       <DependentUpon>ChartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ContentGridDetailPage.xaml.cs">
+      <DependentUpon>ContentGridDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ContentGridPage.xaml.cs">
+      <DependentUpon>ContentGridPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MasterDetailDetailControl.xaml.cs">
+      <DependentUpon>MasterDetailDetailControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MasterDetailPage.xaml.cs">
+      <DependentUpon>MasterDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -218,7 +230,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ContentGridDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ContentGridPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MasterDetailDetailControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MasterDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

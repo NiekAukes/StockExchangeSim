@@ -101,6 +101,8 @@ namespace Eco
 
         public Stock GetCheapestStock(Company cp)
         {
+            if (!StocksForSale.ContainsKey(cp))
+                return null;
             List<Stock> ls = StocksForSale[cp];
             Stock Cheapest = null;
             foreach (Stock stock in ls)
