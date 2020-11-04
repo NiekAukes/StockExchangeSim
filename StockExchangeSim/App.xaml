@@ -7,6 +7,17 @@
         
         <ResourceDictionary>
 
+            <Style x:Key="fieldTextBlockStyle" x:Name="fieldTextBlockStyle" TargetType="TextBlock">
+                <Style.Setters>
+                    <Setter Property="MinWidth" Value="50"/>
+                    <Setter Property="MinHeight" Value="50"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                </Style.Setters>
+            </Style>
+            
             <Style x:Key="titleStyle" TargetType="TextBlock" x:Name="TitleStyle">
                 <Setter Property="FontSize" Value="35"/>
                 <Setter Property="Margin" Value="20,0,20,0"/>

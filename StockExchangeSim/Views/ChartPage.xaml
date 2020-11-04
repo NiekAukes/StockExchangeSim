@@ -12,24 +12,18 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-
-            <GridView x:Name="thisGridView" IsItemClickEnabled="True">
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsWrapGrid
-                            x:Name="thisItemsWrapGrid"
-                            Orientation="Horizontal"
-                            MaximumRowsOrColumns="5"
-                        />
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
-                
-                <TextBlock Text="bruh 1"/>
-                <TextBlock Text="bruh 2"/>
-                <TextBlock Text="bruh 3"/>
-            </GridView>
-
-            <Grid
+        <VariableSizedWrapGrid MaximumRowsOrColumns="8">
+            <RelativePanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBlock Text="TestField1"  VariableSizedWrapGrid.ColumnSpan="1" 
+            VariableSizedWrapGrid.RowSpan="1" Style="{StaticResource fieldTextBlockStyle}"/>
+            
+            <TextBlock Text="TestField2" VariableSizedWrapGrid.ColumnSpan="1"
+            VariableSizedWrapGrid.RowSpan="1" Style="{StaticResource fieldTextBlockStyle}"/>
+        
+                <TextBlock Text="TestField3" Style="{StaticResource fieldTextBlockStyle}"/>
+            </RelativePanel>
+        </VariableSizedWrapGrid>
+        <!--    <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
 
             <syncfusion:SfChart x:Name="chart" Height="auto" Width="auto">
@@ -45,12 +39,11 @@
                     <syncfusion:NumericalAxis Header="Height(in cm)" />
 
                 </syncfusion:SfChart.SecondaryAxis>
-
+-->
                 <!--<syncfusion:ColumnSeries  ItemsSource="{Binding Data}" XBindingPath="Name" YBindingPath="Height" >
-                </syncfusion:ColumnSeries>-->
+                </syncfusion:ColumnSeries>
 
-            </syncfusion:SfChart>
 
-        </Grid>
+        </Grid>-->
     </Grid>
 </Page>
