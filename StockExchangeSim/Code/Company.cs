@@ -121,7 +121,7 @@ namespace Eco
         double low = 0;
         double calcprof()
         {
-            double modifier = 1000 / 2629743.8;
+            double modifier = 3000 / 2629743.8;
             double usableValue = Value;
 
             if (Value < 100)
@@ -129,7 +129,7 @@ namespace Eco
                 usableValue += 500;
             }
             double ret = (Math.Pow((Competitiveness / field.TotalCompetitiveness)
-                * field.companies.Count, 2) * //calculate Competitive Position
+                * field.companies.Count, 1) * //calculate Competitive Position
                 Master.Conjucture - 1) * //multiply by conjucture
                 modifier * MainPage.master.SecondsPerTick;//multiply by the modifier and Economic growth
             if (ret > 1)
@@ -143,7 +143,7 @@ namespace Eco
         public void Update()
         {
             CurrentTick++;
-            Competitiveness += -(Competitiveness - 100) * 0.0000005 * MainPage.master.SecondsPerTick;
+            Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.000001 * MainPage.master.SecondsPerTick;
             
 
             double totalprofit = calcprof();
@@ -217,7 +217,7 @@ namespace Eco
                                 {
                                     stockViewModel.prices.RemoveAt(0);
                                 }
-
+                                MainPage.inst.SetNewYearLimit();
 
                             });
 

@@ -10,6 +10,7 @@ using StockExchangeSim.Views;
 using Telerik.UI.Xaml.Controls.Data;
 using Windows.Security.Authentication.Web.Provider;
 using System.Threading;
+using Windows.Web.Http.Headers;
 
 namespace Eco
 {
@@ -21,9 +22,9 @@ namespace Eco
         public int companyAmount;
         public int maxCompanyStartAmount = 12;
 
-        public double Innovation = 1.5;
-        public double Scandals = 0.2;
-        public double ScandalSeverity = 0.5;
+        public double Innovation = 0.5;
+        public double Scandals = 0.3;
+        public double ScandalSeverity = 1;
 
         public double MarketShare = 1.1;
         public double TotalCompetitiveness = 0;
@@ -72,6 +73,14 @@ namespace Eco
                         newcp.id = companyAmount++;
                         newcp.SetValue(rn.NextDouble() * 600);
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
+
+                        double highestcomp = 0;
+                        for (int i = 0; i < companies.Count; i++)
+                        {
+                            if (companies[i].Competitiveness > highestcomp)
+                                highestcomp = companies[i].Competitiveness;
+                        }
+
                         newcp.Competitiveness += highvalue * 200;
                         companies.Add(newcp);
                         startcompanies.Add(newcp);
@@ -97,7 +106,22 @@ namespace Eco
                     if (scandaltick > 9999)
                     {
                         //impact is based on company value
-                        Company cp = companies[rn.Next(companies.Count)];
+                        //Company cp = companies[rn.Next(companies.Count)];
+                        double rand = Math.Abs(rn.NextDouble() - 0.001);
+                        double totcomp = 0;
+                        Company cp = null;
+
+                        for(int i = 0; cp == null; i++)
+                        {
+                            double qp = companies[i].Competitiveness / TotalCompetitiveness;
+                            if (qp + totcomp > rand)
+                            {
+                                cp = companies[i];
+                                break;
+                            }
+                            totcomp += qp;
+                        }
+
                         double highvalue = Math.Pow(rn.NextDouble() * 1, 2);
                         cp.Competitiveness -= highvalue * 0.1 * ScandalSeverity * cp.Value;
                         scandaltick = 0;

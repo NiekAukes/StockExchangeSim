@@ -20,6 +20,7 @@ using Syncfusion.UI.Xaml.Charts;
 using Eco;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Windows.UI.Core;
 
 namespace StockExchangeSim.Views
 {
@@ -190,6 +191,7 @@ namespace StockExchangeSim.Views
                                 cp.Data((int)(tick / 1000));
                             }
                         }
+                        
                     }
                 }
                 else
@@ -197,6 +199,10 @@ namespace StockExchangeSim.Views
                     Thread.Sleep(10);
                 }
             }
+        }
+        public void SetNewYearLimit()
+        {
+            (chart.PrimaryAxis as NumericalAxis).Minimum = year - master.SecondsPerTick * 3000000 / 31556926.0;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
