@@ -131,11 +131,12 @@ namespace Eco
             double ret = (Math.Pow((Competitiveness / field.TotalCompetitiveness)
                 * field.companies.Count, 2) * //calculate Competitive Position
                 Master.Conjucture - 1) * //multiply by conjucture
-                modifier * MainPage.master.SecondsPerTick * (0.01 * MainPage.master.Year + 1);//multiply by the modifier and Economic growth
+                modifier * MainPage.master.SecondsPerTick;//multiply by the modifier and Economic growth
             if (ret > 1)
             {
+                ret = 0;
                 throw new Exception(); //value too high
-            }
+            }   
             return ret;
                 
         }
@@ -143,6 +144,7 @@ namespace Eco
         {
             CurrentTick++;
             Competitiveness += -(Competitiveness - 100) * 0.0000005 * MainPage.master.SecondsPerTick;
+            
 
             double totalprofit = calcprof();
 

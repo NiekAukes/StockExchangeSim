@@ -23,7 +23,7 @@ namespace Eco
 
         public double Innovation = 1.5;
         public double Scandals = 0.2;
-        public float ScandalSeverity = 1;
+        public double ScandalSeverity = 0.5;
 
         public double MarketShare = 1.1;
         public double TotalCompetitiveness = 0;
@@ -82,7 +82,7 @@ namespace Eco
                     {
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        cp.Competitiveness += highvalue * 0.2 * cp.Value;
+                        cp.Competitiveness += highvalue * 0.1 * cp.Value;
 
                     }
                 }
@@ -98,7 +98,7 @@ namespace Eco
                     {
                         //impact is based on company value
                         Company cp = companies[rn.Next(companies.Count)];
-                        double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
+                        double highvalue = Math.Pow(rn.NextDouble() * 1, 2);
                         cp.Competitiveness -= highvalue * 0.1 * ScandalSeverity * cp.Value;
                         scandaltick = 0;
                     }
@@ -127,6 +127,8 @@ namespace Eco
             //check for bankrupty
             for (int i = 0; i < companies.Count; i++)
             {
+                if (companies[i].Competitiveness < 1)
+                    companies[i].Competitiveness = 1;
                 TotalCompetitiveness += companies[i].Competitiveness;
                 TotalValue += companies[i].Value;
             }
