@@ -53,7 +53,7 @@ namespace StockExchangeSim.Views
             series.YBindingPath = "Height";
 
             //Adding Series to the Chart Series Collection
-            chart.Series.Add(series);
+            //chart.Series.Add(series);
         }
 
 

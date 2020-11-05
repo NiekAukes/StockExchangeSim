@@ -82,7 +82,7 @@ namespace Eco
                     {
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        cp.Competitiveness += highvalue * 200;
+                        cp.Competitiveness += highvalue * 0.2 * cp.Value;
 
                     }
                 }
@@ -99,7 +99,7 @@ namespace Eco
                         //impact is based on company value
                         Company cp = companies[rn.Next(companies.Count)];
                         double highvalue = Math.Pow(rn.NextDouble() * 1, 3);
-                        cp.Competitiveness -= highvalue * 100 * ScandalSeverity;
+                        cp.Competitiveness -= highvalue * 0.1 * ScandalSeverity * cp.Value;
                         scandaltick = 0;
                     }
                 }
@@ -117,7 +117,7 @@ namespace Eco
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE => CHECK
             double value = Math.Pow(rn.NextDouble() - 0.5, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].Competitiveness += value * 0.5;
+            companies[select].Competitiveness += value * 0.001 * companies[select].Value;
 
             TotalCompetitiveness = 0;
             TotalValue = 0;

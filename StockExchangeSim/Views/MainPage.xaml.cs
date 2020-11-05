@@ -83,7 +83,7 @@ namespace StockExchangeSim.Views
         }
 
         private int field = 1, trader = 1, hftrader = 1;
-        
+
         public Master CreateMaster()
         {
             master = new Master(field, trader, 1);
@@ -93,9 +93,9 @@ namespace StockExchangeSim.Views
             {
                 LineSeries series = new LineSeries()
                 {
-                    ItemsSource = master.Fields[0].companies[i].stockViewModel.prices,
+                    ItemsSource = master.Fields[0].companies[i].ValueviewModel.values,
                     XBindingPath = "Year",
-                    YBindingPath = "Close"
+                    YBindingPath = "Value"
                 };
                 series.ListenPropertyChange = true;
                 chart.Series.Add(series);
@@ -129,7 +129,7 @@ namespace StockExchangeSim.Views
             axisside.Header = "value (in $)";//master.Fields[0].companies[0].Value;
             axismain.Header = "Time (in years)";
 
-            
+
             //LineSeries series1 = new LineSeries()
             //{
             //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
@@ -152,10 +152,10 @@ namespace StockExchangeSim.Views
             //    YBindingPath = "Value"
             //};
             //candle.ListenPropertyChange = true;
-            
+
             DataContext = this;
 
-            
+
             UpdateYear();
             dataThread = new Thread(GatherData);
             dataThread.Name = "dataThread";
@@ -163,6 +163,14 @@ namespace StockExchangeSim.Views
 
 
         }
+
+        ~MainPage (){
+
+            master.active = false;
+
+
+        }
+
         public void GatherData()
         {
             for(int tick = 0; true ;tick++)

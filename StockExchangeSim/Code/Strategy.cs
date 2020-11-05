@@ -57,7 +57,9 @@ namespace Eco
                 List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
                 for (int i = 0; i < 50; i++)
                 {
-                    stockPrices.Add(cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)]);
+                    StockPriceGraph spg = cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)];
+                    if (spg != null)
+                        stockPrices.Add(spg);
                 }
 
                 //price discovery

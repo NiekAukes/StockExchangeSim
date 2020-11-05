@@ -44,7 +44,7 @@ namespace Eco
     }
     public class ValueViewModel
     {
-        public ObservableCollection<StockPriceGraph> values = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<ValueGraph> values = new ObservableCollection<ValueGraph>();
     }
     public class Company : IStockOwner
     {
@@ -121,20 +121,23 @@ namespace Eco
         double low = 0;
         double calcprof()
         {
-            double modifier = 1 / 2629743.8;
+            double modifier = 1000 / 2629743.8;
             double usableValue = Value;
 
             if (Value < 100)
             {
                 usableValue += 500;
             }
-
-            return
-                (Math.Pow((Competitiveness / field.TotalCompetitiveness)
+            double ret = (Math.Pow((Competitiveness / field.TotalCompetitiveness)
                 * field.companies.Count, 2) * //calculate Competitive Position
-                Master.Conjucture //multiply by conjucture and Economic growth
-                - 1) * Math.Sqrt(usableValue / 100) * 100 * //times value
-                modifier * MainPage.master.SecondsPerTick;
+                Master.Conjucture - 1) * //multiply by conjucture
+                modifier * MainPage.master.SecondsPerTick * (0.01 * MainPage.master.Year + 1);//multiply by the modifier and Economic growth
+            if (ret > 1)
+            {
+                throw new Exception(); //value too high
+            }
+            return ret;
+                
         }
         public void Update()
         {
@@ -184,38 +187,42 @@ namespace Eco
                 if (st != null) {
                     double currentprice = st.SellPrice;
                     if (currentprice > high)
-                        high = Value;
+                        high = currentprice;
                     if (currentprice < low)
-                        low = Value;
+                        low = currentprice;
 
                     //register datapoint
                     if (tick % 100 == 0)
                     {
                         StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
                         stockPrices.Add(sp);
-                        ValueGraph vg = new ValueGraph(MainPage.master.Year, currentprice);
+                        ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
                         values.Add(vg);
 
-                    }
-                    if (tick % 20000 == 0)
-                    {
-                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+
+                        if (tick % 20000 == 0)
                         {
+                            //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
-                            stockViewModel.prices.Add(sp);
 
-                            if (stockViewModel.prices.Count > 300)
+                            var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                             {
-                                stockViewModel.prices.RemoveAt(0);
-                            }
+
+                                stockViewModel.prices.Add(sp);
+                                ValueviewModel.values.Add(vg);
+
+                                if (stockViewModel.prices.Count > 300)
+                                {
+                                    stockViewModel.prices.RemoveAt(0);
+                                }
 
 
-                        });
+                            });
 
-                        high = currentprice;
-                        low = currentprice;
-                        open = currentprice;
+                            high = currentprice;
+                            low = currentprice;
+                            open = currentprice;
+                        }
                     }
                 }
             }
