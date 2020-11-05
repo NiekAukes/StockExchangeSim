@@ -75,9 +75,9 @@ namespace Eco
         {
             if (CompanyStock.Percentage == 100)
             {
-                for (int i = 0; i < 1000; i++)
+                for (int i = 0; i < 50; i++)
                 {
-                    Master.exchange.SellStock(CompanyStock.SplitStock(1 / 1000), stockprice);
+                    Master.exchange.SellStock(CompanyStock.SplitStock(1 / 50), stockprice);
                 }
             }
         }
@@ -112,6 +112,7 @@ namespace Eco
         #endregion
 
         long CurrentTick = Master.ticks;
+        double modifier = 3000 / 2629743.8;
 
         public double money { get { return Value; } set { Value = value; } }
 
@@ -121,22 +122,17 @@ namespace Eco
         double low = 0;
         double calcprof()
         {
-            double modifier = 3000 / 2629743.8;
-            double usableValue = Value;
+            
+            //double usableValue = Value;
 
-            if (Value < 100)
-            {
-                usableValue += 500;
-            }
-            double ret = (Math.Pow((Competitiveness / field.TotalCompetitiveness)
-                * field.companies.Count, 1) * //calculate Competitive Position
+            //if (Value < 100)
+            //{
+            //    usableValue += 500;
+            //}
+            double ret = ((Competitiveness / field.TotalCompetitiveness)
+                * field.companies.Count * //calculate Competitive Position
                 Master.Conjucture - 1) * //multiply by conjucture
                 modifier * MainPage.master.SecondsPerTick;//multiply by the modifier and Economic growth
-            if (ret > 1)
-            {
-                ret = 0;
-                throw new Exception(); //value too high
-            }   
             return ret;
                 
         }
@@ -144,11 +140,9 @@ namespace Eco
         {
             CurrentTick++;
             Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.000001 * MainPage.master.SecondsPerTick;
-            
 
-            double totalprofit = calcprof();
-
-            CompanyStock.Update(totalprofit);
+            //calculate profit
+            CompanyStock.Update(calcprof());
             Value += CompanyStock.Collect();
 
             
@@ -202,12 +196,12 @@ namespace Eco
                         values.Add(vg);
 
 
-                        if (tick % 20000 == 0)
+                        if (tick % 80000 == 0)
                         {
                             //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
 
-                            var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                            var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
 
                                 stockViewModel.prices.Add(sp);
@@ -226,7 +220,9 @@ namespace Eco
                             open = currentprice;
                         }
                     }
+                    
                 }
+                
             }
         }
 

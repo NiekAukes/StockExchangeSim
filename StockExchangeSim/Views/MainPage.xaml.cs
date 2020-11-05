@@ -83,7 +83,7 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 1, trader = 1, hftrader = 1;
+        private int field = 3, trader = 10, hftrader = 1;
 
         public Master CreateMaster()
         {
@@ -191,9 +191,13 @@ namespace StockExchangeSim.Views
                                 cp.Data((int)(tick / 1000));
                             }
                         }
-                        
+                        if ((int)(tick / 1000) % 80000 == 0)
+                        {
+                            //Thread.Sleep(2);
+                        }
                     }
                 }
+                
                 else
                 {
                     Thread.Sleep(10);
