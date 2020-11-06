@@ -38,7 +38,7 @@ namespace Eco
         public Trader()
         {
             Stocks = new List<Stock>();
-            skill = rn.NextDouble() * 0.4 + 0.4;
+            skill = rn.NextDouble() * 0.2 + 0.7;
         }
 
         public double money { get { return Money; } set { Money = value; } }

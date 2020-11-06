@@ -15,11 +15,11 @@ namespace Eco
     public class StockPriceGraph
     {
         public double Year { get; set; }
-        public double Open { get; set; }
-        public double Close { get; set; }
-        public double High { get; set; }
-        public double Low { get; set; }
-        public StockPriceGraph(double year, double open, double close, double high, double low)
+        public float Open { get; set; }
+        public float Close { get; set; }
+        public float High { get; set; }
+        public float Low { get; set; }
+        public StockPriceGraph(double year, float open, float close, float high, float low)
         {
             Year = year;
             Open = open;
@@ -31,8 +31,8 @@ namespace Eco
     public class ValueGraph
     {
         public double Year { get; set; }
-        public double Value { get; set; }
-        public ValueGraph(double year, double value)
+        public float Value { get; set; }
+        public ValueGraph(double year, float value)
         {
             Year = year;
             Value = value;
@@ -68,7 +68,7 @@ namespace Eco
             CompanyStock = CreateStock(100);
             field = f;
 
-            open = Value;
+            open = (float)Value;
         }
 
         public void BecomePublic()
@@ -77,7 +77,7 @@ namespace Eco
             {
                 for (int i = 0; i < 50; i++)
                 {
-                    Master.exchange.SellStock(CompanyStock.SplitStock(1 / 50), stockprice);
+                    Master.exchange.SellStock(CompanyStock.SplitStock(1.0 / 50.0), stockprice);
                 }
             }
         }
@@ -117,9 +117,11 @@ namespace Eco
         public double money { get { return Value; } set { Value = value; } }
 
 
-        double open = 0;
-        double high = 0;
-        double low = 0;
+        float open = 0;
+        float high = 0;
+        float low = 0;
+
+        public double ValueGainPT = 0;
         double calcprof()
         {
             
@@ -132,20 +134,24 @@ namespace Eco
             double ret = ((Competitiveness / field.TotalCompetitiveness)
                 * field.companies.Count * //calculate Competitive Position
                 Master.Conjucture - 1) * //multiply by conjucture
-                modifier * MainPage.master.SecondsPerTick;//multiply by the modifier and Economic growth
+                modifier;//multiply by the modifier and Economic growth
             return ret;
                 
         }
         public void Update()
         {
-            CurrentTick++;
+            
             Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.000001 * MainPage.master.SecondsPerTick;
 
             //calculate profit
-            CompanyStock.Update(calcprof());
+            if (CurrentTick % 10 == 0)
+            {
+                ValueGainPT = calcprof();
+            }
+            CompanyStock.Update(ValueGainPT * MainPage.master.SecondsPerTick);
             Value += CompanyStock.Collect();
 
-            
+            CurrentTick++;
 
         }
         public void Data(int tick)
@@ -181,7 +187,7 @@ namespace Eco
             {
                 Stock st = Master.exchange.GetCheapestStock(this);
                 if (st != null) {
-                    double currentprice = st.SellPrice;
+                    float currentprice = (float)st.SellPrice;
                     if (currentprice > high)
                         high = currentprice;
                     if (currentprice < low)
@@ -192,7 +198,7 @@ namespace Eco
                     {
                         StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
                         stockPrices.Add(sp);
-                        ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
+                        ValueGraph vg = new ValueGraph(MainPage.master.Year, (float)Value);
                         values.Add(vg);
 
 
@@ -207,9 +213,9 @@ namespace Eco
                                 stockViewModel.prices.Add(sp);
                                 ValueviewModel.values.Add(vg);
 
-                                if (stockViewModel.prices.Count > 300)
+                                if (stockViewModel.prices.Count > 50)
                                 {
-                                    stockViewModel.prices.RemoveAt(0);
+                                    //stockViewModel.prices.RemoveAt(0);
                                 }
                                 MainPage.inst.SetNewYearLimit();
 

@@ -73,6 +73,8 @@ namespace Eco
                     StockPriceGraph spg = cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)];
                     if (spg != null)
                         stockPrices.Add(spg);
+                    else
+                        i--;
                 }
 
                 #endregion
@@ -140,7 +142,7 @@ namespace Eco
                             {
                                 Stock st = exchange.GetCheapestStock(cp);
                                 if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                    exchange.SellStock(st, st.SellPrice * 1.001);
+                                    exchange.SellStock(st, st.SellPrice * 1.01);
                             }
                         }
                     }
@@ -190,7 +192,7 @@ namespace Eco
                         {
                             Stock st = exchange.GetCheapestStock(cp);
                             if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                exchange.SellStock(st, st.SellPrice * 1.002);
+                                exchange.SellStock(st, st.SellPrice * 1.02);
                         }
                     }
                 }
@@ -218,7 +220,7 @@ namespace Eco
                                 if (st != null)
                                 {
                                     foreach (Stock stock in cpstocks)
-                                        exchange.SellStock(stock, st.SellPrice * 1.001);
+                                        exchange.SellStock(stock, st.SellPrice * 1.005);
                                 }
                             }
                         }
@@ -229,7 +231,7 @@ namespace Eco
                             {
                                 Stock st = exchange.GetCheapestStock(cp);
                                 if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                    exchange.SellStock(st, st.SellPrice * 1.002);
+                                    exchange.SellStock(st, st.SellPrice * 1.0015);
                             }
                         }
                     }
@@ -257,19 +259,26 @@ namespace Eco
                 {
                     for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
                     {
-                        exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 1.0005);
+                        exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 2 +
+                            (cp.Value * trader.Stocks[i].Percentage / trader.Stocks[i].SellPrice) / 2);
                     }
 
-                    for (int i = 0; i < 10; i++)
+                    Stock st = exchange.GetCheapestStock(cp);
+
+                    if ((cp.Competitiveness / 100) * (cp.Value * st.Percentage / st.SellPrice) > 1)
                     {
-                        Stock st = exchange.GetCheapestStock(cp);
-                        if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                            exchange.SellStock(st, st.SellPrice * 1.001);
+
+                        for (int i = 0; i < 10; i++)
+                        {
+
+                            if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                exchange.SellStock(st, st.SellPrice * 1.01);
+                        }
                     }
                     trader.ActionTime -= 150;
                 }
                 else
-                trader.ActionTime -= 300;
+                    trader.ActionTime -= 300;
 
 
                 //breakout fase

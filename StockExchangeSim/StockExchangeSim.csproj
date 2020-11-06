@@ -149,6 +149,9 @@
     <PackageReference Include="Syncfusion.SfChart.UWP">
       <Version>18.3.0.44</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.SfInput.UWP">
+      <Version>18.3.0.47</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.SfPivotChart.UWP">
       <Version>18.3.0.44</Version>
     </PackageReference>
