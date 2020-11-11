@@ -72,15 +72,16 @@ namespace Eco
     public class Exchange
     {
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
+        List<int> compconverter = new List<int>();
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        public Dictionary<Company, List<Stock>> StocksForSale = new Dictionary<Company, List<Stock>>(); //Lijst van alle stocks die te koop staan ingedeeld per bedrijf
+        public List<List<Stock>> StocksForSale = new List<List<Stock>>(); //Lijst van alle stocks die te koop staan ingedeeld per bedrijf
 
         public List<Company> GetCompanies() { return Companies; }
         public List<Trader> GetTraders() { return Traders; }
         public void RegisterCompany(Company cp)
         {
             Companies.Add(cp);
-            StocksForSale.Add(cp, new List<Stock>());
+            StocksForSale.Add(new List<Stock>());
         }
         public void RegisterTrader(Trader t)
         {
@@ -88,22 +89,22 @@ namespace Eco
         }
 
         public Exchange() { }
-        public Exchange(IEnumerable<Company> companies, IEnumerable<Trader> traders)
-        {
-            Companies = new List<Company>(companies);
-            Traders = new List<Trader>(traders);
+        //public Exchange(IEnumerable<Company> companies, IEnumerable<Trader> traders)
+        //{
+        //    Companies = new List<Company>(companies);
+        //    Traders = new List<Trader>(traders);
 
-            for (int i = 0; i < Companies.Count; i++)
-            {
-                StocksForSale.Add(Companies[i], new List<Stock>());
-            }
-        }
+        //    for (int i = 0; i < Companies.Count; i++)
+        //    {
+        //        StocksForSale.Add(Companies[i], new List<Stock>());
+        //    }
+        //}
 
         public Stock GetCheapestStock(Company cp)
         {
-            if (!StocksForSale.ContainsKey(cp))
+            if (!Companies.Contains(cp))
                 return null;
-            List<Stock> ls = StocksForSale[cp];
+            List<Stock> ls = StocksForSale[Companies.IndexOf(cp)];
             Stock Cheapest = null;
             foreach (Stock stock in ls)
             {
@@ -119,27 +120,33 @@ namespace Eco
         public void SellStock(Stock stock, double price)
         {
             stock.SellPrice = price;
-            if (!StocksForSale[stock.company].Contains(stock))
+            List<Stock> ls = StocksForSale[Companies.IndexOf(stock.company)];
+            if (!ls.Contains(stock))
             {
-                StocksForSale[stock.company].Add(stock);
+                ls.Add(stock);
             }
         }
         public void RevertSellStock(Stock stock)
         {
-            if (StocksForSale[stock.company].Contains(stock))
+            List<Stock> ls = StocksForSale[Companies.IndexOf(stock.company)];
+            if (!ls.Contains(stock))
             {
-                StocksForSale[stock.company].Remove(stock);
+                ls.Remove(stock);
             }
         }
-        public void BuyStock(Stock stock, IStockOwner buyer)
+        public bool BuyStock(Stock stock, IStockOwner buyer)
         {
-            if (StocksForSale[stock.company].Contains(stock))
+            if (stock == null)
+                return false;
+            if (StocksForSale[Companies.IndexOf(stock.company)].Contains(stock))
             {
                 buyer.money -= stock.SellPrice;
                 stock.Owner.money += stock.SellPrice;
 
                 /*ExchangeDetails? ed = */ExchangeStock(stock, buyer);
+                return true;
             }
+            return false;
         }
         private ExchangeDetails? ExchangeStock(Stock stock, IStockOwner newOwner)
         {

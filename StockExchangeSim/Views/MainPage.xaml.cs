@@ -20,6 +20,7 @@ using Syncfusion.UI.Xaml.Charts;
 using Eco;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Windows.UI.Core;
 
 namespace StockExchangeSim.Views
 {
@@ -82,24 +83,35 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 1, trader = 1, hftrader = 1;
+        private int field = 3, trader = 10, hftrader = 1;
 
         public Master CreateMaster()
         {
             master = new Master(field, trader, 1);
             SetSliderValue();
             chart.Series.Clear();
-            for (int i = 0; i < master.Fields[0].companies.Count; i++)
+            //for (int i = 0; i < master.Fields[0].companies.Count; i++)
+            //{
+            //    LineSeries series = new LineSeries()
+            //    {
+            //        ItemsSource = master.Fields[0].companies[i].ValueviewModel.values,
+            //        XBindingPath = "Year",
+            //        YBindingPath = "Value"
+            //    };
+            //    series.ListenPropertyChange = true;
+            //    chart.Series.Add(series);
+            //}
+            CandleSeries candleSeries = new CandleSeries()
             {
-                LineSeries series = new LineSeries()
-                {
-                    ItemsSource = master.Fields[0].companies[i].ValueviewModel.values,
-                    XBindingPath = "Year",
-                    YBindingPath = "Value"
-                };
-                series.ListenPropertyChange = true;
-                chart.Series.Add(series);
-            }
+                ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
+                XBindingPath = "Year",
+                High = "High",
+                Low = "Low",
+                Open = "Open",
+                Close = "Close"
+            };
+            candleSeries.ListenPropertyChange = true;
+            chart.Series.Add(candleSeries);
 
             return master;
         }
@@ -178,7 +190,7 @@ namespace StockExchangeSim.Views
                 
                 if (master.active)
                 {
-                    if (tick % 1000 == 0)
+                    if (tick % 500 == 0)
                     {
                         for (int i = 0; i < master.Fields.Count; i++)
                         {
@@ -187,16 +199,26 @@ namespace StockExchangeSim.Views
                             for (int j = 0; j < field.companies.Count; j++)
                             {
                                 Company cp = master.Fields[i].companies[j];
-                                cp.Data((int)(tick / 1000));
+                                cp.Data((int)(tick / 500));
                             }
+                        }
+                        if ((int)(tick / 1000) % 80000 == 0)
+                        {
+                            //Thread.Sleep(2);
                         }
                     }
                 }
+                
                 else
                 {
                     Thread.Sleep(10);
                 }
             }
+        }
+        public void SetNewYearLimit()
+        {
+            (chart.PrimaryAxis as NumericalAxis).Minimum = rangeslider.RangeStart * year;/* - master.SecondsPerTick * 300000 / 31556926.0;*/
+            (chart.PrimaryAxis as NumericalAxis).Maximum = rangeslider.RangeEnd * year;/* - master.SecondsPerTick * 300000 / 31556926.0;*/
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

@@ -35,37 +35,54 @@ namespace Eco
         }
         public class PatternStrategy : Strategy
         {
+            double scale = 1;
             List<Company> interestedCompanies = null;
             public PatternStrategy()
             {
-                interestedCompanies = new List<Company>(Master.exchange.StocksForSale.Keys.ToList());
+                interestedCompanies = new List<Company>(Master.exchange.Companies);
                 while (interestedCompanies.Count > 10)
                 {
                     interestedCompanies.RemoveAt(rn.Next(interestedCompanies.Count));
                 }
             }
-            public override void StrategyOutcome(Trader trader, Exchange exchange)
-            {
-                //price exploration
-                double money = trader.money;
-                double scale = 1;
-                Company cp = interestedCompanies[rn.Next(interestedCompanies.Count)]; //invest in this company
-               
-                if (cp.stockPrices.Count < 51) //safeguard
-                    return;
 
+            
+            bool Patterns(Company cp, Trader trader, Exchange exchange)
+            {
+
+
+                #region Checks and Data Gathering
+                bool OwnsStocks = false;
+                List<Stock> cpstocks = null;
+                for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
+                {
+                    if (trader.Stocks[i].company == cp)
+                    {
+                        OwnsStocks = true;
+                        if (cpstocks == null)
+                            cpstocks = new List<Stock>();
+                        cpstocks.Add(trader.Stocks[i]);
+                        break;
+                    }
+                }
+
+                bool Traded = false;
                 List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     StockPriceGraph spg = cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)];
                     if (spg != null)
                         stockPrices.Add(spg);
+                    else
+                        i--;
                 }
 
-                //price discovery
+                #endregion
+
+                #region price discovery
                 List<StockPriceGraph> highs = new List<StockPriceGraph>();
                 List<StockPriceGraph> lows = new List<StockPriceGraph>();
-                for (int i = 1; i < 49; i++)
+                for (int i = 1; i < 99; i++)
                 {
                     if (stockPrices[i].Close > stockPrices[i - 1].Close &&
                             stockPrices[i].Close > stockPrices[i + 1].Close) //this is a high
@@ -88,12 +105,19 @@ namespace Eco
                 List<StockPriceGraph> avLows = new List<StockPriceGraph>();
 
                 if (highs.Count < 5 || lows.Count < 5)
-                    return;
-                for (float i = 0; i < avHighs.Count; i += 5.0f/avHighs.Count)
+                    return Traded;
+                for (float i = 0; i < highs.Count; i += 5.0f / highs.Count)
                 {
                     avHighs.Add(highs[(int)i]);
+                }
+                for (float i = 0; i < lows.Count; i += 5.0f / lows.Count)
+                {
                     avLows.Add(lows[(int)i]);
                 }
+
+                #endregion
+
+                #region Pattern Recognition
 
                 //channel pattern
                 //            _              H  H-h  H-h  H-h
@@ -102,7 +126,6 @@ namespace Eco
                 //   / \/
                 //  /
                 // /
-
 
 
                 if (avHighs[4].High > avHighs[0].High && avLows[4].Low > avLows[0].Low)
@@ -114,25 +137,40 @@ namespace Eco
                         if (avHighs[2].High < avHighs[4].High && avLows[2].Low < avLows[4].Low)
                         {
                             //Satisfied, BUY!!
-
+                            Traded = true;
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Stock st = exchange.GetCheapestStock(cp);
+                                if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                    exchange.SellStock(st, st.SellPrice * 1.01);
+                            }
                         }
                     }
                 }
 
-
-                //headnshoulders pattern
-                //        _                 H  H-h  H-l
-                //    _  / \  _               L   L-s
-                //   / \/   \/ \          ======> Reversal signal
-                //  /
-                // /
-
-                if (avLows[1].Low - avLows[3].Low < 0.01)
+                if (OwnsStocks)
                 {
-                    //lows are same height
-                    if (avHighs[1].High > avHighs[2].High && avHighs[2].High < avHighs[3].High)
+                    //headnshoulders pattern
+                    //        _                 H  H-h  H-l
+                    //    _  / \  _               L   L-s
+                    //   / \/   \/ \          ======> Reversal signal
+                    //  /
+                    // /
+
+                    if (avLows[1].Low - avLows[3].Low < 0.01)
                     {
-                        //probably headnshoulders, try to sell at profit
+                        //lows are same height
+                        if (avHighs[1].High > avHighs[2].High && avHighs[2].High < avHighs[3].High)
+                        {
+                            //probably headnshoulders, try to sell at profit
+                            Traded = true;
+                            Stock st = exchange.GetCheapestStock(cp);
+                            if (st != null)
+                            {
+                                foreach (Stock stock in cpstocks)
+                                    exchange.SellStock(stock, st.SellPrice);
+                            }
+                        }
                     }
                 }
 
@@ -142,20 +180,27 @@ namespace Eco
                 //   / \  / \/       ======> powerful break signal
                 //  /   \/
                 // /
-
-                if (avHighs[0].High - avHighs[4].High < 0.02)
+                
+                if (Math.Abs(avHighs[0].High - avHighs[4].High) < 0.02)
                 {
                     //flat top, first satisfaction
                     if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
                     {
                         //FLAG!!! BUY BUY BUY!!!!!!!
+                        Traded = true;
+                        for (int i = 0; i < 100; i++)
+                        {
+                            Stock st = exchange.GetCheapestStock(cp);
+                            if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                exchange.SellStock(st, st.SellPrice * 1.02);
+                        }
                     }
                 }
 
                 //wedge pattern
-                //          Flat top
+                //          
                 //    /\      
-                //   /  \    /\  /\__       ======> direction of break uncertain
+                //   /  \    /\  __       ======> direction of break uncertain
                 //  /    \  /  \/
                 // /      \/
 
@@ -165,8 +210,76 @@ namespace Eco
                     if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
                     {
                         //Wedge, maybe buy
+                        Traded = true;
+                        if (rn.NextDouble() < trader.skill)
+                        {
+                            //sell
+                            if (OwnsStocks)
+                            {
+                                Stock st = exchange.GetCheapestStock(cp);
+                                if (st != null)
+                                {
+                                    foreach (Stock stock in cpstocks)
+                                        exchange.SellStock(stock, st.SellPrice * 1.005);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //buy
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Stock st = exchange.GetCheapestStock(cp);
+                                if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                    exchange.SellStock(st, st.SellPrice * 1.0015);
+                            }
+                        }
                     }
                 }
+                #endregion
+                return Traded;
+            }
+            public override void StrategyOutcome(Trader trader, Exchange exchange)
+            {
+                //price exploration
+                double money = trader.money;
+                Company cp = interestedCompanies[rn.Next(interestedCompanies.Count)]; //invest in this company
+               
+                if (cp.stockPrices.Count < 101) //safeguard
+                    return;
+
+
+                bool Traded = false;
+                if (rn.NextDouble() < trader.skill)
+                {
+                    Traded = Patterns(cp, trader, exchange);
+
+                }
+                if (!Traded)
+                {
+                    for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
+                    {
+                        exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 2 +
+                            (cp.Value * trader.Stocks[i].Percentage / trader.Stocks[i].SellPrice) / 2);
+                    }
+
+                    Stock st = exchange.GetCheapestStock(cp);
+
+                    if ((cp.Competitiveness / 100) * (cp.Value * st.Percentage / st.SellPrice) > 1)
+                    {
+
+                        for (int i = 0; i < 10; i++)
+                        {
+
+                            if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                exchange.SellStock(st, st.SellPrice * 1.01);
+                        }
+                    }
+                    trader.ActionTime -= 150;
+                }
+                else
+                    trader.ActionTime -= 300;
+
 
                 //breakout fase
             }

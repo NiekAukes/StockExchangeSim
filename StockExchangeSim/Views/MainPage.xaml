@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ch="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:qc="using:Ailon.QuickCharts"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d"
@@ -33,9 +34,9 @@
                 <Button x:Name="Reset" Content="Reset" Click="Reset_Click" Style="{StaticResource buttonSimStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="1"
+                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="3"
                          x:Name="FieldsAm" Style="{StaticResource textBoxSimStyle}"/>
-                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="1"
+                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="10"
                          x:Name="TraderAm" Style="{StaticResource textBoxSimStyle}"/>
                 <TextBox Header="HFTraders: " LostFocus="FieldsAm_LostFocus" Text="1"
                           x:Name="HFTraderAm" Style="{StaticResource textBoxSimStyle}"/>
@@ -61,15 +62,24 @@
                 <qc:LineGraph Title="Sample" ValueMemberPath="Sam" x:Name="graph"/>
             </qc:SerialChart.Graphs>
         </qc:SerialChart>-->
+        <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,0,0,60">
+            <in:SfRangeSlider 
+                x:Name="rangeslider" Width="300" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Minimum="0" Maximum="1"
+                        ShowRange="True" RangeStart="-1" RangeEnd="1"/>
+            <ch:SfChart x:Name="chart" >
+                
+                <ch:SfChart.PrimaryAxis>
+                    <ch:NumericalAxis x:Name="axismain"/>
+                </ch:SfChart.PrimaryAxis>
+                
+                <ch:SfChart.SecondaryAxis>
+                    <ch:NumericalAxis x:Name="axisside"/>
+                </ch:SfChart.SecondaryAxis>
 
-        <ch:SfChart x:Name="chart" 
-            Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,0,0,60">
-            <ch:SfChart.PrimaryAxis>
-                <ch:NumericalAxis x:Name="axismain"/>
-            </ch:SfChart.PrimaryAxis>
-            <ch:SfChart.SecondaryAxis>
-                <ch:NumericalAxis x:Name="axisside"/>
-            </ch:SfChart.SecondaryAxis>
-        </ch:SfChart>
+                <ch:SfChart.Behaviors>
+                    <ch:ChartTrackBallBehavior ShowLine="False" />
+                </ch:SfChart.Behaviors>
+            </ch:SfChart>
+        </StackPanel>
     </Grid>
 </Page>

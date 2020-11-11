@@ -27,8 +27,8 @@ namespace Eco
     public partial class Trader : IStockOwner
     {
         public static Random rn = new Random(Master.Seed);
-        public Dictionary<Stock, double> stocks = new Dictionary<Stock, double>();
         public double Money = 100;
+        public double skill = 0.5;
         public double BaseActionTimeRequired = 20 + rn.NextDouble() * 20; //in seconds
         public double ActivityTime = 0;
         public double ActionTime; //in seconds
@@ -38,6 +38,7 @@ namespace Eco
         public Trader()
         {
             Stocks = new List<Stock>();
+            skill = rn.NextDouble() * 0.2 + 0.7;
         }
 
         public double money { get { return Money; } set { Money = value; } }
@@ -46,23 +47,22 @@ namespace Eco
 
         public void AddStock(Stock stock)
         {
-            if (!stocks.ContainsKey(stock))
-                stocks.Add(stock, stock.value);
+            if (!Stocks.Contains(stock))
+                Stocks.Add(stock);
             stock.Owner = this;
         }
 
         public Stock[] GetStocks()
         {
-            return stocks.Keys.ToArray();
+            return Stocks.ToArray();
         }
 
         public virtual void Update()
         {
             ActionTime += MainPage.master.SecondsPerTick; //accrued Time for actions
-            Stock[] stockArr = stocks.Keys.ToArray();
-            for (int i = 0; i < stockArr.Length; i++)
+            for (int i = 0; i < Stocks.Count; i++)
             {
-                Money += stockArr[i].Collect();
+                Money += Stocks[i].Collect();
             }
             if (ActionTime > 0)
                 strat.StrategyOutcome(this, Master.exchange);
