@@ -128,13 +128,13 @@ namespace Eco
                 // /
 
 
-                if (avHighs[4].High > avHighs[0].High && avLows[4].Low > avLows[0].Low)
+                if (avHighs[0].High > avHighs[4].High && avLows[0].Low > avLows[4].Low)
                 {
                     //first check
-                    if (avHighs[2].High > avHighs[0].High && avLows[2].Low > avLows[0].Low)
+                    if (avHighs[2].High > avHighs[4].High && avLows[2].Low > avLows[4].Low)
                     {
                         //second check
-                        if (avHighs[2].High < avHighs[4].High && avLows[2].Low < avLows[4].Low)
+                        if (avHighs[2].High < avHighs[0].High && avLows[2].Low < avLows[0].Low)
                         {
                             //Satisfied, BUY!!
                             Traded = true;
@@ -157,10 +157,10 @@ namespace Eco
                     //  /
                     // /
 
-                    if (avLows[1].Low - avLows[3].Low < 0.01)
+                    if (Math.Abs(avLows[1].Low - avLows[3].Low) < 0.01)
                     {
                         //lows are same height
-                        if (avHighs[1].High > avHighs[2].High && avHighs[2].High < avHighs[3].High)
+                        if (avHighs[3].High > avHighs[2].High && avHighs[2].High < avHighs[1].High)
                         {
                             //probably headnshoulders, try to sell at profit
                             Traded = true;
@@ -184,7 +184,7 @@ namespace Eco
                 if (Math.Abs(avHighs[0].High - avHighs[4].High) < 0.02)
                 {
                     //flat top, first satisfaction
-                    if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
+                    if (avLows[4].Low < avLows[2].Low && avLows[2].Low < avLows[0].Low)
                     {
                         //FLAG!!! BUY BUY BUY!!!!!!!
                         Traded = true;
@@ -204,10 +204,10 @@ namespace Eco
                 //  /    \  /  \/
                 // /      \/
 
-                if (avHighs[0].High > avHighs[2].High && avHighs[2].High > avHighs[4].High)
+                if (avHighs[4].High > avHighs[2].High && avHighs[2].High > avHighs[0].High)
                 {
                     //decreasing highs
-                    if (avLows[0].Low < avLows[2].Low && avLows[2].Low < avLows[4].Low)
+                    if (avLows[4].Low < avLows[2].Low && avLows[2].Low < avLows[0].Low)
                     {
                         //Wedge, maybe buy
                         Traded = true;
