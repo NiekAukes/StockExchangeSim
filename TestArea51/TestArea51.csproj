@@ -46,6 +46,7 @@
     <Compile Include="Exchange.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strategy.cs" />
     <Compile Include="Trader.cs" />
   </ItemGroup>
   <ItemGroup>

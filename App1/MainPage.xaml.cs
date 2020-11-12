@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Eco;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Eco
 {
-    public class Program
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class MainPage : Page
     {
-        public static Exchange exchange = new Exchange();
-        static void Main(string[] args)
+        public MainPage()
         {
+            this.InitializeComponent();
+
             Company cp = new Company();
             cp.stockPrices = new List<StockPriceGraph>
             {
@@ -29,8 +43,6 @@ namespace Eco
                 new StockPriceGraph(0.11, 3116.6, 3115.2, 3117.7, 3114.5),
                 new StockPriceGraph(0.11, 3116.6, 3115.2, 3117.7, 3114.5),
             };
-
-
         }
     }
 }
