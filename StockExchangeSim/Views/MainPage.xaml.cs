@@ -21,6 +21,7 @@ using Eco;
 using System.Collections.ObjectModel;
 using System.Threading;
 using Windows.UI.Core;
+using Windows.UI;
 
 namespace StockExchangeSim.Views
 {
@@ -111,6 +112,7 @@ namespace StockExchangeSim.Views
                 Close = "Close"
             };
             candleSeries.ListenPropertyChange = true;
+            candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
             chart.Series.Add(candleSeries);
 
             return master;
