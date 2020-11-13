@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +26,9 @@ namespace Eco
 
     public class Company { 
         public double Value, stockprice;
-        public List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
     }
+
     public class Stock
     {
         public IStockOwner Owner;
@@ -86,20 +88,38 @@ namespace Eco
     {
 
     }
+    //bid ask implementatie
+    public class BidAsk
+    {
+        public class AskData
+        {
+            Trader Asker;
+            int amount;
+        }
+        public Company cp;
+        public List<Stock> Bids;
+        public List<AskData> Ask;
+        public BidAsk(Company company)
+        {
+            Bids = new List<Stock>();
+            Ask = new List<AskData>();
+            cp = company;
+        }
+    }
 
     //doel van exchange is om informatie te verkrijgen en bij te houden. Dit is de class waar andere classes "handelen", net als in een echte exchange
     public class Exchange
     {
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
+        List<int> compconverter = new List<int>();
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        public Dictionary<Company, List<Stock>> StocksForSale = new Dictionary<Company, List<Stock>>(); //Lijst van alle stocks die te koop staan ingedeeld per bedrijf
+        //public List<List<Stock>> StocksForSale = new List<List<Stock>>(); //Lijst van alle stocks die te koop staan ingedeeld per bedrijf
+        public List<BidAsk> BidAskSpreads = new List<BidAsk>();
 
-        public List<Company> GetCompanies() { return Companies; }
-        public List<Trader> GetTraders() { return Traders; }
         public void RegisterCompany(Company cp)
         {
             Companies.Add(cp);
-            StocksForSale.Add(cp, new List<Stock>());
+            BidAskSpreads.Add(new BidAsk(cp));
         }
         public void RegisterTrader(Trader t)
         {
@@ -107,22 +127,22 @@ namespace Eco
         }
 
         public Exchange() { }
-        public Exchange(IEnumerable<Company> companies, IEnumerable<Trader> traders)
-        {
-            Companies = new List<Company>(companies);
-            Traders = new List<Trader>(traders);
+        //public Exchange(IEnumerable<Company> companies, IEnumerable<Trader> traders)
+        //{
+        //    Companies = new List<Company>(companies);
+        //    Traders = new List<Trader>(traders);
 
-            for (int i = 0; i < Companies.Count; i++)
-            {
-                StocksForSale.Add(Companies[i], new List<Stock>());
-            }
-        }
+        //    for (int i = 0; i < Companies.Count; i++)
+        //    {
+        //        StocksForSale.Add(Companies[i], new List<Stock>());
+        //    }
+        //}
 
         public Stock GetCheapestStock(Company cp)
         {
-            if (!StocksForSale.ContainsKey(cp))
+            if (!Companies.Contains(cp))
                 return null;
-            List<Stock> ls = StocksForSale[cp];
+            List<Stock> ls = BidAskSpreads[Companies.IndexOf(cp)].Bids;
             Stock Cheapest = null;
             foreach (Stock stock in ls)
             {
@@ -138,27 +158,36 @@ namespace Eco
         public void SellStock(Stock stock, double price)
         {
             stock.SellPrice = price;
-            if (!StocksForSale[stock.company].Contains(stock))
+            List<Stock> ls = BidAskSpreads[Companies.IndexOf(stock.company)].Bids;
+            if (!ls.Contains(stock))
             {
-                StocksForSale[stock.company].Add(stock);
+                ls.Add(stock);
             }
         }
         public void RevertSellStock(Stock stock)
         {
-            if (StocksForSale[stock.company].Contains(stock))
+            List<Stock> ls = BidAskSpreads[Companies.IndexOf(stock.company)].Bids;
+            if (!ls.Contains(stock))
             {
-                StocksForSale[stock.company].Remove(stock);
+                ls.Remove(stock);
             }
         }
-        public void BuyStock(Stock stock, IStockOwner buyer)
+        public bool BuyStock(Company cp, IStockOwner buyer)
         {
-            if (StocksForSale[stock.company].Contains(stock))
+            if (cp == null)
+                return false;
+            if (BidAskSpreads[Companies.IndexOf(cp)].Bids.Count > 0)
             {
+                //find cheapest stock
+                Stock stock = GetCheapestStock(cp);
                 buyer.money -= stock.SellPrice;
                 stock.Owner.money += stock.SellPrice;
 
-                /*ExchangeDetails? ed = */ExchangeStock(stock, buyer);
+                /*ExchangeDetails? ed = */
+                ExchangeStock(stock, buyer);
+                return true;
             }
+            return false;
         }
         private ExchangeDetails? ExchangeStock(Stock stock, IStockOwner newOwner)
         {

@@ -69,16 +69,18 @@
             <ch:SfChart x:Name="chart" >
                 
                 <ch:SfChart.PrimaryAxis>
-                    <ch:NumericalAxis x:Name="axismain"/>
+                    <ch:NumericalAxis x:Name="axismain" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.PrimaryAxis>
                 
                 <ch:SfChart.SecondaryAxis>
-                    <ch:NumericalAxis x:Name="axisside"/>
+                    <ch:NumericalAxis x:Name="axisside" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.SecondaryAxis>
 
-                <ch:SfChart.Behaviors>
+                <!--<ch:SfChart.Behaviors>
                     <ch:ChartTrackBallBehavior ShowLine="False" />
-                </ch:SfChart.Behaviors>
+                </ch:SfChart.Behaviors>-->
+                
+                
             </ch:SfChart>
         </StackPanel>
     </Grid>

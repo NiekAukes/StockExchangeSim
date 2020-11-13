@@ -3,12 +3,31 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:App1"
+    xmlns:ch="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <StackPanel>
+            <Button x:Name="button" Click="button_Click">One Tick</Button>
+            <ch:SfChart x:Name="chart" Height="638" >
 
+                <ch:SfChart.PrimaryAxis>
+                    <ch:NumericalAxis x:Name="axismain"/>
+                </ch:SfChart.PrimaryAxis>
+
+                <ch:SfChart.SecondaryAxis>
+                    <ch:NumericalAxis x:Name="axisside"/>
+                </ch:SfChart.SecondaryAxis>
+
+                <ch:SfChart.Behaviors>
+                    <ch:ChartTrackBallBehavior ShowLine="False" />
+                </ch:SfChart.Behaviors>
+            </ch:SfChart>
+            <TextBlock x:Name="log"></TextBlock>
+        </StackPanel>
     </Grid>
 </Page>

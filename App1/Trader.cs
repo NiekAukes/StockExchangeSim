@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App1;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,7 @@ namespace Eco
         public double BaseActionTimeRequired = 20 + rn.NextDouble() * 20; //in seconds
         public double ActivityTime = 0;
         public double ActionTime; //in seconds
+        public double skill = 1;
 
         Strategy strat = new PatternStrategy();
 
@@ -63,7 +65,7 @@ namespace Eco
                 Money += stockArr[i].Collect();
             }
             //if (ActionTime > 0)
-                strat.StrategyOutcome(this, Program.exchange);
+                strat.StrategyOutcome(this, MainPage.exchange);
 
 
         }
