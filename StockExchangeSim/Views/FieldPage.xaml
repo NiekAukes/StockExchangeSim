@@ -6,10 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="300" Loaded="UserControl_Loaded">
+    d:DesignHeight="250" x:Name="TileUserCtrl"
+    d:DesignWidth="250" PointerEntered="FieldBlock_PointerEntered" PointerExited="FieldBlock_PointerExited" PointerPressed="FieldBlock_PointerPressed" PointerReleased="FieldBlock_PointerReleased">
 
-    <Grid>
+    <Grid x:Name="Tile">
+        
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="2*"/>
@@ -17,11 +19,37 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Viewbox Grid.Row="0" Margin="20">
-        <SymbolIcon x:Name="symbolIcon" Symbol="AllApps"/>
+
+        <Viewbox Grid.Row="0" Margin="20" MaxHeight="250" MaxWidth="250">
+            <Viewbox.RenderTransform>
+                <ScaleTransform x:Name="TileRenderTransform"/>
+            </Viewbox.RenderTransform>
+            <Viewbox.Resources>
+                <Storyboard x:Name="scaleAnim">
+                    <DoubleAnimation
+                    Storyboard.TargetName="TileRenderTransform"
+                    Storyboard.TargetProperty="(RenderTransform.ScaleX)"
+                    From="1.0" To="1.2" Duration="0:0:0.25"/>
+                    <DoubleAnimation
+                    Storyboard.TargetName="TileRenderTransform"
+                    Storyboard.TargetProperty="(RenderTransform.ScaleY)"
+                    From="1.0" To="1.2" Duration="0:0:0.25"/>
+                </Storyboard>
+                <Storyboard x:Name="revScaleAnim">
+                    <DoubleAnimation
+                    Storyboard.TargetName="TileRenderTransform"
+                    Storyboard.TargetProperty="(RenderTransform.ScaleX)"
+                    From="{Binding ScaleX, Mode=TwoWay}" To="1.0" Duration="0:0:0.25"/>
+                    <DoubleAnimation
+                    Storyboard.TargetName="TileRenderTransform"
+                    Storyboard.TargetProperty="(RenderTransform.ScaleY)"
+                    From="{Binding ScaleY, Mode=TwoWay}" To="1.0" Duration="0:0:0.25"/>
+                </Storyboard>
+            </Viewbox.Resources>
+            <SymbolIcon x:Name="symbolIcon" Symbol="AllApps"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Margin="0,5,0,5">
-            <TextBlock x:Name="FieldTextBlock"  Text="prevField1" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Viewbox Grid.Row="1" Margin="0,5,0,5" MaxHeight="70">
+            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldText, Mode=TwoWay}" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Viewbox>
 
     </Grid>

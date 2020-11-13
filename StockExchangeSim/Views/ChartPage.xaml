@@ -6,22 +6,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:syncfusion="using:Syncfusion.UI.Xaml.Charts"
-    
+   
     Style="{StaticResource PageStyle}"
     xmlns:tc="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+        <ScrollViewer>
         <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
-
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
-
+            
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+          
         </VariableSizedWrapGrid>
+        </ScrollViewer>
         <!--    <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
 
