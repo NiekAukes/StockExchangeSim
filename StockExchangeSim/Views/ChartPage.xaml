@@ -12,16 +12,15 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <VariableSizedWrapGrid MaximumRowsOrColumns="8">
-            <RelativePanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <TextBlock Text="TestField1"  VariableSizedWrapGrid.ColumnSpan="1" 
-            VariableSizedWrapGrid.RowSpan="1" Style="{StaticResource fieldTextBlockStyle}"/>
-            
-            <TextBlock Text="TestField2" VariableSizedWrapGrid.ColumnSpan="1"
-            VariableSizedWrapGrid.RowSpan="1" Style="{StaticResource fieldTextBlockStyle}"/>
-        
-                <TextBlock Text="TestField3" Style="{StaticResource fieldTextBlockStyle}"/>
-            </RelativePanel>
+        <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
+
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="300" Style="{StaticResource fieldPageStyle}"/>
+
         </VariableSizedWrapGrid>
         <!--    <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
