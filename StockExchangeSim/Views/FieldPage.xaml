@@ -5,11 +5,19 @@
     xmlns:local="using:StockExchangeSim.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="250" x:Name="TileUserCtrl"
+    mc:Ignorable="d" Height="{Binding TileHeight, Mode=TwoWay}" Width="{Binding TileWidth, Mode=TwoWay}"
+    d:DesignHeight="250" x:Name="Tile" 
     d:DesignWidth="250" PointerEntered="FieldBlock_PointerEntered" PointerExited="FieldBlock_PointerExited" PointerPressed="FieldBlock_PointerPressed" PointerReleased="FieldBlock_PointerReleased">
-
-    <Grid x:Name="Tile">
+    <!-- x:Name of userctrl was TileUserCtrl-->
+    <UserControl.BorderBrush>
+        <SolidColorBrush x:Name="backgroundbrush" Color="White"/>
+    </UserControl.BorderBrush>
+    <Grid x:Name="GridOfTile" Background="{StaticResource AppBarBackgroundThemeBrush}"
+          Scale="{x:Bind MouseOver,Mode=OneWay}" PointerExited="GridOfTile_PointerExited">
+        
+        <Grid.ScaleTransition>
+            <Vector3Transition/>
+        </Grid.ScaleTransition>
         
         
         <Grid.RowDefinitions>
@@ -21,7 +29,7 @@
         </Grid.ColumnDefinitions>
 
         <Viewbox Grid.Row="0" Margin="20" MaxHeight="250" MaxWidth="250">
-            <Viewbox.RenderTransform>
+            <!--<Viewbox.RenderTransform>
                 <ScaleTransform x:Name="TileRenderTransform"/>
             </Viewbox.RenderTransform>
             <Viewbox.Resources>
@@ -45,7 +53,7 @@
                     Storyboard.TargetProperty="(RenderTransform.ScaleY)"
                     From="{Binding ScaleY, Mode=TwoWay}" To="1.0" Duration="0:0:0.25"/>
                 </Storyboard>
-            </Viewbox.Resources>
+            </Viewbox.Resources>-->
             <SymbolIcon x:Name="symbolIcon" Symbol="AllApps"/>
         </Viewbox>
         <Viewbox Grid.Row="1" Margin="0,5,0,5" MaxHeight="70">
