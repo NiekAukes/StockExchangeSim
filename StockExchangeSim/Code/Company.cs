@@ -217,7 +217,7 @@ namespace Eco
                                 {
                                     //stockViewModel.prices.RemoveAt(0);
                                 }
-                                MainPage.inst.SetNewYearLimit();
+                                //MainPage.inst.SetNewYearLimit();
 
                             });
 

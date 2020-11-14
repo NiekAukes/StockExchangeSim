@@ -56,9 +56,17 @@ namespace StockExchangeSim.Views
             //chart.Series.Add(series);
         }
 
+        //Functions for fields
+        #region FieldFunctions
 
+        public void AddFieldPage(string fieldName)
+        {
+            FieldPage newPage = new FieldPage();
+            //newPage.
+            this.fieldGrid.Children.Add(newPage);
+        }
 
-
+        #endregion
 
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

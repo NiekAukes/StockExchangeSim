@@ -79,7 +79,7 @@ namespace StockExchangeSim.Views
                 double days = (value - Math.Floor(value)) * 365.25;
                 double Hours = ((days - Math.Floor(days)) * 24);
                 int minutes = (int)((Hours - Math.Floor(Hours)) * 60);
-                years.Text = "Years: " + Math.Floor(value).ToString() + " Days: " + Math.Floor(days).ToString() + " Time: " + Math.Floor(Hours).ToString() + ":" + minutes.ToString();
+                //years.Text = "Years: " + Math.Floor(value).ToString() + " Days: " + Math.Floor(days).ToString() + " Time: " + Math.Floor(Hours).ToString() + ":" + minutes.ToString();
                 _year = value;
             }
         }
@@ -217,11 +217,7 @@ namespace StockExchangeSim.Views
                 }
             }
         }
-        public void SetNewYearLimit()
-        {
-            (chart.PrimaryAxis as NumericalAxis).Minimum = rangeslider.RangeStart * year;/* - master.SecondsPerTick * 300000 / 31556926.0;*/
-            (chart.PrimaryAxis as NumericalAxis).Maximum = rangeslider.RangeEnd * year;/* - master.SecondsPerTick * 300000 / 31556926.0;*/
-        }
+        
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
