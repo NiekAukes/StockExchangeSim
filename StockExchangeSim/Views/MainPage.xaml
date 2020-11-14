@@ -25,7 +25,8 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1000" Style="{StaticResource titleStyle}">Simulator</TextBlock>
-        
+        <TextBlock x:Name="years" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom"/>
+
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
             <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Height="auto" Margin="0,20,0,0" HorizontalAlignment="Center">
                 <Button x:Name="Start" Content="Start" Click="Start_Click" Style="{StaticResource buttonSimStyle}"/>
