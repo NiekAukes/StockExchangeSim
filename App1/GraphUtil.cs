@@ -39,6 +39,8 @@ namespace Eco
             End = e;
         }
 
+        public float Length { get { return MathF.Sqrt(MathF.Pow(Begin.x - End.x, 2) + MathF.Pow(Begin.y - End.y, 2)); } }
+
         public LineAnnotation ConvertToContinuousChartLine()
         {
             return new LineAnnotation()

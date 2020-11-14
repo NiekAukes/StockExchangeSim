@@ -17,10 +17,16 @@ namespace Eco
         {
             Random rn = new Random();
             public abstract void StrategyOutcome(Trader trader, Exchange exchange);
+            public abstract void Observe();
         }
         
         public class SimpleStrategy : Strategy
         {
+            public override void Observe()
+            {
+                throw new NotImplementedException();
+            }
+
             public override void StrategyOutcome(Trader trader, Exchange exchange)
             {
                 double money = trader.money;
@@ -291,6 +297,11 @@ namespace Eco
 
 
                 //breakout fase
+            }
+
+            public override void Observe()
+            {
+                throw new NotImplementedException();
             }
         }
     }

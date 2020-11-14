@@ -4,45 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App1;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Eco
 {
 
     public class TrendData
     {
-        public Line Uptrend, DownTrend;
+        public Line UpTrend, DownTrend;
 
 
     }
-    //no touchy
+    //needs optimalization
     public class TrendTool : MarketTool<TrendData>
     {
         public override TrendData StrategyOutcome(Company cp)
         {
 
             MinimumPriceCount = cp.stockPrices.Count;
-            List<StockPriceGraph> highs = new List<StockPriceGraph>();
-            List<StockPriceGraph> lows = new List<StockPriceGraph>();
-            highs.Add(cp.stockPrices[0]);
-            for (int i = 1; i < MinimumPriceCount - 1; i++)
-            {
-                if (cp.stockPrices[i].High > cp.stockPrices[i - 1].High &&
-                        cp.stockPrices[i].High > cp.stockPrices[i + 1].High) //this is a high
-                {
-                    highs.Add(cp.stockPrices[i]);
-                    //MainPage.inst.AddVerticalLine(cp.stockPrices[i].Year, false);
-                }
-                if (highs.Count > 0) //first top always high
-                {
-                    if (cp.stockPrices[i].Low < cp.stockPrices[i - 1].Low &&
-                        cp.stockPrices[i].Low < cp.stockPrices[i + 1].Low) //this is a low
-                    {
-                        lows.Add(cp.stockPrices[i]);
-                        //MainPage.inst.AddVerticalLine(cp.stockPrices[i].Year, true);
+            List<StockPriceGraph> highs = new List<StockPriceGraph>(cp.stockPrices);
+            List<StockPriceGraph> lows = new List<StockPriceGraph>(cp.stockPrices);
+            //
+            //   These Comments are working code, they create highs and lows
+            //
+            //highs.Add(cp.stockPrices[0]);
+            //for (int i = 1; i < MinimumPriceCount - 1; i++)
+            //{
+            //    if (cp.stockPrices[i].High > cp.stockPrices[i - 1].High &&
+            //            cp.stockPrices[i].High > cp.stockPrices[i + 1].High) //this is a high
+            //    {
+            //        highs.Add(cp.stockPrices[i]);
+            //        //MainPage.inst.AddVerticalLine(cp.stockPrices[i].Year, false);
+            //    }
+            //    if (highs.Count > 0) //first top always high
+            //    {
+            //        if (cp.stockPrices[i].Low < cp.stockPrices[i - 1].Low &&
+            //            cp.stockPrices[i].Low < cp.stockPrices[i + 1].Low) //this is a low
+            //        {
+            //            lows.Add(cp.stockPrices[i]);
+            //            //MainPage.inst.AddVerticalLine(cp.stockPrices[i].Year, true);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
+            //highs.Add(cp.stockPrices[MinimumPriceCount - 1]);
+            //lows.Add(cp.stockPrices[MinimumPriceCount - 1]);
             Point High = new Point(), Low = new Point();
 
             foreach (var sp in highs)
@@ -80,7 +87,7 @@ namespace Eco
                 //check line
                 foreach (var comp in lows)
                 {
-                    if (comp.Close < line.Multiplier * comp.Year + line.Adder)
+                    if (comp.Low < line.Multiplier * comp.Year + line.Adder)
                     {
                         LineValid = false;
                         break;
@@ -91,8 +98,8 @@ namespace Eco
             }
             if (line != null)
             {
-                MainPage.inst.AddContinuousline(line);
-                ret.Uptrend = line;
+                //MainPage.inst.AddContinuousline(line, new SolidColorBrush(Colors.Gray));
+                ret.UpTrend = line;
             }
             line = null;
             foreach (var sp in highs)
@@ -109,7 +116,7 @@ namespace Eco
                 //check line
                 foreach (var comp in lows)
                 {
-                    if (comp.Close > line.Multiplier * comp.Year + line.Adder) //check if it crosses
+                    if (comp.High > line.Multiplier * comp.Year + line.Adder) //check if it crosses
                     {
                         LineValid = false;
                         break;
@@ -120,7 +127,7 @@ namespace Eco
             }
             if (line != null)
             {
-                MainPage.inst.AddContinuousline(line);
+                //MainPage.inst.AddContinuousline(line, new SolidColorBrush(Colors.Gray));
                 ret.DownTrend = line;
             }
             return ret;

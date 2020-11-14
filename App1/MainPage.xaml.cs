@@ -31,13 +31,7 @@ namespace App1
         public static Exchange exchange = new Exchange();
         public static Trader trader = new Trader();
         public static TextBlock Log;
-        public MainPage()
-        {
-            inst = this;
-            this.InitializeComponent();
-            Log = log;
-            
-            cp.stockPrices = new ObservableCollection<StockPriceGraph>
+        public ObservableCollection<StockPriceGraph> Realprices = new ObservableCollection<StockPriceGraph>
             {
                 new StockPriceGraph(0, 3120.3f, 3119.5f, 3121, 3119),
                 new StockPriceGraph(0.01f, 3119.5f, 3116.5f, 3120.5f, 3115.5f),
@@ -70,7 +64,7 @@ namespace App1
                 new StockPriceGraph(0.28f, 3122.8f, 3123.8f, 3124.8f, 3122.8f),
                 new StockPriceGraph(0.29f, 3123.8f, 3122.6f, 3124.0f, 3122.2f),
                 new StockPriceGraph(0.30f, 3122.6f, 3121.9f, 3123.1f, 3121.8f),
-                new StockPriceGraph(0.31f, 3121.9f, 3120.2f, 3119.4f, 3122.6f),
+                new StockPriceGraph(0.31f, 3121.9f, 3120.2f, 3122.6f, 3119.4f),
                 new StockPriceGraph(0.32f, 3120.2f, 3122.1f, 3122.4f, 3119.2f),
                 new StockPriceGraph(0.33f, 3122.1f, 3124.1f, 3124.1f, 3122.0f),
                 new StockPriceGraph(0.34f, 3124.1f, 3123.4f, 3124.5f, 3120.5f),
@@ -80,7 +74,7 @@ namespace App1
                 new StockPriceGraph(0.38f, 3119.6f, 3121.9f, 3122.5f, 3119.6f),
                 new StockPriceGraph(0.39f, 3121.9f, 3122.5f, 3122.5f, 3120.3f),
                 new StockPriceGraph(0.40f, 3122.5f, 3124.4f, 3124.8f, 3122.5f),
-                new StockPriceGraph(0.41f, 3124.4f, 3126.0f, 3123.4f, 3126.8f),
+                new StockPriceGraph(0.41f, 3124.4f, 3126.0f, 3126.8f, 3123.4f),
                 new StockPriceGraph(0.42f, 3126.0f, 3125.0f, 3126.1f, 3123.1f),
                 new StockPriceGraph(0.43f, 3125.0f, 3122.1f, 3125.2f, 3122.1f),
                 new StockPriceGraph(0.44f, 3122.1f, 3126.0f, 3127.0f, 3121.3f),
@@ -96,6 +90,15 @@ namespace App1
                 new StockPriceGraph(0.54f, 3132.0f, 3133.4f, 3134.1f, 3130.9f),
                 new StockPriceGraph(0.55f, 3133.4f, 3133.4f, 3133.9f, 3131.2f),
             };
+        int counter = 0;
+        public static float Year = 0;
+    public MainPage()
+        {
+            inst = this;
+            this.InitializeComponent();
+            Log = log;
+
+            cp.stockPrices = new ObservableCollection<StockPriceGraph>();
 
             axisside.Header = "value (in $)";
             axismain.Header = "Time (in years)";
@@ -128,17 +131,42 @@ namespace App1
         SupportResistanceTool SupportResistanceTool = new SupportResistanceTool();
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < 5; i++)
+            {
+                if (i + counter * 5 < Realprices.Count)
+                    cp.stockPrices.Add(Realprices[i + counter * 5]);
+            }
+            if (cp.stockPrices.Count > 25)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    cp.stockPrices.RemoveAt(0);
+                }
+            }
+
+            counter++;
+            Year += counter * 0.05f;
             //trader.Update();
-            TrendTool.StrategyOutcome(cp);
+            TrendData TData = TrendTool.StrategyOutcome(cp);
+            AddContinuousline(TData.UpTrend, new SolidColorBrush(Colors.Cyan));
+            AddContinuousline(TData.DownTrend, new SolidColorBrush(Colors.Magenta));
+
             SupportResistanceData data = SupportResistanceTool.StrategyOutcome(cp);
-            foreach(Line ln in data.supportLevels)
-            {
-                Addline(ln, new SolidColorBrush(Colors.LightGreen));
-            }
-            foreach (Line ln in data.resistanceLevels)
-            {
-                Addline(ln, new SolidColorBrush(Colors.Red));
-            }
+
+            AddContinuousline(data.MainSupport, new SolidColorBrush(Colors.LightGreen));
+            AddContinuousline(data.MainResistance, new SolidColorBrush(Colors.Red));
+
+
+            //foreach (Line ln in data.supportLevels)
+            //{
+            //    AddContinuousline(ln, new SolidColorBrush(Colors.LightGreen));
+            //}
+            //foreach (Line ln in data.resistanceLevels)
+            //{
+            //    AddContinuousline(ln, new SolidColorBrush(Colors.Red));
+            //}
+
+
         }
 
         public void AddVerticalLine(float val, bool Pos = false)
@@ -150,9 +178,12 @@ namespace App1
         {
             chart.Annotations.Add(new HorizontalLineAnnotation() { Y1 = val, X1 = 0, X2 = 5 });
         }
-        public void AddContinuousline(Line line)
+        public void AddContinuousline(Line line, Brush bs)
         {
+            if (line == null)
+                return;
             LineAnnotation la = line.ConvertToContinuousChartLine();
+            la.Stroke = bs;
             chart.Annotations.Add(la);
         }
         public void Addline(Line line, Brush bs)
