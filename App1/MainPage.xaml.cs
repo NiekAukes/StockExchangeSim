@@ -15,6 +15,7 @@ using Syncfusion.UI.Xaml.Charts;
 using Windows.UI.Xaml.Navigation;
 using Eco;
 using System.Collections.ObjectModel;
+using System.Drawing;
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace App1
@@ -37,62 +38,62 @@ namespace App1
             
             cp.stockPrices = new ObservableCollection<StockPriceGraph>
             {
-                new StockPriceGraph(0, 3120.3, 3119.5, 3121, 3119),
-                new StockPriceGraph(0.01, 3119.5, 3116.5, 3120.5, 3115.5),
-                new StockPriceGraph(0.02, 3116.5, 3113.8, 3118.0, 3112.3),
-                new StockPriceGraph(0.03, 3113.8, 3114.8, 3115.3, 3113.3),
-                new StockPriceGraph(0.04, 3114.8, 3111.6, 3115.0, 3109.6),
-                new StockPriceGraph(0.05, 3111.6, 3112.9, 3114.6, 3111.3),
-                new StockPriceGraph(0.06, 3112.9, 3113.5, 3115.1, 3111.8),
-                new StockPriceGraph(0.07, 3113.5, 3113.1, 3114.1, 3111.6),
-                new StockPriceGraph(0.08, 3113.1, 3115.0, 3115.1, 3113.1),
-                new StockPriceGraph(0.09, 3115.0, 3118.0, 3118.1, 3113.5),
-                new StockPriceGraph(0.10, 3118.0, 3116.6, 3118.1, 3116.1),
-                new StockPriceGraph(0.11, 3116.6, 3115.2, 3117.7, 3114.5),
-                new StockPriceGraph(0.12, 3115.2, 3113.2, 3117.0, 3112.9),
-                new StockPriceGraph(0.13, 3113.2, 3113.6, 3115.1, 3112.5),
-                new StockPriceGraph(0.14, 3113.6, 3118.0, 3118.0, 3113.1),
-                new StockPriceGraph(0.15, 3118.0, 3116.6, 3118.1, 3116.3),
-                new StockPriceGraph(0.16, 3116.6, 3118.8, 3119.0, 3115.8),
-                new StockPriceGraph(0.17, 3118.8, 3119.5, 3120.2, 3118.8),
-                new StockPriceGraph(0.18, 3119.5, 3121.0, 3121.8, 3118.6),
-                new StockPriceGraph(0.19, 3121.0, 3119.1, 3121.1, 3117.2),
-                new StockPriceGraph(0.20, 3119.1, 3120.6, 3121.9, 3119.1),
-                new StockPriceGraph(0.21, 3120.6, 3120.61, 3120.7, 3119.4),
-                new StockPriceGraph(0.22, 3120.6, 3120.61, 3120.7, 3119.5),
-                new StockPriceGraph(0.23, 3120.6, 3122.0, 3120.6, 3119.5),
-                new StockPriceGraph(0.24, 3122.0, 3122.5, 3122.1, 3120.5),
-                new StockPriceGraph(0.25, 3122.5, 3121.5, 3122.5, 3119.5),
-                new StockPriceGraph(0.26, 3121.5, 3120.1, 3122.0, 3119.9),
-                new StockPriceGraph(0.27, 3120.1, 3122.8, 3122.8, 3120.0),
-                new StockPriceGraph(0.28, 3122.8, 3123.8, 3124.8, 3122.8),
-                new StockPriceGraph(0.29, 3123.8, 3122.6, 3124.0, 3122.2),
-                new StockPriceGraph(0.30, 3122.6, 3121.9, 3123.1, 3121.8),
-                new StockPriceGraph(0.31, 3121.9, 3120.2, 3119.4, 3122.6),
-                new StockPriceGraph(0.32, 3120.2, 3122.1, 3122.4, 3119.2),
-                new StockPriceGraph(0.33, 3122.1, 3124.1, 3124.1, 3122.0),
-                new StockPriceGraph(0.34, 3124.1, 3123.4, 3124.5, 3120.5),
-                new StockPriceGraph(0.35, 3123.4, 3122.3, 3124.1, 3121.4),
-                new StockPriceGraph(0.36, 3122.3, 3121.2, 3123.7, 3120.8),
-                new StockPriceGraph(0.37, 3121.2, 3119.6, 3122.8, 3117.8),
-                new StockPriceGraph(0.38, 3119.6, 3121.9, 3122.5, 3119.6),
-                new StockPriceGraph(0.39, 3121.9, 3122.5, 3122.5, 3120.3),
-                new StockPriceGraph(0.40, 3122.5, 3124.4, 3124.8, 3122.5),
-                new StockPriceGraph(0.41, 3124.4, 3126.0, 3123.4, 3126.8),
-                new StockPriceGraph(0.42, 3126.0, 3125.0, 3126.1, 3123.1),
-                new StockPriceGraph(0.43, 3125.0, 3122.1, 3125.2, 3122.1),
-                new StockPriceGraph(0.44, 3122.1, 3126.0, 3127.0, 3121.3),
-                new StockPriceGraph(0.45, 3126.0, 3126.2, 3126.8, 3124.1),
-                new StockPriceGraph(0.46, 3126.2, 3126.4, 3126.8, 3124.8),
-                new StockPriceGraph(0.47, 3126.4, 3127.3, 3127.8, 3125.0),
-                new StockPriceGraph(0.48, 3127.3, 3126.3, 3128.0, 3126.1),
-                new StockPriceGraph(0.49, 3126.3, 3127.4, 3128.3, 3125.1),
-                new StockPriceGraph(0.50, 3127.4, 3127.7, 3129.0, 3125.7),
-                new StockPriceGraph(0.51, 3127.7, 3128.5, 3128.7, 3126.4),
-                new StockPriceGraph(0.52, 3128.5, 3128.9, 3130.0, 3127.6),
-                new StockPriceGraph(0.53, 3128.9, 3132.0, 3132.2, 3128.8),
-                new StockPriceGraph(0.54, 3132.0, 3133.4, 3134.1, 3130.9),
-                new StockPriceGraph(0.55, 3133.4, 3133.4, 3133.9, 3131.2),
+                new StockPriceGraph(0, 3120.3f, 3119.5f, 3121, 3119),
+                new StockPriceGraph(0.01f, 3119.5f, 3116.5f, 3120.5f, 3115.5f),
+                new StockPriceGraph(0.02f, 3116.5f, 3113.8f, 3118.0f, 3112.3f),
+                new StockPriceGraph(0.03f, 3113.8f, 3114.8f, 3115.3f, 3113.3f),
+                new StockPriceGraph(0.04f, 3114.8f, 3111.6f, 3115.0f, 3109.6f),
+                new StockPriceGraph(0.05f, 3111.6f, 3112.9f, 3114.6f, 3111.3f),
+                new StockPriceGraph(0.06f, 3112.9f, 3113.5f, 3115.1f, 3111.8f),
+                new StockPriceGraph(0.07f, 3113.5f, 3113.1f, 3114.1f, 3111.6f),
+                new StockPriceGraph(0.08f, 3113.1f, 3115.0f, 3115.1f, 3113.1f),
+                new StockPriceGraph(0.09f, 3115.0f, 3118.0f, 3118.1f, 3113.5f),
+                new StockPriceGraph(0.10f, 3118.0f, 3116.6f, 3118.1f, 3116.1f),
+                new StockPriceGraph(0.11f, 3116.6f, 3115.2f, 3117.7f, 3114.5f),
+                new StockPriceGraph(0.12f, 3115.2f, 3113.2f, 3117.0f, 3112.9f),
+                new StockPriceGraph(0.13f, 3113.2f, 3113.6f, 3115.1f, 3112.5f),
+                new StockPriceGraph(0.14f, 3113.6f, 3118.0f, 3118.0f, 3113.1f),
+                new StockPriceGraph(0.15f, 3118.0f, 3116.6f, 3118.1f, 3116.3f),
+                new StockPriceGraph(0.16f, 3116.6f, 3118.8f, 3119.0f, 3115.8f),
+                new StockPriceGraph(0.17f, 3118.8f, 3119.5f, 3120.2f, 3118.8f),
+                new StockPriceGraph(0.18f, 3119.5f, 3121.0f, 3121.8f, 3118.6f),
+                new StockPriceGraph(0.19f, 3121.0f, 3119.1f, 3121.1f, 3117.2f),
+                new StockPriceGraph(0.20f, 3119.1f, 3120.6f, 3121.9f, 3119.1f),
+                new StockPriceGraph(0.21f, 3120.6f, 3120.61f, 3120.7f, 3119.4f),
+                new StockPriceGraph(0.22f, 3120.6f, 3120.61f, 3120.7f, 3119.5f),
+                new StockPriceGraph(0.23f, 3120.6f, 3122.0f, 3120.6f, 3119.5f),
+                new StockPriceGraph(0.24f, 3122.0f, 3122.5f, 3122.1f, 3120.5f),
+                new StockPriceGraph(0.25f, 3122.5f, 3121.5f, 3122.5f, 3119.5f),
+                new StockPriceGraph(0.26f, 3121.5f, 3120.1f, 3122.0f, 3119.9f),
+                new StockPriceGraph(0.27f, 3120.1f, 3122.8f, 3122.8f, 3120.0f),
+                new StockPriceGraph(0.28f, 3122.8f, 3123.8f, 3124.8f, 3122.8f),
+                new StockPriceGraph(0.29f, 3123.8f, 3122.6f, 3124.0f, 3122.2f),
+                new StockPriceGraph(0.30f, 3122.6f, 3121.9f, 3123.1f, 3121.8f),
+                new StockPriceGraph(0.31f, 3121.9f, 3120.2f, 3119.4f, 3122.6f),
+                new StockPriceGraph(0.32f, 3120.2f, 3122.1f, 3122.4f, 3119.2f),
+                new StockPriceGraph(0.33f, 3122.1f, 3124.1f, 3124.1f, 3122.0f),
+                new StockPriceGraph(0.34f, 3124.1f, 3123.4f, 3124.5f, 3120.5f),
+                new StockPriceGraph(0.35f, 3123.4f, 3122.3f, 3124.1f, 3121.4f),
+                new StockPriceGraph(0.36f, 3122.3f, 3121.2f, 3123.7f, 3120.8f),
+                new StockPriceGraph(0.37f, 3121.2f, 3119.6f, 3122.8f, 3117.8f),
+                new StockPriceGraph(0.38f, 3119.6f, 3121.9f, 3122.5f, 3119.6f),
+                new StockPriceGraph(0.39f, 3121.9f, 3122.5f, 3122.5f, 3120.3f),
+                new StockPriceGraph(0.40f, 3122.5f, 3124.4f, 3124.8f, 3122.5f),
+                new StockPriceGraph(0.41f, 3124.4f, 3126.0f, 3123.4f, 3126.8f),
+                new StockPriceGraph(0.42f, 3126.0f, 3125.0f, 3126.1f, 3123.1f),
+                new StockPriceGraph(0.43f, 3125.0f, 3122.1f, 3125.2f, 3122.1f),
+                new StockPriceGraph(0.44f, 3122.1f, 3126.0f, 3127.0f, 3121.3f),
+                new StockPriceGraph(0.45f, 3126.0f, 3126.2f, 3126.8f, 3124.1f),
+                new StockPriceGraph(0.46f, 3126.2f, 3126.4f, 3126.8f, 3124.8f),
+                new StockPriceGraph(0.47f, 3126.4f, 3127.3f, 3127.8f, 3125.0f),
+                new StockPriceGraph(0.48f, 3127.3f, 3126.3f, 3128.0f, 3126.1f),
+                new StockPriceGraph(0.49f, 3126.3f, 3127.4f, 3128.3f, 3125.1f),
+                new StockPriceGraph(0.50f, 3127.4f, 3127.7f, 3129.0f, 3125.7f),
+                new StockPriceGraph(0.51f, 3127.7f, 3128.5f, 3128.7f, 3126.4f),
+                new StockPriceGraph(0.52f, 3128.5f, 3128.9f, 3130.0f, 3127.6f),
+                new StockPriceGraph(0.53f, 3128.9f, 3132.0f, 3132.2f, 3128.8f),
+                new StockPriceGraph(0.54f, 3132.0f, 3133.4f, 3134.1f, 3130.9f),
+                new StockPriceGraph(0.55f, 3133.4f, 3133.4f, 3133.9f, 3131.2f),
             };
 
             axisside.Header = "value (in $)";
@@ -122,10 +123,27 @@ namespace App1
             
             
         }
-
+        TrendTool TrendTool = new TrendTool();
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            trader.Update();
+            //trader.Update();
+            TrendTool.StrategyOutcome(cp);
+
+        }
+
+        public void AddVerticalLine(float val, bool Pos = false)
+        {
+            chart.Annotations.Add(new VerticalLineAnnotation() { X1 = val, Y1 = 3000, Y2 = 5000, 
+                Stroke = Pos ? new SolidColorBrush(Windows.UI.Color.FromArgb(255,255,0,0)) : new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0))});
+        }
+        public void AddHorizontalLine(float val)
+        {
+            chart.Annotations.Add(new HorizontalLineAnnotation() { Y1 = val, X1 = 0, X2 = 5 });
+        }
+        public void Addline(Line line)
+        {
+            LineAnnotation la = line.ConvertToChartLine();
+            chart.Annotations.Add(la);
         }
     }
 }

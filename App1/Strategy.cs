@@ -18,11 +18,7 @@ namespace Eco
             Random rn = new Random();
             public abstract void StrategyOutcome(Trader trader, Exchange exchange);
         }
-        public abstract class MarketTool<ToolData>
-        {
-            Random rn = new Random();
-            public abstract ToolData StrategyOutcome(Company cp);
-        }
+        
         public class SimpleStrategy : Strategy
         {
             public override void StrategyOutcome(Trader trader, Exchange exchange)
@@ -41,50 +37,7 @@ namespace Eco
                 
             }
         }
-        public class TrendData
-        {
-
-        }
-        public class TrendTool : MarketTool<TrendData>
-        {
-            public static int MinimumPriceCount = 50;
-            public override TrendData StrategyOutcome(Company cp)
-            {
-
-
-                List<StockPriceGraph> highs = new List<StockPriceGraph>();
-                List<StockPriceGraph> lows = new List<StockPriceGraph>();
-                for (int i = 1; i < MinimumPriceCount - 1; i++)
-                {
-                    if (cp.stockPrices[i].Close > cp.stockPrices[i - 1].Close &&
-                            cp.stockPrices[i].Close > cp.stockPrices[i + 1].Close) //this is a high
-                    {
-                        highs.Add(cp.stockPrices[i]);
-                    }
-                    if (highs.Count > 0) //first top always high
-                    {
-                        if (cp.stockPrices[i].Close < cp.stockPrices[i - 1].Close &&
-                            cp.stockPrices[i].Close < cp.stockPrices[i + 1].Close) //this is a low
-                        {
-                            lows.Add(cp.stockPrices[i]);
-                        }
-                    }
-                }
-                double High = 0, Low = 0;
-
-                foreach (var sp in highs)
-                {
-                    if (sp.High > High)
-                        High = sp.High;
-                }
-                foreach (var sp in lows)
-                {
-                    if (sp.Low > Low)
-                        Low = sp.Low;
-                }
-                return null;
-            }
-        }
+        
         public class PatternStrategy : Strategy
         {
             double scale = 1;
@@ -285,7 +238,7 @@ namespace Eco
                             for (int i = 0; i < 10; i++)
                             {
                                 Stock st = exchange.GetCheapestStock(cp);
-                                if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                                if (exchange.BuyStock(cp, trader)) //if transaction succeeded
                                     exchange.SellStock(st, st.SellPrice * 1.0015);
                             }
                         }
@@ -340,5 +293,10 @@ namespace Eco
                 //breakout fase
             }
         }
+    }
+    public abstract class MarketTool<ToolData>
+    {
+        Random rn = new Random();
+        public abstract ToolData StrategyOutcome(Company cp);
     }
 }
