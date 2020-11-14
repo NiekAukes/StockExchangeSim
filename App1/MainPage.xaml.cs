@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using Eco;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using Windows.UI;
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace App1
@@ -124,11 +125,20 @@ namespace App1
             
         }
         TrendTool TrendTool = new TrendTool();
+        SupportResistanceTool SupportResistanceTool = new SupportResistanceTool();
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //trader.Update();
             TrendTool.StrategyOutcome(cp);
-
+            SupportResistanceData data = SupportResistanceTool.StrategyOutcome(cp);
+            foreach(Line ln in data.supportLevels)
+            {
+                Addline(ln, new SolidColorBrush(Colors.LightGreen));
+            }
+            foreach (Line ln in data.resistanceLevels)
+            {
+                Addline(ln, new SolidColorBrush(Colors.Red));
+            }
         }
 
         public void AddVerticalLine(float val, bool Pos = false)
@@ -140,9 +150,15 @@ namespace App1
         {
             chart.Annotations.Add(new HorizontalLineAnnotation() { Y1 = val, X1 = 0, X2 = 5 });
         }
-        public void Addline(Line line)
+        public void AddContinuousline(Line line)
+        {
+            LineAnnotation la = line.ConvertToContinuousChartLine();
+            chart.Annotations.Add(la);
+        }
+        public void Addline(Line line, Brush bs)
         {
             LineAnnotation la = line.ConvertToChartLine();
+            la.Stroke = bs;
             chart.Annotations.Add(la);
         }
     }

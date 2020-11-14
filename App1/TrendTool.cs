@@ -17,7 +17,6 @@ namespace Eco
     //no touchy
     public class TrendTool : MarketTool<TrendData>
     {
-        public static int MinimumPriceCount = 50;
         public override TrendData StrategyOutcome(Company cp)
         {
 
@@ -92,7 +91,7 @@ namespace Eco
             }
             if (line != null)
             {
-                MainPage.inst.Addline(line);
+                MainPage.inst.AddContinuousline(line);
                 ret.Uptrend = line;
             }
             line = null;
@@ -121,7 +120,7 @@ namespace Eco
             }
             if (line != null)
             {
-                MainPage.inst.Addline(line);
+                MainPage.inst.AddContinuousline(line);
                 ret.DownTrend = line;
             }
             return ret;

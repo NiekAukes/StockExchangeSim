@@ -39,7 +39,7 @@ namespace Eco
             End = e;
         }
 
-        public LineAnnotation ConvertToChartLine()
+        public LineAnnotation ConvertToContinuousChartLine()
         {
             return new LineAnnotation()
             {
@@ -47,6 +47,17 @@ namespace Eco
                 X2 = 0.55,
                 Y1 = Begin.y,
                 Y2 = 0.55 * Multiplier + Adder,
+                Stroke = new SolidColorBrush(Colors.DarkGray)
+            };
+        }
+        public LineAnnotation ConvertToChartLine()
+        {
+            return new LineAnnotation()
+            {
+                X1 = Begin.x,
+                X2 = End.x,
+                Y1 = Begin.y,
+                Y2 = End.y,
                 Stroke = new SolidColorBrush(Colors.DarkGray)
             };
         }
