@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategy.cs" />
+    <Compile Include="SupportResistanceTool.cs" />
     <Compile Include="Trader.cs" />
     <Compile Include="TrendTool.cs" />
   </ItemGroup>
