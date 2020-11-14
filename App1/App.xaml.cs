@@ -30,6 +30,7 @@ namespace App1
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzUxNzA5QDMxMzgyZTMzMmUzMGZ0T2ZPUG9KNkJhY3hUTVdKSmlKalJjaG1sSUlJRktkTU13RVpSTktOWW89");
         }
 
         /// <summary>
