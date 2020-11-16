@@ -15,12 +15,12 @@
         <ScrollViewer>
         <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
             
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="250" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
           
         </VariableSizedWrapGrid>
         </ScrollViewer>

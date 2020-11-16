@@ -26,11 +26,39 @@ namespace StockExchangeSim.Views
         {
 
             this.InitializeComponent();
-            Tile.BorderThickness = new Thickness(2);
-            Tile.BorderBrush = new SolidColorBrush( Windows.UI.Color.FromArgb(255, 255, 255, 255));
+
+            Tile.BorderThickness = new Thickness(TileBorderThickness);
+            Tile.BorderBrush = TileNOTSelectedBrush;
 
             this.DataContext = this;
         }
+        public double TileBorderThickness = 5;
+        public double TileCornerRadius = 4;
+        //public SolidColorBrush TileSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(220, 255, 255, 255));
+        //public SolidColorBrush TileNOTSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 255, 255, 255));
+        private SolidColorBrush tileselectedbrush;
+        public SolidColorBrush TileSelectedBrush
+        {
+            get
+            {
+                if (RequestedTheme == ElementTheme.Dark) {
+                    tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 225, 225, 225));
+                }
+                else {
+                    tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 21, 21, 21));
+                }
+                return tileselectedbrush;
+            }
+        }
+        public SolidColorBrush TileNOTSelectedBrush
+        {
+            get
+            {
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(0, 225, 225, 225));
+            }
+        }
+
+
         private string _text = "TestField";
         public string fieldText
         {
@@ -68,7 +96,7 @@ namespace StockExchangeSim.Views
         private void FieldBlock_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             isMouseOver = true;
-            Tile.BorderThickness = new Thickness(2);
+            Tile.BorderThickness = new Thickness(TileBorderThickness);
 
             //Tile.BorderBrush = new SolidColorBrush(color: Windows.UI.Color.FromArgb(255, 255, 255, 255));
             //Tile.BorderThickness = new Thickness(2);
@@ -78,13 +106,12 @@ namespace StockExchangeSim.Views
             //DoubleAnimation animateOpacityOfBorderBrush = CreateDoubleAnimation(backgroundbrush, 0, 1, "Opacity", 250);
            // brushBoard.Children.Add(animateOpacityOfBorderBrush); brushBoard.Begin();
             
-            //SizeUpFrameWorkElement(Tile, Tile.Scale.X, Tile.Scale.Y, 1.2f,1.2f, 250); //time in ms
+            SizeUpFrameWorkElement(Tile, Tile.Scale.X, Tile.Scale.Y, 1.2f,1.2f, 125); //time in ms
         }
 
         private void FieldBlock_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             isMouseOver = false;
-            Tile.BorderThickness = new Thickness(2);
             //Tile.BorderBrush = new SolidColorBrush(color: Windows.UI.Color.FromArgb(0, 255, 255, 255));
             //Tile.BorderThickness = new Thickness(2);
             //ColorAnimation bruh2 = AnimateBorderbrushProperty(Tile, new System.Numerics.Vector4(255, 255, 255, 255), new System.Numerics.Vector4(0, 255, 255, 255), 150);
@@ -92,7 +119,34 @@ namespace StockExchangeSim.Views
             //DoubleAnimation opacityAnimBorderBrush = CreateDoubleAnimation(backgroundbrush, 255, 0, "Opacity", 150);
             //brushBoard2.Children.Add(opacityAnimBorderBrush);
             //brushBoard2.Begin();
+
+            GridOfTile.BorderBrush = TileNOTSelectedBrush;
+            GridOfTile.BorderThickness = new Thickness(TileBorderThickness);
+            GridOfTile.CornerRadius = new CornerRadius(TileCornerRadius);
+
+            SizeUpFrameWorkElement(Tile, 1.2f, 1.2f, 1.0f, 1.0f, 150); //time in ms
         }
+        private void FieldBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            //when mouse is pressed over element
+            GridOfTile.BorderBrush = TileSelectedBrush;
+            GridOfTile.BorderThickness = new Thickness(TileBorderThickness);
+            GridOfTile.CornerRadius = new CornerRadius(TileCornerRadius);
+        }
+
+        private void FieldBlock_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            //when mouse is released over element
+            GridOfTile.BorderBrush = TileNOTSelectedBrush;
+            GridOfTile.BorderThickness = new Thickness(TileBorderThickness);
+            GridOfTile.CornerRadius = new CornerRadius(TileCornerRadius);
+        }
+        private void GridOfTile_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            //is not used
+
+        }
+
         public float ScaleX
         {
             get { return Tile.Scale.X; }
@@ -147,28 +201,17 @@ namespace StockExchangeSim.Views
             Storyboard.SetTargetProperty(animation, propertyToAnimate);
             animation.From = fromX;
             animation.To = toX;
-            //does not work, returns null animation.EasingFunction.EasingMode = EasingMode.EaseIn;
+            SineEase easeMode = new SineEase();
+            easeMode.EasingMode = EasingMode.EaseIn;
+            animation.EasingFunction = easeMode;
+            
             animation.Duration = TimeSpan.FromMilliseconds(mSecInterval);
             return animation;
         }
 
 
         #endregion
-        private void FieldBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            //when mouse is pressed over element
-        }
-
-        private void FieldBlock_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            //when mouse is released over element
-        }
-        private void GridOfTile_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            //when mouse leaves bounds of element
-            isMouseOver = false;
-            SizeUpFrameWorkElement(Tile, 1.2f, 1.2f, 1.0f, 1.0f, 150);
-        }
+        
     }
 
 }

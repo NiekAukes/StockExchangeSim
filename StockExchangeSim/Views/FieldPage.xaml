@@ -12,53 +12,25 @@
     <UserControl.BorderBrush>
         <SolidColorBrush x:Name="backgroundbrush" Color="White"/>
     </UserControl.BorderBrush>
-    <Grid x:Name="GridOfTile" Background="{StaticResource AppBarBackgroundThemeBrush}"
+    <Grid x:Name="GridOfTile" Background="{ThemeResource AppBarItemBackgroundThemeBrush}"
           Scale="{x:Bind MouseOver,Mode=OneWay}" PointerExited="GridOfTile_PointerExited">
-        
         <Grid.ScaleTransition>
             <Vector3Transition/>
         </Grid.ScaleTransition>
-        
-        
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="6*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Viewbox Grid.Row="0" Margin="20" MaxHeight="250" MaxWidth="250">
-            <!--<Viewbox.RenderTransform>
-                <ScaleTransform x:Name="TileRenderTransform"/>
-            </Viewbox.RenderTransform>
-            <Viewbox.Resources>
-                <Storyboard x:Name="scaleAnim">
-                    <DoubleAnimation
-                    Storyboard.TargetName="TileRenderTransform"
-                    Storyboard.TargetProperty="(RenderTransform.ScaleX)"
-                    From="1.0" To="1.2" Duration="0:0:0.25"/>
-                    <DoubleAnimation
-                    Storyboard.TargetName="TileRenderTransform"
-                    Storyboard.TargetProperty="(RenderTransform.ScaleY)"
-                    From="1.0" To="1.2" Duration="0:0:0.25"/>
-                </Storyboard>
-                <Storyboard x:Name="revScaleAnim">
-                    <DoubleAnimation
-                    Storyboard.TargetName="TileRenderTransform"
-                    Storyboard.TargetProperty="(RenderTransform.ScaleX)"
-                    From="{Binding ScaleX, Mode=TwoWay}" To="1.0" Duration="0:0:0.25"/>
-                    <DoubleAnimation
-                    Storyboard.TargetName="TileRenderTransform"
-                    Storyboard.TargetProperty="(RenderTransform.ScaleY)"
-                    From="{Binding ScaleY, Mode=TwoWay}" To="1.0" Duration="0:0:0.25"/>
-                </Storyboard>
-            </Viewbox.Resources>-->
-            <SymbolIcon x:Name="symbolIcon" Symbol="AllApps"/>
+        <Viewbox Margin="10,10,10,0" Grid.Row="0">
+                <SymbolIcon x:Name="symbolIcon" Symbol="AllApps" VerticalAlignment="Top"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Margin="0,5,0,5" MaxHeight="70">
-            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldText, Mode=TwoWay}" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5,0,5" MaxHeight="70" Grid.Row="1">
+            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldText, Mode=TwoWay}" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
         </Viewbox>
-
     </Grid>
 </UserControl>
