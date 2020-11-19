@@ -43,7 +43,7 @@ namespace StockExchangeSim.Views
         {
             get
             {
-                return new SolidColorBrush(Windows.UI.Color.FromArgb(225, 125, 125, 125));
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(225, 230, 230, 230));
                 
                     /* if (RequestedTheme == ElementTheme.Dark) {
                     tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 225, 225, 225));
