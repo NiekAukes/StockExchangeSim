@@ -26,6 +26,7 @@ namespace StockExchangeSim.Views
         {
 
             this.InitializeComponent();
+            
 
             Tile.BorderThickness = new Thickness(TileBorderThickness);
             Tile.BorderBrush = TileNOTSelectedBrush;
@@ -37,17 +38,20 @@ namespace StockExchangeSim.Views
         //public SolidColorBrush TileSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(220, 255, 255, 255));
         //public SolidColorBrush TileNOTSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 255, 255, 255));
         private SolidColorBrush tileselectedbrush;
+
         public SolidColorBrush TileSelectedBrush
         {
             get
             {
-                if (RequestedTheme == ElementTheme.Dark) {
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(225, 125, 125, 125));
+                
+                    /* if (RequestedTheme == ElementTheme.Dark) {
                     tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 225, 225, 225));
                 }
                 else {
                     tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 21, 21, 21));
                 }
-                return tileselectedbrush;
+                return tileselectedbrush;*/
             }
         }
         public SolidColorBrush TileNOTSelectedBrush

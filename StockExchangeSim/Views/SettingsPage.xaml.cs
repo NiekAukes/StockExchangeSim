@@ -39,6 +39,8 @@ namespace StockExchangeSim.Views
         public SettingsPage()
         {
             InitializeComponent();
+
+
             CustomSeed.IsChecked = Master.fCustomSeed;
             asyncFieldFlag.IsChecked = Master.fAsyncFields;
             Seed.Text = Master.CustomSeed.ToString();

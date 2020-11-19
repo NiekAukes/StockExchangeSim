@@ -24,6 +24,7 @@ namespace StockExchangeSim
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ2NDQ3QDMxMzgyZTMzMmUzMEMwRXJDb1hnRUJhcHo1RFZBWXBKQ2owT0F1ME1DQ3dmMGhWNFhjVU1ZMWc9");
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
+            RequestedTheme = ApplicationTheme.Dark;
 
             // Deferred execution until used. Check https://docs.microsoft.com/dotnet/api/system.lazy-1 for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);

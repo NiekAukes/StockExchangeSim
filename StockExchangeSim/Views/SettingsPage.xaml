@@ -7,24 +7,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Style="{StaticResource PageStyle}"
     xmlns:xaml="using:Windows.UI.Xaml"
-    mc:Ignorable="d">
+    mc:Ignorable="d" x:Name="settingsPage">
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="251*"/>
-            <RowDefinition Height="830*"/>
+            <RowDefinition Height="118*"/>
+            <RowDefinition Height="133*"/>
+            <RowDefinition Height="829*"/>
         </Grid.RowDefinitions>
         <StackPanel
-            x:Name="ContentArea" Grid.RowSpan="2">
+            x:Name="ContentArea" Grid.RowSpan="3">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
 
                 <StackPanel Margin="{StaticResource XSmallTopMargin}">
                     <RadioButton 
-                        x:Uid="Settings_Theme_Light"
+                        x:Uid="Settings_Theme_Light" x:Name="settingsThemeLight"
                         Checked="ThemeChanged_CheckedAsync" 
                         IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
                         FontSize="15"
@@ -34,7 +35,7 @@
                         </RadioButton.CommandParameter>
                     </RadioButton>
                     <RadioButton 
-                        x:Uid="Settings_Theme_Dark"
+                        x:Uid="Settings_Theme_Dark" x:Name="settingsThemeDark"
                         Checked="ThemeChanged_CheckedAsync" 
                         IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
                         FontSize="15"
@@ -44,7 +45,7 @@
                         </RadioButton.CommandParameter>
                     </RadioButton>
                     <RadioButton 
-                        x:Uid="Settings_Theme_Default"
+                        x:Uid="Settings_Theme_Default" x:Name="settingsThemeDefault"
                         Checked="ThemeChanged_CheckedAsync"
                         IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
                         FontSize="15"
