@@ -46,9 +46,9 @@ namespace Eco
             return new LineAnnotation()
             {
                 X1 = Begin.x,
-                X2 = 0.55,
+                X2 = 1,
                 Y1 = Begin.y,
-                Y2 = 0.55 * Multiplier + Adder,
+                Y2 = 1 * Multiplier + Adder,
                 Stroke = new SolidColorBrush(Colors.DarkGray)
             };
         }

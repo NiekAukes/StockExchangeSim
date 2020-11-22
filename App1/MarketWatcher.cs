@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App1;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Eco
 {
@@ -11,7 +13,7 @@ namespace Eco
     {
         public Company cp;
         public S Strategy;
-        public abstract void UpdateInsights();
+        public abstract float UpdateInsights();
         public abstract void RedoInsights();
 
     }
@@ -21,7 +23,7 @@ namespace Eco
         SupportResistanceTool SRTool;
         SupportResistanceData SRData;
 
-        public override void StrategyOutcome(Trader trader, Exchange exchange)
+        public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
             //TODO
             foreach(var mw in MarketWatchers)
@@ -36,9 +38,16 @@ namespace Eco
     }
     public class BreakoutMarketWatcher : MarketWatcher<BreakoutStrategy>
     {
-        SupportResistanceTool SRTool;
-        SupportResistanceData SRData;
+        SupportResistanceTool SRTool = new SupportResistanceTool();
+        SupportResistanceData SRData = null;
         float lastInsightTime = 0;
+        int lastdatapoint = 0;
+
+        public BreakoutMarketWatcher(Company company)
+        {
+            cp = company;
+        }
+
         public override void RedoInsights()
         {
             //TODO
@@ -47,17 +56,68 @@ namespace Eco
             SRData = SRTool.StrategyOutcome(cp);
 
             lastInsightTime = MainPage.Year;
+            
 
         }
-
-        public override void UpdateInsights()
+        int LastRememberUp = 0, LastRememberDown = 0; 
+        bool LastPotentialBreakoutUp = false, LastPotentialBreakoutDown = false;
+        public override float UpdateInsights()
         {
-            //TODO
-
+            float ret = 0;
             //there is a price update
 
-            //get the new 
+            //get the new prices
+            List<StockPriceGraph> NewPrices = new List<StockPriceGraph>(cp.stockPrices.Skip(lastdatapoint));
+            //NewPrices.AddRange(cp.stockPrices.getrange); 
+            //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
 
+            MainPage.inst.AddContinuousline(SRData.MainSupport, new SolidColorBrush(Colors.LightGreen));
+            MainPage.inst.AddContinuousline(SRData.MainResistance, new SolidColorBrush(Colors.Red));
+
+            bool potentialBreakoutUp = false;
+            bool potentialBreakoutDown = false;
+
+            foreach (var price in NewPrices)
+            {
+                if (SRData.MainResistance != null)
+                {
+                    if (price.Close > (SRData.MainResistance.Multiplier * price.Year + SRData.MainResistance.Adder))
+                    {
+                        //potential breakout
+                        if (potentialBreakoutUp || LastPotentialBreakoutUp)
+                        {
+                            //confirmation, buy stocks
+                            MainPage.inst.AddVerticalLine(price.Year);
+                        }
+                        else
+                            potentialBreakoutUp = true; //wait for confirmation
+                    }
+                }
+                if (SRData.MainSupport != null)
+                {
+                    if (price.Close < SRData.MainSupport.Multiplier * price.Year + SRData.MainSupport.Adder)
+                    {
+                        //potential breakout
+                        if (potentialBreakoutDown || LastPotentialBreakoutDown)
+                        {
+                            //confirmation, sell stocks
+                            MainPage.inst.AddVerticalLine(price.Year, true);
+
+                        }
+                        else
+                            potentialBreakoutDown = true; //wait for confirmation
+                    }
+                }
+
+            }
+
+            if ((potentialBreakoutDown) || (potentialBreakoutUp))
+                SRData = null;
+            if (SRData == null)
+                RedoInsights();
+
+            lastdatapoint = cp.stockPrices.Count > 20 ? 20 : cp.stockPrices.Count;
+            return ret;
             //apply Support and Resistance to Breakouts
         }
     }

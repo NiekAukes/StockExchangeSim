@@ -28,7 +28,7 @@ namespace App1
     {
         public static MainPage inst;
         public static Company cp = new Company();
-        public static Exchange exchange = new Exchange();
+        public static ExchangeBroker exchange = new ExchangeBroker();
         public static Trader trader = new Trader();
         public static TextBlock Log;
         public ObservableCollection<StockPriceGraph> Realprices = new ObservableCollection<StockPriceGraph>
@@ -89,6 +89,21 @@ namespace App1
                 new StockPriceGraph(0.53f, 3128.9f, 3132.0f, 3132.2f, 3128.8f),
                 new StockPriceGraph(0.54f, 3132.0f, 3133.4f, 3134.1f, 3130.9f),
                 new StockPriceGraph(0.55f, 3133.4f, 3133.4f, 3133.9f, 3131.2f),
+                new StockPriceGraph(0.56f, 3133.4f, 3139.4f, 3139.8f, 3131.2f),
+                new StockPriceGraph(0.57f, 3139.4f, 3145.2f, 3145.4f, 3143.0f),
+                new StockPriceGraph(0.58f, 3145.2f, 3146.3f, 3146.5f, 3143.0f),
+                new StockPriceGraph(0.59f, 3146.3f, 3140.3f, 3147.0f, 3138.5f),
+                new StockPriceGraph(0.60f, 3140.3f, 3138.3f, 3142.0f, 3137.7f),
+                new StockPriceGraph(0.61f, 3138.3f, 3139.3f, 3140.6f, 3137.3f),
+                new StockPriceGraph(0.62f, 3139.3f, 3139.4f, 3139.6f, 3136.3f),
+                new StockPriceGraph(0.63f, 3139.4f, 3141.8f, 3142.7f, 3139.0f),
+                new StockPriceGraph(0.64f, 3141.8f, 3144.8f, 3146.1f, 3140.7f),
+                new StockPriceGraph(0.65f, 3144.8f, 3144.2f, 3146.3f, 3142.7f),
+                new StockPriceGraph(0.66f, 3144.2f, 3141.2f, 3146.1f, 3140.4f),
+                new StockPriceGraph(0.67f, 3141.2f, 3139.5f, 3142.1f, 3138.9f),
+                new StockPriceGraph(0.68f, 3139.5f, 3140.1f, 3143.5f, 3137.4f),
+                new StockPriceGraph(0.69f, 3140.1f, 3143.1f, 3145.3f, 3139.7f),
+                new StockPriceGraph(0.70f, 3143.1f, 3146.6f, 3147.3f, 3142.1f),
             };
         int counter = 0;
         public static float Year = 0;
@@ -129,6 +144,7 @@ namespace App1
         }
         TrendTool TrendTool = new TrendTool();
         SupportResistanceTool SupportResistanceTool = new SupportResistanceTool();
+        BreakoutMarketWatcher marketWatcher = new BreakoutMarketWatcher(cp);
         private void button_Click(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < 5; i++)
@@ -147,15 +163,17 @@ namespace App1
             counter++;
             Year += counter * 0.05f;
             //trader.Update();
-            TrendData TData = TrendTool.StrategyOutcome(cp);
-            AddContinuousline(TData.UpTrend, new SolidColorBrush(Colors.Cyan));
-            AddContinuousline(TData.DownTrend, new SolidColorBrush(Colors.Magenta));
+            //TrendData TData = TrendTool.StrategyOutcome(cp);
+            //AddContinuousline(TData.UpTrend, new SolidColorBrush(Colors.Cyan));
+            //AddContinuousline(TData.DownTrend, new SolidColorBrush(Colors.Magenta));
 
-            SupportResistanceData data = SupportResistanceTool.StrategyOutcome(cp);
+            //SupportResistanceData data = SupportResistanceTool.StrategyOutcome(cp);
 
-            AddContinuousline(data.MainSupport, new SolidColorBrush(Colors.LightGreen));
-            AddContinuousline(data.MainResistance, new SolidColorBrush(Colors.Red));
-
+            //AddContinuousline(data.MainSupport, new SolidColorBrush(Colors.LightGreen));
+            //AddContinuousline(data.MainResistance, new SolidColorBrush(Colors.Red));
+            if ((counter - 1) % 5 == 0)
+                marketWatcher.RedoInsights();
+            marketWatcher.UpdateInsights();
 
             //foreach (Line ln in data.supportLevels)
             //{

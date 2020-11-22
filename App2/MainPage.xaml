@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="App2.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel Margin="50">
+            <TextBlock x:Name="text" Text="StockPrice: $-.--" HorizontalAlignment="Center" FontSize="32"></TextBlock>
+            <TextBox x:Name="input" Text="1" Width="100" Height="56" FontSize="32" TextAlignment="DetectFromContent"></TextBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="Add" Width="160" Height="60" Margin="10" Content="Buy" Click="Add_Click"></Button>
+                <Button x:Name="Sub" Width="160" Height="60" Margin="10" Content="Sell" Click="Sub_Click"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

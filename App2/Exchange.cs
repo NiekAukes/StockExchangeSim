@@ -110,86 +110,22 @@ namespace Eco
         }
     }
 
-    public interface IExchange
-    {
-        double money { get; set; }
-        List<BidAsk> BidAskSpreads { get; set; }
-
-        bool BuyStock(Company cp, Trader buyer);
-        void RegisterCompany(Company cp);
-        void RegisterTrader(Trader t);
-        void SellStock(Stock stock);
-    }
-    public class ExchangeBroker : IExchange
-    {
-        public double money { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public List<BidAsk> BidAskSpreads { get; set; }
-        public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
-        public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        
-
-        public void RegisterCompany(Company cp)
-        {
-            Companies.Add(cp);
-            BidAsk bidAsk = new BidAsk(cp); //create new bidask
-            BidAskSpreads.Add(bidAsk);
-            cp.BidAsk = bidAsk;
-        }
-
-        public void RegisterTrader(Trader t)
-        {
-            Traders.Add(t);
-        }
-        public bool BuyStock(Company cp, Trader buyer)
-        {
-            if (cp.BidAsk.Stocks.Count < 1)
-                return false;
-
-            money += cp.BidAsk.Bid;
-            buyer.money -= cp.BidAsk.Bid;
-
-            cp.BidAsk.Ask *= (float)(cp.BidAsk.Stocks[0].Percentage * 100.0f / (cp.BidAsk.Stocks.Count + 1));
-            cp.BidAsk.Bid = cp.BidAsk.Ask * 1.001f;
-
-            cp.BidAsk.Stocks[0].Owner = buyer;
-            cp.BidAsk.Stocks.RemoveAt(0);
-            return true;
-        }
-
-        public void SellStock(Stock stock)
-        {
-            money += stock.company.BidAsk.Ask;
-            stock.Owner.money += stock.company.BidAsk.Ask;
-
-            stock.company.BidAsk.Ask /= (float)(stock.company.BidAsk.Stocks[0].Percentage * 100.0f / (stock.company.BidAsk.Stocks.Count + 1));
-            stock.company.BidAsk.Bid = stock.company.BidAsk.Ask * 1.001f;
-
-            stock.Owner = null;
-            stock.company.BidAsk.Stocks.Add(stock);
-        }
-    }
     //doel van exchange is om informatie te verkrijgen en bij te houden. Dit is de class waar andere classes "handelen", net als in een echte exchange
-    [Obsolete]
-    public class Exchange : IStockOwner, IExchange
+    public class Exchange : IStockOwner
     {
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         List<int> compconverter = new List<int>();
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        public List<BidAsk> BidAskSpreads { get; set; }//Lijst van alle stocks die te koop staan ingedeeld per bedrijf
+        public List<BidAsk> BidAskSpreads = new List<BidAsk>();//Lijst van alle stocks die te koop staan ingedeeld per bedrijf
 
-        public List<Stock> Stocks
-        {
-            get
-            {
+        public List<Stock> Stocks { get {
                 List<Stock> ret = new List<Stock>();
-                foreach (var ba in BidAskSpreads)
+                foreach(var ba in BidAskSpreads)
                 {
                     ret.AddRange(ba.Stocks);
                 }
                 return ret;
-            }
-            set { }
-        }
+            } set { } }
         public double money { get; set; }
 
         public void RegisterCompany(Company cp)
@@ -204,15 +140,15 @@ namespace Eco
             Traders.Add(t);
         }
 
-        public Exchange() { BidAskSpreads = new List<BidAsk>(); }
+        public Exchange() { }
 
-
+        
         Stock GetCheapestStock(Company cp)
         {
             if (!Companies.Contains(cp))
                 return null;
 
-
+            
             List<Stock> ls = BidAskSpreads[Companies.IndexOf(cp)].Stocks;
             Stock Cheapest = null;
             foreach (Stock stock in ls)
@@ -251,7 +187,7 @@ namespace Eco
                 buyer.AddStock(stock);
 
                 cp.BidAsk.Bid *= 1.001f;
-
+                
                 return true;
             }
             return false;

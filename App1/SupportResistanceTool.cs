@@ -67,7 +67,7 @@ namespace Eco
                         bool linevalid = true;
                         if (highpos[j] - highpos[i] > minimumLineLength)
                         {
-                            for (int k = highpos[i]; k < highpos[j] - 1; k++)
+                            for (int k = highpos[i]; k < cp.stockPrices.Count; k++)
                             {
                                 if (cp.stockPrices[k].Close > line.Multiplier * cp.stockPrices[k].Year + line.Adder) //if line crosses
                                 {
@@ -82,7 +82,10 @@ namespace Eco
                         if (linevalid)
                         {
                             float addval = highs[i].High / minimumMargin * 3;
-                            line = new Line(new Point(highs[i].Year, highs[i].High + addval), new Point(highs[j].Year, highs[j].High + addval * (1 + (highs[j].Year - highs[i].Year) * 10)));
+                            line.Adder += addval;
+                            line.Begin.y += addval;
+                            line.End.y += addval;
+                            //line = new Line(new Point(highs[i].Year, highs[i].High + addval), new Point(highs[j].Year, highs[j].High + addval * (1 + (highs[j].Year - highs[i].Year) * 10)));
                             ret.resistanceLevels.Add(line);
                         }
                     }
@@ -103,7 +106,7 @@ namespace Eco
                         bool linevalid = true;
                         if (lowpos[j] - lowpos[i] > minimumLineLength)
                         {
-                            for (int k = lowpos[i]; k < lowpos[j]; k++)
+                            for (int k = lowpos[i]; k < cp.stockPrices.Count; k++)
                             {
                                 if (cp.stockPrices[k].Low < line.Multiplier * cp.stockPrices[k].Year + line.Adder) //if line crosses
                                 {
@@ -117,9 +120,11 @@ namespace Eco
 
                         if (linevalid)
                         {
-                            float addval = lows[i].Low / minimumMargin * 3;
-                            line = new Line(new Point(lows[i].Year, lows[i].Low - addval), new Point(lows[j].Year, lows[j].Low - addval * (1 + (lows[j].Year - lows[i].Year) * 10)));
-
+                            float addval = -lows[i].Low / minimumMargin * 3;
+                            //line = new Line(new Point(lows[i].Year, lows[i].Low - addval), new Point(lows[j].Year, lows[j].Low - addval * (1 + (lows[j].Year - lows[i].Year) * 10)));
+                            line.Adder += addval;
+                            line.Begin.y += addval;
+                            line.End.y += addval;
                             ret.supportLevels.Add(line);
                         }
                     }

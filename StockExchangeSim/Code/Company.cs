@@ -56,6 +56,8 @@ namespace Eco
         public double stockprice = 0;
         public double Competitiveness = 100;
 
+        //BidAsk bidAsk = null;
+
         public StockViewModel stockViewModel = new StockViewModel();
         public ValueViewModel ValueviewModel = new ValueViewModel();
         public List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();

@@ -1,4 +1,4 @@
-﻿using App1;
+﻿using App2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,13 +37,11 @@ namespace Eco
         public double ActionTime; //in seconds
         public double skill = 1;
 
-        List<Strategy> Strategies = new List<Strategy>();
+        Strategy strat = new PatternStrategy();
 
         public Trader()
         {
             Stocks = new List<Stock>();
-            Strategies.Add(StrategyFactory.RandomStrategy());
-            Strategies.Add(StrategyFactory.RandomStrategy());
         }
 
         public double money { get { return Money; } set { Money = value; } }
@@ -66,11 +64,8 @@ namespace Eco
                     Money += stockArr[i].Collect();
                 }
             }
-            if (ActionTime > 0)
-            {
-                foreach (Strategy strat in Strategies)
-                    strat.StrategyOutcome(this, MainPage.exchange);
-            }
+            //if (ActionTime > 0)
+                strat.StrategyOutcome(this, MainPage.exchange);
 
 
         }
