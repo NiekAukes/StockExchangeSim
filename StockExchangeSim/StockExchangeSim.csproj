@@ -204,6 +204,9 @@
     <Compile Include="Views\ChartPage.xaml.cs">
       <DependentUpon>ChartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CompanyDetail.xaml.cs">
+      <DependentUpon>CompanyDetail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FieldPage.xaml.cs">
       <DependentUpon>FieldPage.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,10 @@
     <Page Include="Views\ChartPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CompanyDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FieldPage.xaml">
       <SubType>Designer</SubType>

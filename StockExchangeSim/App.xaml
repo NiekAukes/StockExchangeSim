@@ -7,6 +7,13 @@
 
         <ResourceDictionary>
 
+            <Style x:Name="CompanyDetailTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="20,10,20,0"/>
+               <!-- <Setter Property="FontSize" Value="25"/> -->
+            </Style>
+            
             <Style x:Key="fieldPageStyle" x:Name="fieldPageStyle" TargetType="UserControl">
                 <Setter Property="Margin" Value="30"/>
                 <Setter Property="Height" Value="auto"/>

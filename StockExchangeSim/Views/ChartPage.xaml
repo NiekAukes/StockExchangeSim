@@ -24,5 +24,7 @@
 
             </VariableSizedWrapGrid>
         </ScrollViewer>
+        <StackPanel x:Name="insertCompanyDetailHere" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <!-- <local:CompanyDetail Height="auto" Width="auto" Opacity="0"/> -->
     </Grid>
 </Page>
