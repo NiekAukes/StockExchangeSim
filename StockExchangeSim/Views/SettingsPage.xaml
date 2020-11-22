@@ -11,12 +11,17 @@
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
     </Page.Resources>
+
+    
+
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="118*"/>
             <RowDefinition Height="133*"/>
             <RowDefinition Height="829*"/>
         </Grid.RowDefinitions>
+        <Image Source="/Assets/croppedDarkModeLogo.png" Grid.Row="0" Grid.RowSpan="100"
+        Height="100" Width="auto" Margin="40,0,20,40" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         <StackPanel
             x:Name="ContentArea" Grid.RowSpan="3">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
