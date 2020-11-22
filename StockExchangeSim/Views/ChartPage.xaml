@@ -13,38 +13,16 @@
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <ScrollViewer>
-        <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
-            
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-            <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-          
-        </VariableSizedWrapGrid>
+            <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
+
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+
+            </VariableSizedWrapGrid>
         </ScrollViewer>
-        <!--    <Grid
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-
-            <syncfusion:SfChart x:Name="chart" Height="auto" Width="auto">
-
-                <syncfusion:SfChart.PrimaryAxis>
-
-                    <syncfusion:CategoryAxis Header="Name" />
-
-                </syncfusion:SfChart.PrimaryAxis>
-
-                <syncfusion:SfChart.SecondaryAxis>
-
-                    <syncfusion:NumericalAxis Header="Height(in cm)" />
-
-                </syncfusion:SfChart.SecondaryAxis>
--->
-                <!--<syncfusion:ColumnSeries  ItemsSource="{Binding Data}" XBindingPath="Name" YBindingPath="Height" >
-                </syncfusion:ColumnSeries>
-
-
-        </Grid>-->
     </Grid>
 </Page>
