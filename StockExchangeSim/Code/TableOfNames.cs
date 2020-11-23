@@ -8,6 +8,7 @@ namespace Eco
 {
     class TableOfNames
     {
+        public List<string> Names = new List<string>();
 
     }
 }
