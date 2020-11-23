@@ -70,7 +70,7 @@ namespace Eco
             List<StockPriceGraph> NewPrices = new List<StockPriceGraph>(cp.stockPrices.Skip(lastdatapoint));
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
-
+            
             MainPage.inst.AddContinuousline(SRData.MainSupport, new SolidColorBrush(Colors.LightGreen));
             MainPage.inst.AddContinuousline(SRData.MainResistance, new SolidColorBrush(Colors.Red));
 
