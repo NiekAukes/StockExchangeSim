@@ -82,7 +82,6 @@ namespace StockExchangeSim.Views
 
         //Functions for fields
         #region FieldFunctions
-
         public void AddFieldPage(Eco.Field fld)
         {
             FieldPage fieldpg = new FieldPage();
