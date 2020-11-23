@@ -48,6 +48,7 @@ namespace Eco
     }
     public class Company : IStockOwner
     {
+        public string name = null;
         public Field field = null;
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
@@ -72,7 +73,11 @@ namespace Eco
 
             open = (float)Value;
         }
-
+        public void initName()
+        {
+            //search a random name in list of names
+            name = "henk"; 
+        }
         public void BecomePublic()
         {
             if (CompanyStock.Percentage == 100)

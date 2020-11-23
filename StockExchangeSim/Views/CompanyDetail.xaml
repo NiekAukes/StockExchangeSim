@@ -22,7 +22,8 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         
-        <ListView x:Name="companyList" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Foreground="White">
+        <ListView x:Name="companyList" Grid.Column="0" Grid.Row="0"
+                  Grid.RowSpan="2" Foreground="White" PointerPressed="companyList_PointerPressed" PointerReleased="companyList_PointerReleased">
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
