@@ -46,9 +46,19 @@ namespace StockExchangeSim.Views
 
         public double TileBorderThickness = 5;
         public double TileCornerRadius = 4;
-        //public SolidColorBrush TileSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(220, 255, 255, 255));
-        //public SolidColorBrush TileNOTSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 255, 255, 255));
-        //private SolidColorBrush tileselectedbrush;
+
+        private double tileHeight = 250;
+        private double tileWidth = 250;
+        public double TileHeight
+        {
+            get { return tileHeight; }
+            set { tileHeight = value; }
+        }
+        public double TileWidth
+        {
+            get { return tileWidth; }
+            set { tileWidth = value; }
+        }
 
         public SolidColorBrush TileSelectedBrush
         {
@@ -103,22 +113,6 @@ namespace StockExchangeSim.Views
             get;set;
         }
         
-
-
-        private double tileHeight = 250;
-        private double tileWidth  = 250;
-        public double TileHeight
-        {
-            get { return tileHeight; }
-            set { tileHeight = value;}
-        }
-        public double TileWidth
-        {
-            get { return tileWidth; }
-            set { tileWidth = value;}
-        }
-
-
         #region AnimationStuffShit
 
         public static Storyboard scaleUpStoryBoard = new Storyboard();

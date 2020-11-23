@@ -74,9 +74,9 @@ namespace StockExchangeSim.Views
             //Add tiles programmatically, for debugging
             fieldGrid.Children.Clear();
             //ADD ALL FIELDS TO 
-            for(int i = 0; i<10; i++)
+            for(int i = 0; i<Eco.Master.inst.Fields.Count; i++)
             {
-                AddFieldPage("field1");
+                AddFieldPage(Eco.Master.inst.Fields[i]);
             }
         }
 
@@ -87,8 +87,8 @@ namespace StockExchangeSim.Views
         {
             FieldPage fieldpg = new FieldPage();
             fieldpg.chartpg = this;
-            fieldpg.Name = fieldPageName;
-            fieldpg.fieldtxt.Value = fieldPageName;
+            fieldpg.Name = fld.fieldName;
+            fieldpg.fieldtxt.Value = fld.fieldName;
             //((TextBlock)fieldpg.FindName("FieldTextBlock")).Name = fieldPageName;
 
             fieldpg.Style = (Windows.UI.Xaml.Style)App.Current.Resources["fieldPageStyle"];
