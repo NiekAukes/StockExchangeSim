@@ -12,7 +12,25 @@ using Windows.UI.Xaml.Navigation;
 
 namespace StockExchangeSim.Views
 {
+    public class Observable<T> : INotifyPropertyChanged
+    {
+        public Observable(T val)
+        {
+            _val = val;
+        }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        T _val;
+        public T Value { get { return _val; } set {
+                _val = value;
+                OnPropertyChanged();
+            } }
+        
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
     public class Person
     {
         public string Name { get; set; }
