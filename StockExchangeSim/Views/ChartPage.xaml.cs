@@ -74,7 +74,7 @@ namespace StockExchangeSim.Views
             //Add tiles programmatically, for debugging
             fieldGrid.Children.Clear();
             //ADD ALL FIELDS TO 
-            for(int i = 0; i<Eco.Master.inst.Fields.Count; i++)
+            for(int i = 0; i < Eco.Master.inst.Fields.Count; i++)
             {
                 AddFieldPage(Eco.Master.inst.Fields[i]);
             }
