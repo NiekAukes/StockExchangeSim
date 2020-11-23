@@ -27,9 +27,12 @@ namespace StockExchangeSim.Views
 
 
         }
+
+
         public void InsertDetails(List<Eco.Company> companies)
         {
             List<Eco.Company> listofCompanies = companies;
+
             companyList.Items.Clear();
 
             //insert company names:

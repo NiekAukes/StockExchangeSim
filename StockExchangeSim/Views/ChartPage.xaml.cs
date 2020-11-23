@@ -51,19 +51,30 @@ namespace StockExchangeSim.Views
             series.ItemsSource = (new ViewModel()).Data;
             series.XBindingPath = "Name";
             series.YBindingPath = "Height";
-
-            //Adding Series to the Chart Series Collection
             //chart.Series.Add(series);
+
+            //Add tiles programmatically, for debugging
+            fieldGrid.Children.Clear();
+            //ADD ALL FIELDS TO 
+            for(int i = 0; i<10; i++)
+            {
+                AddFieldPage("field1");
+            }
         }
 
         //Functions for fields
         #region FieldFunctions
 
-        public void AddFieldPage(string fieldName)
+        public void AddFieldPage(Eco.Field fld)
         {
-            FieldPage newPage = new FieldPage();
-            //newPage.
-            this.fieldGrid.Children.Add(newPage);
+            FieldPage fieldpg = new FieldPage();
+            fieldpg.chartpg = this;
+            fieldpg.Name = fieldPageName;
+            fieldpg.fieldtxt.Value = fieldPageName;
+            //((TextBlock)fieldpg.FindName("FieldTextBlock")).Name = fieldPageName;
+
+            fieldpg.Style = (Windows.UI.Xaml.Style)App.Current.Resources["fieldPageStyle"];
+            fieldGrid.Children.Add(fieldpg);
         }
 
         #endregion

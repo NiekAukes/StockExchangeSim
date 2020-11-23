@@ -140,7 +140,7 @@ namespace StockExchangeSim.Views
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
             //DataContext = master;
 
-            axisside.Header = "value (in $)";//master.Fields[0].companies[0].Value;
+            axisside.Header = "Value (in $)";//master.Fields[0].companies[0].Value;
             axismain.Header = "Time (in years)";
 
 

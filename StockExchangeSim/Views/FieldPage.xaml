@@ -30,7 +30,8 @@
                 <SymbolIcon x:Name="symbolIcon" Symbol="AllApps" VerticalAlignment="Top"/>
         </Viewbox>
         <Viewbox HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5,0,5" MaxHeight="70" Grid.Row="1">
-            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldText, Mode=TwoWay}" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldtxt.Value, Mode=TwoWay}"
+                       FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
         </Viewbox>
     </Grid>
 </UserControl>

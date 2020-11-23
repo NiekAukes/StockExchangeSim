@@ -18,6 +18,7 @@ namespace Eco
     {
         Random rn = null;
 
+        public string fieldName;
         public int id;
         public int companyAmount;
         public int maxCompanyStartAmount = 12;
@@ -56,9 +57,11 @@ namespace Eco
             startcompanies = new List<Company>(companies);
             startamount = companyAmount;
 
+
+            this.fieldName = SelectRandomName();
         }
         int scandaltick = 0;
-
+        
         public void Update()
         {
             //calculate innovation (FIXED)
@@ -178,7 +181,10 @@ namespace Eco
                 }
             }
         }
-        
+        public string SelectRandomName()
+        {
+
+        }
         public void print()
         {
             
