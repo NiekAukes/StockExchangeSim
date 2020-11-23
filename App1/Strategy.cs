@@ -45,6 +45,10 @@ namespace Eco
         public class MarketResults
         {
             public List<Tuple<Company, float>> Results = new List<Tuple<Company, float>>();
+            public static MarketResults operator+(MarketResults a, MarketResults b)
+            {
+
+            }
         }
         public abstract class Strategy
         {

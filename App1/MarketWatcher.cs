@@ -26,10 +26,12 @@ namespace Eco
         public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
             //TODO
-            foreach(var mw in MarketWatchers)
+            Trader.MarketResults MR = new Trader.MarketResults();
+            for(int i = 0; i < MarketWatchers.Count; i++)
             {
-                mw.RedoInsights();
+                MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].UpdateInsights()));
             }
+            return MR;
         }
         public override void Observe()
         {
@@ -88,6 +90,8 @@ namespace Eco
                         {
                             //confirmation, buy stocks
                             MainPage.inst.AddVerticalLine(price.Year);
+                            ret += 5;
+
                         }
                         else
                             potentialBreakoutUp = true; //wait for confirmation
@@ -102,7 +106,7 @@ namespace Eco
                         {
                             //confirmation, sell stocks
                             MainPage.inst.AddVerticalLine(price.Year, true);
-
+                            ret -= 5;
                         }
                         else
                             potentialBreakoutDown = true; //wait for confirmation
@@ -110,9 +114,11 @@ namespace Eco
                 }
 
             }
-
+            if (MainPage.Year - lastInsightTime > 0.2)
+                SRData = null;
             if ((potentialBreakoutDown) || (potentialBreakoutUp))
                 SRData = null;
+
             if (SRData == null)
                 RedoInsights();
 
