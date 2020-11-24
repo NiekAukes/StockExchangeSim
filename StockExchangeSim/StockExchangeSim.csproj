@@ -193,6 +193,7 @@
     <Compile Include="Code\Master.cs" />
     <Compile Include="Code\MicroTimers.cs" />
     <Compile Include="Code\Strategy.cs" />
+    <Compile Include="Code\TableOfNames.cs" />
     <Compile Include="Code\Trader.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />

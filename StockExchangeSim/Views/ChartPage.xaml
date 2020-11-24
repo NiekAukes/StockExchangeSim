@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:syncfusion="using:Syncfusion.UI.Xaml.Charts"
-   
+   x:Name="thispage"
     Style="{StaticResource PageStyle}"
     xmlns:tc="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d">
@@ -15,16 +15,11 @@
         <ScrollViewer>
             <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
 
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
-                <local:FieldPage Height="225" Style="{StaticResource fieldPageStyle}"/>
+                
 
             </VariableSizedWrapGrid>
         </ScrollViewer>
-        <!--<StackPanel x:Name="insertCompanyDetailHere" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/> -->
-        <local:CompanyDetail Height="auto" Width="auto" Opacity="0"/>
+        <StackPanel x:Name="insertCompanyDetailHere" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        
     </Grid>
 </Page>

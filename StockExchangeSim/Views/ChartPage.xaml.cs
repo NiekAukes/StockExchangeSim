@@ -12,27 +12,23 @@ using Windows.UI.Xaml.Navigation;
 
 namespace StockExchangeSim.Views
 {
-
-    public class Person
+    public class Observable<T> : INotifyPropertyChanged
     {
-        public string Name { get; set; }
-
-        public double Height { get; set; }
-    }
-
-    public class ViewModel
-    {
-        public List<Person> Data { get; set; }
-
-        public ViewModel()
+        public Observable(T val)
         {
-            Data = new List<Person>()
-            {
-                new Person { Name = "David", Height = 180 },
-                new Person { Name = "Michael", Height = 170 },
-                new Person { Name = "Steve", Height = 160 },
-                new Person { Name = "Joel", Height = 182 }
-            };
+            _val = val;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        T _val;
+        public T Value { get { return _val; } set {
+                _val = value;
+                OnPropertyChanged();
+            } }
+        
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
     public sealed partial class ChartPage : Page, INotifyPropertyChanged
@@ -46,24 +42,30 @@ namespace StockExchangeSim.Views
 
             InitializeComponent();
 
-            ColumnSeries series = new ColumnSeries();
-
-            series.ItemsSource = (new ViewModel()).Data;
-            series.XBindingPath = "Name";
-            series.YBindingPath = "Height";
-
-            //Adding Series to the Chart Series Collection
-            //chart.Series.Add(series);
+            //Add tiles programmatically, for debugging
+            fieldGrid.Children.Clear();
+            //ADD ALL FIELDS TO THE TILES
+            for(int i = 0; i < Eco.Master.inst.Fields.Count; i++)
+            {
+                AddFieldPage(Eco.Master.inst.Fields[i]);
+            }
         }
+
 
         //Functions for fields
         #region FieldFunctions
-
-        public void AddFieldPage(string fieldName)
+        Random rn = new Random();
+        public void AddFieldPage(Eco.Field fld)
         {
-            FieldPage newPage = new FieldPage();
-            //newPage.
-            this.fieldGrid.Children.Add(newPage);
+            FieldPage fieldpg = new FieldPage(fld);
+            fieldpg.chartpg = this;
+            fieldpg.Name = fld.fieldName;
+            //fld.fieldName = rn.Next().ToString();
+            fieldpg.fieldtxt.Value = fld.id.ToString();
+            //((TextBlock)fieldpg.FindName("FieldTextBlock")).Name = fieldPageName;
+
+            fieldpg.Style = (Windows.UI.Xaml.Style)App.Current.Resources["fieldPageStyle"];
+            fieldGrid.Children.Add(fieldpg);
         }
 
         #endregion

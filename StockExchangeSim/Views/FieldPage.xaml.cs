@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -22,36 +24,62 @@ namespace StockExchangeSim.Views
 {
     public sealed partial class FieldPage : UserControl
     {
-        public FieldPage()
-        {
+        public ChartPage chartpg { get; set; }
+        public Eco.Field Field { get; set; }
 
+        public FieldPage(Eco.Field fld)
+        {
+            fieldtxt = new Observable<string>("haha pp");
             this.InitializeComponent();
-            
+            Field = fld;
+
 
             Tile.BorderThickness = new Thickness(TileBorderThickness);
             Tile.BorderBrush = TileNOTSelectedBrush;
 
             this.DataContext = this;
+            this.PointerReleased += FieldPage_PointerReleased;
+
         }
+
+        private void FieldPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            //tell the chartpage to load this field
+            chartpg.Frame.Navigate(typeof(CompanyDetail), Field);
+            
+            //chrtPg.
+
+        }
+
         public double TileBorderThickness = 5;
         public double TileCornerRadius = 4;
-        //public SolidColorBrush TileSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(220, 255, 255, 255));
-        //public SolidColorBrush TileNOTSelectedBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0, 255, 255, 255));
-        private SolidColorBrush tileselectedbrush;
+
+        private double tileHeight = 250;
+        private double tileWidth = 250;
+        public double TileHeight
+        {
+            get { return tileHeight; }
+            set { tileHeight = value; }
+        }
+        public double TileWidth
+        {
+            get { return tileWidth; }
+            set { tileWidth = value; }
+        }
 
         public SolidColorBrush TileSelectedBrush
         {
             get
             {
                 return new SolidColorBrush(Windows.UI.Color.FromArgb(225, 230, 230, 230));
-                
-                    /* if (RequestedTheme == ElementTheme.Dark) {
-                    tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 225, 225, 225));
-                }
-                else {
-                    tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 21, 21, 21));
-                }
-                return tileselectedbrush;*/
+
+                /* if (RequestedTheme == ElementTheme.Dark) {
+                tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 225, 225, 225));
+            }
+            else {
+                tileselectedbrush = new SolidColorBrush(Windows.UI.Color.FromArgb(225, 21, 21, 21));
+            }
+            return tileselectedbrush;*/
             }
         }
         public SolidColorBrush TileNOTSelectedBrush
@@ -62,34 +90,36 @@ namespace StockExchangeSim.Views
             }
         }
 
-
-        private string _text = "TestField";
-        public string fieldText
+        //string fldtxt = "noname";
+        public class Observable<T> : INotifyPropertyChanged
         {
-            private set
-            {
-                _text = value;
-               
+
+            public Observable(T val){
+                _val = val;
             }
-            get
+
+            public event PropertyChangedEventHandler PropertyChanged;
+            T _val;
+            public T Value
             {
-                return _text;
+                get { return _val; }
+                set
+                {
+                    _val = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            protected void OnPropertyChanged([CallerMemberName] string name = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
-        private double tileHeight = 250;
-        private double tileWidth  = 250;
-        public double TileHeight
+        public Observable<string> fieldtxt
         {
-            get { return tileHeight; }
-            set { tileHeight = value;}
+            get;set;
         }
-        public double TileWidth
-        {
-            get { return tileWidth; }
-            set { tileWidth = value;}
-        }
-
-
+        
         #region AnimationStuffShit
 
         public static Storyboard scaleUpStoryBoard = new Storyboard();

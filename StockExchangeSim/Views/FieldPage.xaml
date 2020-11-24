@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StockExchangeSim.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:StockExchangeSim.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Height="{Binding TileHeight, Mode=TwoWay}" Width="{Binding TileWidth, Mode=TwoWay}"
     d:DesignHeight="250" x:Name="Tile" 
@@ -25,12 +26,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
         <Viewbox Margin="10,10,10,0" Grid.Row="0">
                 <SymbolIcon x:Name="symbolIcon" Symbol="AllApps" VerticalAlignment="Top"/>
-        </Viewbox>
-        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5,0,5" MaxHeight="70" Grid.Row="1">
-            <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldText, Mode=TwoWay}" FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
-        </Viewbox>
+            </Viewbox>
+            <Viewbox HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5,0,5" MaxHeight="70" Grid.Row="1">
+                <TextBlock x:Name="FieldTextBlock"  Text="{Binding fieldtxt.Value, Mode=TwoWay}"
+                       FontFamily="Nunito" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+            </Viewbox>
     </Grid>
 </UserControl>

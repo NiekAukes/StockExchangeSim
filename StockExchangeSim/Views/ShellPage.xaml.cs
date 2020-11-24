@@ -21,6 +21,8 @@ namespace StockExchangeSim.Views
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
+        public static ShellPage inst { get; set; }
+
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 
@@ -43,6 +45,7 @@ namespace StockExchangeSim.Views
         {
             InitializeComponent();
             DataContext = this;
+            inst = this;
             Initialize();
         }
 

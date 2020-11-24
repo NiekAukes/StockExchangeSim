@@ -15,8 +15,8 @@
             </Style>
             
             <Style x:Key="fieldPageStyle" x:Name="fieldPageStyle" TargetType="UserControl">
-                <Setter Property="Margin" Value="30"/>
-                <Setter Property="Height" Value="auto"/>
+                <Setter Property="Margin" Value="25"/>
+                <Setter Property="Height" Value="200"/>
                 <Setter Property="Width" Value="auto"/>
                 <Setter Property="Background" Value="Transparent"/>
             </Style>
