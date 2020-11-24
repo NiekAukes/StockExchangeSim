@@ -68,8 +68,14 @@ namespace Eco
             }
             if (ActionTime > 0)
             {
+                MarketResults Final = new MarketResults();
                 foreach (Strategy strat in Strategies)
-                    strat.StrategyOutcome(this, MainPage.exchange);
+                    Final = Final + strat.StrategyOutcome(this, MainPage.exchange);
+
+                foreach(var tp in Final.Results)
+                {
+
+                }
             }
 
 

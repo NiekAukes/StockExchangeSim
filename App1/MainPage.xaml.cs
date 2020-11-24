@@ -142,6 +142,8 @@ namespace App1
             
             
         }
+        Trader t = new Trader();
+
         TrendTool TrendTool = new TrendTool();
         SupportResistanceTool SupportResistanceTool = new SupportResistanceTool();
         BreakoutMarketWatcher marketWatcher = new BreakoutMarketWatcher(cp);
@@ -159,7 +161,7 @@ namespace App1
                     cp.stockPrices.RemoveAt(0);
                 }
             }
-
+            
             counter++;
             Year += counter * 0.05f;
             //trader.Update();
@@ -184,7 +186,7 @@ namespace App1
             //    AddContinuousline(ln, new SolidColorBrush(Colors.Red));
             //}
 
-
+            t.Update();
         }
 
         public void AddVerticalLine(float val, bool Pos = false)
