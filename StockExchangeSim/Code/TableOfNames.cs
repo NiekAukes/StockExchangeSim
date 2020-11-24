@@ -60,7 +60,7 @@ namespace Eco
                 {
                     "ABN Ambro Group",
                     "Deutsche Bank",
-                    "DZ Bank",
+                    "Hare Banking",
                     "Rabobank",
                     "DNB ASA",
                     "HSBC Holdings PLC",

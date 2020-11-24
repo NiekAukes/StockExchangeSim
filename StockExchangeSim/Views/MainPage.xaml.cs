@@ -310,7 +310,7 @@ namespace StockExchangeSim.Views
             {
                 val = int.Parse(box.Text);
             }
-            catch (Exception ex)
+            catch
             {
                 MessageDialog messageDialog = new MessageDialog("Invalid input in Fields, Traders or HFTraders.");
                 messageDialog.Commands.Add(new UICommand("Close"));
