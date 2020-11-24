@@ -183,7 +183,8 @@ namespace Eco
         }
         public string SelectRandomName()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return "";
         }
         public void print()
         {

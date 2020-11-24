@@ -31,28 +31,6 @@ namespace StockExchangeSim.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
-    public class Person
-    {
-        public string Name { get; set; }
-
-        public double Height { get; set; }
-    }
-
-    public class ViewModel
-    {
-        public List<Person> Data { get; set; }
-
-        public ViewModel()
-        {
-            Data = new List<Person>()
-            {
-                new Person { Name = "David", Height = 180 },
-                new Person { Name = "Michael", Height = 170 },
-                new Person { Name = "Steve", Height = 160 },
-                new Person { Name = "Joel", Height = 182 }
-            };
-        }
-    }
     public sealed partial class ChartPage : Page, INotifyPropertyChanged
     {
         public ObservableCollection<DataPoint> Source { get; } = new ObservableCollection<DataPoint>();
@@ -64,13 +42,6 @@ namespace StockExchangeSim.Views
 
             InitializeComponent();
 
-            ColumnSeries series = new ColumnSeries();
-
-            series.ItemsSource = (new ViewModel()).Data;
-            series.XBindingPath = "Name";
-            series.YBindingPath = "Height";
-            //chart.Series.Add(series);
-
             //Add tiles programmatically, for debugging
             fieldGrid.Children.Clear();
             //ADD ALL FIELDS TO THE TILES
@@ -80,14 +51,17 @@ namespace StockExchangeSim.Views
             }
         }
 
+
         //Functions for fields
         #region FieldFunctions
+        Random rn = new Random();
         public void AddFieldPage(Eco.Field fld)
         {
-            FieldPage fieldpg = new FieldPage();
+            FieldPage fieldpg = new FieldPage(fld);
             fieldpg.chartpg = this;
             fieldpg.Name = fld.fieldName;
-            fieldpg.fieldtxt.Value = fld.fieldName;
+            //fld.fieldName = rn.Next().ToString();
+            fieldpg.fieldtxt.Value = fld.id.ToString();
             //((TextBlock)fieldpg.FindName("FieldTextBlock")).Name = fieldPageName;
 
             fieldpg.Style = (Windows.UI.Xaml.Style)App.Current.Resources["fieldPageStyle"];
