@@ -47,7 +47,32 @@ namespace Eco
             public List<Tuple<Company, float>> Results = new List<Tuple<Company, float>>();
             public static MarketResults operator+(MarketResults a, MarketResults b)
             {
+                List<Company> lscomp = new List<Company>();
+                List<float> lsfloat = new List<float>();
+                for (int i = 0; i < a.Results.Count; i++)
+                {
+                    lscomp.Add(a.Results[i].Item1);
+                    lsfloat.Add(a.Results[i].Item2);
+                }
+                for (int i = 0; i < b.Results.Count; i++)
+                {
+                    if (!lscomp.Contains(b.Results[i].Item1))
+                    {
+                        lscomp.Add(b.Results[i].Item1);
+                        lsfloat.Add(b.Results[i].Item2);
+                    }
+                    else
+                    {
+                        lsfloat[lscomp.IndexOf(b.Results[i].Item1)] += b.Results[i].Item2;
+                    }
+                }
 
+                MarketResults MR = new MarketResults();
+                for (int i = 0; i < lscomp.Count; i++)
+                {
+                    MR.Results.Add(new Tuple<Company, float>(lscomp[i], lsfloat[i]));
+                }
+                return MR;
             }
         }
         public abstract class Strategy

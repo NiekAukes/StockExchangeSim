@@ -25,10 +25,13 @@ namespace StockExchangeSim.Views
     public sealed partial class FieldPage : UserControl
     {
         public ChartPage chartpg { get; set; }
-        public FieldPage()
+        public Eco.Field Field { get; set; }
+
+        public FieldPage(Eco.Field fld)
         {
             fieldtxt = new Observable<string>("haha pp");
             this.InitializeComponent();
+            Field = fld;
 
 
             Tile.BorderThickness = new Thickness(TileBorderThickness);
@@ -41,7 +44,11 @@ namespace StockExchangeSim.Views
 
         private void FieldPage_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            //throw new NotImplementedException();
+            //tell the chartpage to load this field
+            chartpg.Frame.Navigate(typeof(CompanyDetail), Field);
+            
+            //chrtPg.
+
         }
 
         public double TileBorderThickness = 5;

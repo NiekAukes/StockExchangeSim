@@ -84,7 +84,7 @@ namespace Eco
             {
                 for (int i = 0; i < 50; i++)
                 {
-                    Master.exchange.SellStock(CompanyStock.SplitStock(1.0 / 50.0), stockprice);
+                    Master.inst.exchange.SellStock(CompanyStock.SplitStock(1.0 / 50.0), stockprice/50);
                 }
             }
         }
@@ -167,32 +167,35 @@ namespace Eco
             {
                 LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
                 LastDecemValue = Value;
-            }
-            if (tick % 100 == 0)
-            {
-                LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
-                LastCentumValue = Value;
-            }
-            if (tick % 1000 == 0)
-            {
-                LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
-                LastMilleValue = Value;
-            }
-            if (tick % 10000 == 0)
-            {
-                LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
-                LastDeceMilleValue = Value;
-            }
-            if (tick % 100000 == 0)
-            {
-                LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
-                LastCentuMilleValue = Value;
+
+                if (tick % 100 == 0)
+                {
+                    LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
+                    LastCentumValue = Value;
+
+                    if (tick % 1000 == 0)
+                    {
+                        LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
+                        LastMilleValue = Value;
+
+                        if (tick % 10000 == 0)
+                        {
+                            LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
+                            LastDeceMilleValue = Value;
+                        }
+                        if (tick % 100000 == 0)
+                        {
+                            LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
+                            LastCentuMilleValue = Value;
+                        }
+                    }
+                }
             }
 
             //check high and low
             if (tick % 20 == 0)
             {
-                Stock st = Master.exchange.GetCheapestStock(this);
+                Stock st = Master.inst.exchange.GetCheapestStock(this);
                 if (st != null) {
                     float currentprice = (float)st.SellPrice;
                     if (currentprice > high)

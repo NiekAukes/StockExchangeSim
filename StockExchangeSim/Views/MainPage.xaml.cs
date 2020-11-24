@@ -88,9 +88,14 @@ namespace StockExchangeSim.Views
 
         public Master CreateMaster()
         {
+            if (master != null)
+            {
+                master.alive = false;
+            }
+            
             master = new Master(field, trader, 1);
             SetSliderValue();
-            chart.Series.Clear();
+            RedoLines();
             //for (int i = 0; i < master.Fields[0].companies.Count; i++)
             //{
             //    LineSeries series = new LineSeries()
@@ -102,7 +107,14 @@ namespace StockExchangeSim.Views
             //    series.ListenPropertyChange = true;
             //    chart.Series.Add(series);
             //}
-            CandleSeries candleSeries = new CandleSeries()
+            
+
+            return master;
+        }
+        public void RedoLines()
+        {
+            chart.Series.Clear();
+            FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
             {
                 ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
                 XBindingPath = "Year",
@@ -112,12 +124,9 @@ namespace StockExchangeSim.Views
                 Close = "Close"
             };
             candleSeries.ListenPropertyChange = true;
-            candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
+            //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
             chart.Series.Add(candleSeries);
-
-            return master;
         }
-
         string _display;
         public string display
         {
@@ -137,6 +146,8 @@ namespace StockExchangeSim.Views
             inst = this;
             if (master == null)
                 CreateMaster();
+            else
+                RedoLines();
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
             //DataContext = master;
 
@@ -178,39 +189,32 @@ namespace StockExchangeSim.Views
 
         }
 
-        ~MainPage (){
-
-            master.active = false;
-
-
-        }
+        //~MainPage ()
+        //{
+        //    master.active = false;
+        //}
 
         public void GatherData()
         {
             for(int tick = 0; true ;tick++)
             {
-                
+
                 if (master.active)
                 {
-                    if (tick % 500 == 0)
+                    for (int i = 0; i < master.Fields.Count; i++)
                     {
-                        for (int i = 0; i < master.Fields.Count; i++)
+                        Field field = master.Fields[i];
+                        //do Information Gathering from fields
+                        for (int j = 0; j < field.companies.Count; j++)
                         {
-                            Field field = master.Fields[i];
-                            //do Information Gathering from fields
-                            for (int j = 0; j < field.companies.Count; j++)
-                            {
-                                Company cp = master.Fields[i].companies[j];
-                                cp.Data((int)(tick / 500));
-                            }
-                        }
-                        if ((int)(tick / 1000) % 80000 == 0)
-                        {
-                            //Thread.Sleep(2);
+                            Company cp = master.Fields[i].companies[j];
+                            cp.Data(tick);
                         }
                     }
+                    //Thread.Sleep(2);
+
                 }
-                
+
                 else
                 {
                     Thread.Sleep(10);
