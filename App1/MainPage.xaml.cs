@@ -173,8 +173,8 @@ namespace App1
 
             //AddContinuousline(data.MainSupport, new SolidColorBrush(Colors.LightGreen));
             //AddContinuousline(data.MainResistance, new SolidColorBrush(Colors.Red));
-            if ((counter - 1) % 5 == 0)
-                marketWatcher.RedoInsights();
+            //if ((counter - 1) % 5 == 0)
+            //    marketWatcher.RedoInsights();
             marketWatcher.UpdateInsights();
 
             //foreach (Line ln in data.supportLevels)

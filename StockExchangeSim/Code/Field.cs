@@ -49,7 +49,7 @@ namespace Eco
                 cp.SetValue(rn.NextDouble() * 2000);
                 cp.stockprice = cp.Value / 100;
 
-                Master.exchange.RegisterCompany(cp);
+                Master.inst.exchange.RegisterCompany(cp);
                 cp.BecomePublic();
 
                 companies.Add(cp);

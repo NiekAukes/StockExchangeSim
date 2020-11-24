@@ -110,7 +110,7 @@ namespace Eco
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
-        public static Exchange exchange = new Exchange();
+        public Exchange exchange = new Exchange();
 
         public static double Conjucture { get; set; }
         public static double TotalShare = 0;

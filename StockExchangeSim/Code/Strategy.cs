@@ -39,7 +39,7 @@ namespace Eco
             List<Company> interestedCompanies = null;
             public PatternStrategy()
             {
-                interestedCompanies = new List<Company>(Master.exchange.Companies);
+                interestedCompanies = new List<Company>(Master.inst.exchange.Companies);
                 while (interestedCompanies.Count > 10)
                 {
                     interestedCompanies.RemoveAt(rn.Next(interestedCompanies.Count));

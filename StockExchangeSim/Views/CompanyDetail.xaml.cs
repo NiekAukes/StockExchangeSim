@@ -102,7 +102,7 @@ namespace StockExchangeSim.Views
             companyValueChart.Series.Clear();
 
             //INSERT COMPANY VALUES
-            LineSeries series = new LineSeries()
+            FastLineSeries series = new FastLineSeries()
             {
                 ItemsSource = comp.ValueviewModel.values,
                 XBindingPath = "Year",
@@ -112,7 +112,7 @@ namespace StockExchangeSim.Views
             companyValueChart.Series.Add(series);
 
             //INSERT STOCK PRICES
-            CandleSeries candleSeries = new CandleSeries()
+            FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
             {
                 ItemsSource = comp.stockViewModel.prices,
                 XBindingPath = "Year",
@@ -122,7 +122,7 @@ namespace StockExchangeSim.Views
                 Close = "Close"
             };
             candleSeries.ListenPropertyChange = true;
-            candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
+            //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
             stockPriceChart.Series.Add(candleSeries);
         }
 

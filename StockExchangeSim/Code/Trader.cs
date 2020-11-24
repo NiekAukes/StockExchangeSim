@@ -65,7 +65,7 @@ namespace Eco
                 Money += Stocks[i].Collect();
             }
             if (ActionTime > 0)
-                strat.StrategyOutcome(this, Master.exchange);
+                strat.StrategyOutcome(this, Master.inst.exchange);
 
 
         }
