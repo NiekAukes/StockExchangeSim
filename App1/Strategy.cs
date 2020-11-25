@@ -15,13 +15,13 @@ namespace Eco
         public static class StrategyFactory
         {
             public static int StrategyAmount = 1;
-            public static Strategy RandomStrategy()
+            public static Strategy RandomStrategy(Trader t)
             {
                 int choice = rn.Next(StrategyAmount);
                 switch (choice)
                 {
                     case 0:
-                        return new BreakoutStrategy();
+                        return new BreakoutStrategy(t);
                     case 1:
                         return null ;
                     case 2:

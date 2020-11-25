@@ -34,7 +34,7 @@ namespace Eco
         public double Money = 100;
         public double BaseActionTimeRequired = 20 + rn.NextDouble() * 20; //in seconds
         public double ActivityTime = 0;
-        public double ActionTime; //in seconds
+        public double ActionTime = 1; //in seconds
         public double skill = 1;
 
         List<Strategy> Strategies = new List<Strategy>();
@@ -42,8 +42,10 @@ namespace Eco
         public Trader()
         {
             Stocks = new List<Stock>();
-            Strategies.Add(StrategyFactory.RandomStrategy());
-            Strategies.Add(StrategyFactory.RandomStrategy());
+            InterestedCompanies.Add(MainPage.cp);
+            Strategies.Add(StrategyFactory.RandomStrategy(this));
+            //Strategies.Add(StrategyFactory.RandomStrategy());
+            
         }
 
         public double money { get { return Money; } set { Money = value; } }
@@ -74,6 +76,27 @@ namespace Eco
 
                 foreach(var tp in Final.Results)
                 {
+                    if (tp.Item2 < 0)
+                    {
+                        //sell stocks, if any
+                        List<Stock> lsstocks = stocks[InterestedCompanies.IndexOf(tp.Item1)];
+                        if (stocks[InterestedCompanies.IndexOf(tp.Item1)].Count > 0)
+                        {
+                            for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
+                            {
+                                //sell stocks with float value or until all stocks are sold
+                                MainPage.exchange.SellStock(lsstocks[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < tp.Item2 * 100; i++)
+                        {
+                            //buy stocks here
+                            MainPage.exchange.BuyStock(tp.Item1, this);
+                        }
+                    }
 
                 }
             }

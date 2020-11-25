@@ -172,7 +172,7 @@ namespace Eco
                         Company cp = companies[i];
                         var ignore = MainPage.inst.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                         {
-                            cp.stockViewModel.prices.Clear();
+                            cp.stockViewModel.prices1m.Clear();
                         });
                     }
                     companies.RemoveAt(i);

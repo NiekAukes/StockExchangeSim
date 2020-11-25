@@ -19,9 +19,15 @@ namespace Eco
     }
     public class BreakoutStrategy : Trader.Strategy
     {
-        List<BreakoutMarketWatcher> MarketWatchers = new List<BreakoutMarketWatcher>();
+        public List<BreakoutMarketWatcher> MarketWatchers = new List<BreakoutMarketWatcher>();
         SupportResistanceTool SRTool;
         SupportResistanceData SRData;
+
+        public BreakoutStrategy(Trader t)
+        {
+            foreach (Company cp in t.InterestedCompanies)
+                MarketWatchers.Add(new BreakoutMarketWatcher(cp));
+        }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
@@ -72,7 +78,10 @@ namespace Eco
             List<StockPriceGraph> NewPrices = new List<StockPriceGraph>(cp.stockPrices.Skip(lastdatapoint));
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
-            
+
+            if (SRData == null)
+                RedoInsights();
+
             MainPage.inst.AddContinuousline(SRData.MainSupport, new SolidColorBrush(Colors.LightGreen));
             MainPage.inst.AddContinuousline(SRData.MainResistance, new SolidColorBrush(Colors.Red));
 
@@ -119,8 +128,6 @@ namespace Eco
             if ((potentialBreakoutDown) || (potentialBreakoutUp))
                 SRData = null;
 
-            if (SRData == null)
-                RedoInsights();
 
             lastdatapoint = cp.stockPrices.Count > 20 ? 20 : cp.stockPrices.Count;
             return ret;

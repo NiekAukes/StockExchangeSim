@@ -40,7 +40,11 @@ namespace Eco
     }
     public class StockViewModel
     {
-        public ObservableCollection<StockPriceGraph> prices = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> prices1m = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> prices5m = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> prices10m = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> prices15m = new ObservableCollection<StockPriceGraph>();
+        public ObservableCollection<StockPriceGraph> prices30m = new ObservableCollection<StockPriceGraph>();
     }
     public class ValueViewModel
     {
@@ -61,7 +65,10 @@ namespace Eco
 
         public StockViewModel stockViewModel = new StockViewModel();
         public ValueViewModel ValueviewModel = new ValueViewModel();
-        public List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
+        public List<StockPriceGraph> stockPrices1m = new List<StockPriceGraph>();
+        public List<StockPriceGraph> stockPrices5m = new List<StockPriceGraph>();
+        public List<StockPriceGraph> stockPrices10m = new List<StockPriceGraph>();
+        public List<StockPriceGraph> stockPrices30m = new List<StockPriceGraph>();
         public List<ValueGraph> values = new List<ValueGraph>();
 
         //setup values
@@ -119,7 +126,7 @@ namespace Eco
         #endregion
 
         long CurrentTick = Master.ticks;
-        double modifier = 3000 / 2629743.8;
+        double modifier = 30000 / 2629743.8;
 
         public double money { get { return Value; } set { Value = value; } }
 
@@ -161,6 +168,9 @@ namespace Eco
             CurrentTick++;
 
         }
+        float open5m, close5m, high5m, low5m;
+        float open10m, close10m, high10m, low10m;
+        float open30m, close30m, high30m, low30m;
         public void Data(int tick)
         {
             if (tick % 10 == 0)
@@ -203,14 +213,35 @@ namespace Eco
                     if (currentprice < low)
                         low = currentprice;
 
+                    
+
                     //register datapoint
                     if (tick % 100 == 0)
                     {
                         StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        stockPrices.Add(sp);
+                        stockPrices1m.Add(sp);
                         ValueGraph vg = new ValueGraph(MainPage.master.Year, (float)Value);
                         values.Add(vg);
+                        if (stockPrices1m.Count > 10000)
+                        {
+                            stockPrices1m.RemoveAt(0);
+                        }
 
+                        //create new highlow
+                        if (currentprice > high5m)
+                            high5m = currentprice;
+                        if (currentprice < low5m)
+                            low5m = currentprice;
+
+                        if (tick % 500 == 0)
+                        {
+                            StockPriceGraph sp5m = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                            stockPrices5m.Add(sp5m);
+                            if (stockPrices5m.Count > 10000)
+                            {
+                                stockPrices5m.RemoveAt(0);
+                            }
+                        }
 
                         if (tick % 80000 == 0)
                         {
@@ -220,12 +251,12 @@ namespace Eco
                             var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
 
-                                stockViewModel.prices.Add(sp);
+                                stockViewModel.prices1m.Add(sp);
                                 ValueviewModel.values.Add(vg);
 
-                                if (stockViewModel.prices.Count > 50)
+                                if (stockViewModel.prices1m.Count > 1000)
                                 {
-                                    //stockViewModel.prices.RemoveAt(0);
+                                    stockViewModel.prices1m.RemoveAt(0);
                                 }
                                 //MainPage.inst.SetNewYearLimit();
 

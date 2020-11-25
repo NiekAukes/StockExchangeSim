@@ -114,7 +114,7 @@ namespace StockExchangeSim.Views
             //INSERT STOCK PRICES
             FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
             {
-                ItemsSource = comp.stockViewModel.prices,
+                ItemsSource = comp.stockViewModel.prices1m,
                 XBindingPath = "Year",
                 High = "High",
                 Low = "Low",

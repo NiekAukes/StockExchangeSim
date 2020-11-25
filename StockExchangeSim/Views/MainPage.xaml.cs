@@ -116,7 +116,7 @@ namespace StockExchangeSim.Views
             chart.Series.Clear();
             FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
             {
-                ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
+                ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
                 XBindingPath = "Year",
                 High = "High",
                 Low = "Low",
