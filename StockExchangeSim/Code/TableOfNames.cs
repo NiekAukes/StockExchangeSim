@@ -32,7 +32,7 @@ namespace Eco
                     "Volvo Studios",
                     "Elgoog Inc.",
                     "Hipbone Inc.",
-                    "Fools Studio"
+                    "Fools Studio",
                 }
             },
             new FieldNameInfo()
