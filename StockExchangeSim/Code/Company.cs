@@ -254,7 +254,7 @@ namespace Eco
                                 stockViewModel.prices1m.Add(sp);
                                 ValueviewModel.values.Add(vg);
 
-                                if (stockViewModel.prices1m.Count > 1000)
+                                if (stockViewModel.prices1m.Count > 100)
                                 {
                                     stockViewModel.prices1m.RemoveAt(0);
                                 }

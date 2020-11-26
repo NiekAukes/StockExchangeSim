@@ -70,7 +70,7 @@ namespace Eco
                 List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
                 for (int i = 0; i < 100; i++)
                 {
-                    StockPriceGraph spg = cp.stockPrices1m[cp.stockPrices1m.Count - 1 - (int)(i * scale)];
+                    StockPriceGraph spg = cp.stockPrices1m[cp.stockPrices1m.Count - 10 - (int)(i * scale)];
                     if (spg != null)
                         stockPrices.Add(spg);
                     else
