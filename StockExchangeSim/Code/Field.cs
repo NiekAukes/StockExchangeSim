@@ -219,13 +219,13 @@ namespace Eco
         public string getInfo()
         {
             string displaay = "";
-            displaay += "field id: " + id + ", started with " + startamount;
+            displaay += fieldName + ", started with " + startamount + " companies";
 
             for (int i = 0; i < startcompanies.Count; i++)
             {
                 if (startcompanies[i].Bankrupt)
                 {
-                    displaay += "\nCompany " + startcompanies[i].id + ": BANKRUPT,\t Time alive: " + Math.Floor(startcompanies[i].age) + " days";
+                    displaay += "\n" + startcompanies[i].name + ": BANKRUPT,\t Time alive: " + Math.Floor(startcompanies[i].age) + " days";
                 }
                 else
                 {
@@ -234,9 +234,23 @@ namespace Eco
                         //decemille
                         double lastgain = Math.Floor(startcompanies[i].LastDeceMilleGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
-                        displaay += "\nCompany " + startcompanies[i].id +
+
+
+                        string s = startcompanies[i].name;
+                        displaay += "\n";
+                        for (int k = 0; k < 15 && k < s.Length; k++)
+                        {
+                            
+                            displaay += s[k];
+                            if (k == 14)
+                            {
+                                displaay += "...";
+                            }
+                        }
+
+                        displaay += 
                             ": " + Math.Floor(startcompanies[i].LastDeceMilleValue) +
-                            ",\t gain: " + lastgainstr +
+                            ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                     else if (MainPage.master.SecondsPerTick >= 7.5)
@@ -245,9 +259,9 @@ namespace Eco
                         double lastgain = Math.Floor(startcompanies[i].LastMilleGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
 
-                        displaay += "\nCompany " + startcompanies[i].id +
+                        displaay += "\n" + startcompanies[i].name +
                             ": " + Math.Floor(startcompanies[i].LastMilleValue) +
-                            ",\t gain: " + lastgainstr +
+                            ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                     else
@@ -255,9 +269,9 @@ namespace Eco
                         //centum
                         double lastgain = Math.Floor(startcompanies[i].LastCentumGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
-                        displaay += "\nCompany " + startcompanies[i].id +
+                        displaay += "\n" + startcompanies[i].name +
                         ": " + Math.Floor(startcompanies[i].LastCentumValue) +
-                        ",\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 + 
+                        ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 + 
                         ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                 }
