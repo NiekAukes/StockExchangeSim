@@ -16,9 +16,13 @@ namespace Eco
 {
     public class Field
     {
-        Random rn = null;
+        Random rn = new Random();
+
+
+        public FieldNameInfo NameInfo = null;
 
         public string fieldName;
+
         public int id;
         public int companyAmount;
         public int maxCompanyStartAmount = 12;
@@ -39,8 +43,14 @@ namespace Eco
 
         public Field(int Id)
         {
+
             id = Id;
             rn = new Random(Master.Seed * (Id + 1));
+
+
+
+            fieldName = SelectRandomName();
+
             companyAmount = rn.Next(1, maxCompanyStartAmount);
             for (int i = 0; i < companyAmount; i++)
             {
@@ -58,7 +68,6 @@ namespace Eco
             startamount = companyAmount;
 
 
-            this.fieldName = SelectRandomName();
         }
         int scandaltick = 0;
         
@@ -184,7 +193,11 @@ namespace Eco
         public string SelectRandomName()
         {
             //throw new NotImplementedException();
-            return "";
+            int rng = rn.Next(Master.inst.masterTable.NameInfo.Count);
+            NameInfo = Master.inst.masterTable.NameInfo[rng];
+            Master.inst.masterTable.NameInfo.RemoveAt(rng);
+
+            return NameInfo.FieldName;
         }
         public void print()
         {

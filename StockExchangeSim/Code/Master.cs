@@ -112,6 +112,8 @@ namespace Eco
         public List<Trader> Traders = new List<Trader>();
         public Exchange exchange = new Exchange();
 
+        public TableOfNames masterTable = new TableOfNames();
+
         public static double Conjucture { get; set; }
         public static double TotalShare = 0;
 

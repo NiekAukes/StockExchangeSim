@@ -79,11 +79,16 @@ namespace Eco
             field = f;
 
             open = (float)Value;
+            name = initName();
         }
-        public void initName()
+        public string initName()
         {
             //search a random name in list of names
-            name = "henk"; 
+            int rng = rn.Next(field.NameInfo.CompanyNames.Count);
+            string ret = field.NameInfo.CompanyNames[rng];
+            field.NameInfo.CompanyNames.RemoveAt(rng);
+
+            return ret;
         }
         public void BecomePublic()
         {

@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Eco
 {
-    class FieldNameInfo
+    public class FieldNameInfo
     {
         public string FieldName { get; set; }
         public List<string> CompanyNames { get; set; }
     }
-    class TableOfNames
+    public class TableOfNames
     {
         public List<FieldNameInfo> NameInfo = new List<FieldNameInfo>()
         {
+
             new FieldNameInfo()
             {
                 FieldName = "IT Sector",
@@ -80,7 +81,16 @@ namespace Eco
                     "Corona Distillery",
                     "Hertog Kees Brewery",
                     "Jupiter Beer",
+                    "Big Smack Food Corp.",
+                    "Bec Dongalds Inc.",
 
+                    "comp 6",
+                    "comp 7",
+                    "comp 8",
+                    "comp 9",
+                    "comp 10",
+                    "comp 11",
+                    "comp 12"
                 }
             },
             new FieldNameInfo()
@@ -90,7 +100,17 @@ namespace Eco
                 {
                     "Jelle's Boubedriuw B.V.",
                     "Bob de Douwer GMBH",
-                    
+                    "Steentje Los B.V.",
+                    "Keibest N.V.",
+                    "Steengoed GMBH",
+                    "Grondig Gegraven",
+
+                    "comp 7",
+                    "comp 8",
+                    "comp 9",
+                    "comp 10",
+                    "comp 11",
+                    "comp 12"
                 }
             },
 

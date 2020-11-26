@@ -60,11 +60,9 @@ namespace StockExchangeSim.Views
                 companyList.Items.Clear();
                 for (int i = 0; i < listofCompanies.Count; i++)
                 {
-                    listofCompanies[i].initName();
-
                     //make listboxitem to shove name into (with force)
                     TextBlock item = new TextBlock();
-                    item.Text = (listofCompanies[i].id).ToString();
+                    item.Text = listofCompanies[i].name;
                     //item.PointerPressed += Item_PointerPressed;
                     //item.PointerReleased += Item_PointerPressed;
                     companyList.Items.Add(item);

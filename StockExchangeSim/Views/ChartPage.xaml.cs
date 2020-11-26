@@ -61,7 +61,7 @@ namespace StockExchangeSim.Views
             fieldpg.chartpg = this;
             fieldpg.Name = fld.fieldName;
             //fld.fieldName = rn.Next().ToString();
-            fieldpg.fieldtxt.Value = fld.id.ToString();
+            fieldpg.fieldtxt.Value = fld.fieldName;
             //((TextBlock)fieldpg.FindName("FieldTextBlock")).Name = fieldPageName;
 
             fieldpg.Style = (Windows.UI.Xaml.Style)App.Current.Resources["fieldPageStyle"];
