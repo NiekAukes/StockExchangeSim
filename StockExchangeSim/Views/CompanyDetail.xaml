@@ -14,6 +14,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -21,7 +22,12 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="companyList" Grid.Column="0" Grid.Row="0"
+        <TextBlock x:Name="FieldName" Style="{StaticResource CompanyDetailTitleStyle}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                       Grid.Row="0" Grid.Column="0" Text="TestFieldName"/>
+        
+        <ListView x:Name="companyList" Grid.Column="0" Grid.Row="1"
                   Grid.RowSpan="2" Foreground="White" SelectionChanged="companyList_SelectionChanged">
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
@@ -29,7 +35,7 @@
             <ListViewItem Foreground="white">fklsj fldkj</ListViewItem>
         </ListView>
 
-        <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
+        <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Orientation="Vertical">
             <TextBlock x:Name="CompanyName" Style="{StaticResource CompanyDetailTitleStyle}"
                        Text="TestCompanyName"/>
 

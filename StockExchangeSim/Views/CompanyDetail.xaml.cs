@@ -51,7 +51,7 @@ namespace StockExchangeSim.Views
         public void InsertDetails(List<Eco.Company> companies, int selectedindex)
         {
             listofCompanies = companies;
-
+            FieldName.Text = Field.fieldName;
             
 
             //insert company names:

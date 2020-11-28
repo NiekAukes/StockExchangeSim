@@ -142,6 +142,8 @@ namespace Eco
         }
         public bool BuyStock(Company cp, Trader buyer)
         {
+            if (cp.BidAsk == null)
+                return false;
             if (cp.BidAsk.Stocks.Count < 1)
                 return false;
 
@@ -158,6 +160,9 @@ namespace Eco
 
         public void SellStock(Stock stock)
         {
+            if (stock.company.BidAsk == null)
+                return;
+
             money += stock.company.BidAsk.Ask;
             stock.Owner.money += stock.company.BidAsk.Ask;
 

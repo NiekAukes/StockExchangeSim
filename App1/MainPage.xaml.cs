@@ -154,7 +154,7 @@ namespace App1
                 if (i + counter * 5 < Realprices.Count)
                     cp.stockPrices.Add(Realprices[i + counter * 5]);
             }
-            if (cp.stockPrices.Count > 25)
+            if (cp.stockPrices.Count > 125)
             {
                 for (int i = 0; i < 5; i++)
                 {

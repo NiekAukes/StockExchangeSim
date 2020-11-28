@@ -34,7 +34,7 @@ namespace Eco
         public double Money = 100;
         public double BaseActionTimeRequired = 20 + rn.NextDouble() * 20; //in seconds
         public double ActivityTime = 0;
-        public double ActionTime = 1; //in seconds
+        public double ActionTime = rn.NextDouble() * 240; //in seconds
         public double skill = 1;
 
         List<Strategy> Strategies = new List<Strategy>();

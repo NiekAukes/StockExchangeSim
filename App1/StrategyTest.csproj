@@ -131,6 +131,7 @@
     <Compile Include="Strategy.cs" />
     <Compile Include="SupportResistanceTool.cs" />
     <Compile Include="Trader.cs" />
+    <Compile Include="TrendMarketWatcher.cs" />
     <Compile Include="TrendStrategy.cs" />
     <Compile Include="TrendTool.cs" />
   </ItemGroup>
