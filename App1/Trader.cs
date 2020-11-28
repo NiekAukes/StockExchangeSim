@@ -43,8 +43,12 @@ namespace Eco
         {
             Stocks = new List<Stock>();
             InterestedCompanies.Add(MainPage.cp);
-            Strategies.Add(StrategyFactory.RandomStrategy(this));
-            //Strategies.Add(StrategyFactory.RandomStrategy());
+            StrategyFactory stFact = new StrategyFactory(this);
+            while (Strategies.Count < 1) //pick strats till you have 2
+            {
+                Strategies.Add(stFact.RandomStrategy());
+            }
+            
             
         }
 
@@ -79,14 +83,25 @@ namespace Eco
                     if (tp.Item2 < 0)
                     {
                         //sell stocks, if any
-                        List<Stock> lsstocks = stocks[InterestedCompanies.IndexOf(tp.Item1)];
-                        if (stocks[InterestedCompanies.IndexOf(tp.Item1)].Count > 0)
+                        List<Stock> lsstocks = null;
+                        int index = InterestedCompanies.IndexOf(tp.Item1);
+                        try
                         {
-                            for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
+                            lsstocks = stocks[index];
+
+
+                            if (stocks[index].Count > 0)
                             {
-                                //sell stocks with float value or until all stocks are sold
-                                MainPage.exchange.SellStock(lsstocks[i]);
+                                for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
+                                {
+                                    //sell stocks with float value or until all stocks are sold
+                                    MainPage.exchange.SellStock(lsstocks[i]);
+                                }
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error");
                         }
                     }
                     else
