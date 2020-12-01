@@ -124,6 +124,10 @@ namespace Eco
             {
                 Seed = CustomSeed;
             }
+            else
+            {
+                Seed = (new Random()).Next();
+            }
             //set vars
             FieldAmount = fields;
             TraderAmount = traders;
