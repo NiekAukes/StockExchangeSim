@@ -7,28 +7,7 @@ using System.Threading.Tasks;
 
 namespace Eco
 {
-    public class StockPriceGraph
-    {
-        public float Year { get; set; }
-        public float Open { get; set; }
-        public float Close { get; set; }
-        public float High { get; set; }
-        public float Low { get; set; }
-        public StockPriceGraph(float year, float open, float close, float high, float low)
-        {
-            Year = year;
-            Open = open;
-            Close = close;
-            High = high;
-            Low = low;
-        }
-    }
-
-    public class Company {
-        public BidAsk BidAsk;
-        public float Value, stockprice;
-        public ObservableCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
-    }
+   
 
     public class Stock
     {
@@ -76,7 +55,7 @@ namespace Eco
         }
         public void Update(float totalProfit)
         {
-            Collected += totalProfit * Percentage * 0.01;
+            Collected += totalProfit * Percentage * 0.01f;
         }
         public float Collect()
         {

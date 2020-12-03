@@ -7,12 +7,6 @@ using System.Threading.Tasks;
 namespace Eco
 {
 
-    public abstract class MarketTool<ToolData>
-    {
-        Random rn = new Random();
-        public static int MinimumPriceCount = 50;
-        public abstract ToolData StrategyOutcome(Company cp);
-    }
     public class LiquidityToolData
     {
         public LiquidityToolData(float ESP) { ExpectedStockPrice = ESP; }

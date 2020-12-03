@@ -20,13 +20,13 @@ namespace StockExchangeSim.Core.Models
 
         public string ShipperPhone { get; set; }
 
-        public double Freight { get; set; }
+        public float Freight { get; set; }
 
         public string Company { get; set; }
 
         public string ShipTo { get; set; }
 
-        public double OrderTotal { get; set; }
+        public float OrderTotal { get; set; }
 
         public string Status { get; set; }
 

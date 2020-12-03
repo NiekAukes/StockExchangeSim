@@ -30,7 +30,7 @@ namespace Eco
     {
         public static Random rn = new Random();
         public List<List<Stock>> stocks = new List<List<Stock>>();
-        public List<Company> InterestedCompanies = new List<Company>();
+        public List<Company> InterestedCompanies = null;
         public float Money = 100;
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
@@ -42,7 +42,11 @@ namespace Eco
         public Trader()
         {
             Stocks = new List<Stock>();
-            InterestedCompanies.Add(MainPage.cp);
+            InterestedCompanies = Master.inst.GetAllCompanies();
+            while (InterestedCompanies.Count > 4)
+            {
+                InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
+            }
             StrategyFactory stFact = new StrategyFactory(this);
             while (Strategies.Count < 1) //pick strats till you have 2
             {
@@ -76,7 +80,7 @@ namespace Eco
             {
                 MarketResults Final = new MarketResults();
                 foreach (Strategy strat in Strategies)
-                    Final = Final + strat.StrategyOutcome(this, MainPage.exchange);
+                    Final = Final + strat.StrategyOutcome(this, Master.inst.exchange);
 
                 foreach(var tp in Final.Results)
                 {
@@ -95,7 +99,7 @@ namespace Eco
                                 for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
                                 {
                                     //sell stocks with float value or until all stocks are sold
-                                    MainPage.exchange.SellStock(lsstocks[i]);
+                                    Master.inst.exchange.SellStock(lsstocks[i]);
                                 }
                             }
                         }
@@ -109,7 +113,7 @@ namespace Eco
                         for (int i = 0; i < tp.Item2 * 100; i++)
                         {
                             //buy stocks here
-                            MainPage.exchange.BuyStock(tp.Item1, this);
+                            Master.inst.exchange.BuyStock(tp.Item1, this);
                         }
                     }
 
@@ -124,7 +128,7 @@ namespace Eco
             int index = InterestedCompanies.IndexOf(cp);
             for (int i = 0; i < amount; i++)
             {
-                MainPage.exchange.SellStock(stocks[index][0]);
+                Master.inst.exchange.SellStock(stocks[index][0]);
                 stocks[index].RemoveAt(0);
             }
         }

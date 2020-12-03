@@ -14,12 +14,12 @@ namespace Eco
 {
     public class StockPriceGraph
     {
-        public double Year { get; set; }
+        public float Year { get; set; }
         public float Open { get; set; }
         public float Close { get; set; }
         public float High { get; set; }
         public float Low { get; set; }
-        public StockPriceGraph(double year, float open, float close, float high, float low)
+        public StockPriceGraph(float year, float open, float close, float high, float low)
         {
             Year = year;
             Open = open;
@@ -30,9 +30,9 @@ namespace Eco
     }
     public class ValueGraph
     {
-        public double Year { get; set; }
+        public float Year { get; set; }
         public float Value { get; set; }
-        public ValueGraph(double year, float value)
+        public ValueGraph(float year, float value)
         {
             Year = year;
             Value = value;
@@ -57,9 +57,10 @@ namespace Eco
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
         public List<Stock> Stocks { get; set; }
-        public double Value = 50;
-        public double stockprice = 0;
-        public double Competitiveness = 100;
+        public BidAsk BidAsk;
+        public float Value = 50;
+        public float stockprice = 0;
+        public float Competitiveness = 100;
 
         //BidAsk bidAsk = null;
 
@@ -73,9 +74,9 @@ namespace Eco
 
         //setup values
         public int id;
-        public double CompetitivePosition = 1;
-        public double Dividend = 0;
-        public double StockPart = 0.01 / 50;
+        public float CompetitivePosition = 1;
+        public float Dividend = 0;
+        public float StockPart = 0.01f / 50;
         public Company(Field f)
         {
             CompanyStock = CreateStock(100);
@@ -99,13 +100,13 @@ namespace Eco
             {
                 for (int i = 0; i < 50; i++)
                 {
-                    Master.inst.exchange.SellStock(CompanyStock.SplitStock(1.0 / 50.0), stockprice/50);
+                    Master.inst.exchange.SellStock(CompanyStock.SplitStock(1.0f / 50.0f));
                 }
             }
         }
         //variable values
         #region variableValues
-        public void SetValue(double val)
+        public void SetValue(float val)
         {
             Value = val;
             LastDecemValue = val;
@@ -114,40 +115,40 @@ namespace Eco
             LastDeceMilleValue = val;
             LastCentuMilleValue = val;
         }
-        public double age = 0;
+        public float age = 0;
         public bool Bankrupt = false;
 
-        public double LastDecemValue = 0;
-        public double LastCentumValue = 0;
-        public double LastMilleValue = 0;
-        public double LastDeceMilleValue = 0;
-        public double LastCentuMilleValue = 0;
+        public float LastDecemValue = 0;
+        public float LastCentumValue = 0;
+        public float LastMilleValue = 0;
+        public float LastDeceMilleValue = 0;
+        public float LastCentuMilleValue = 0;
 
         //Gain Calculation
-        public double LastTickGain = 0.0; //value Gained per tick
-        public double LastTickSlope = 0.0; // gain Gained per tick
-        public double LastDecemGain = 0;
-        public double LastCentumGain = 0;
-        public double LastMilleGain = 0;
-        public double LastDeceMilleGain = 0;
-        public double LastCentuMilleGain = 0;
+        public float LastTickGain = 0.0f; //value Gained per tick
+        public float LastTickSlope = 0.0f; // gain Gained per tick
+        public float LastDecemGain = 0;
+        public float LastCentumGain = 0;
+        public float LastMilleGain = 0;
+        public float LastDeceMilleGain = 0;
+        public float LastCentuMilleGain = 0;
         #endregion
 
         long CurrentTick = Master.ticks;
-        double modifier = 30000 / 2629743.8;
+        float modifier = 30000 / 2629743.8f;
 
-        public double money { get { return Value; } set { Value = value; } }
+        public float money { get { return Value; } set { Value = value; } }
 
 
         float open = 0;
         float high = 0;
         float low = 0;
 
-        public double ValueGainPT = 0;
-        double calcprof()
+        public float ValueGainPT = 0;
+        float calcprof()
         {
 
-            //double usableValue = Value;
+            //float usableValue = Value;
 
             //if (Value < 100)
             //{
@@ -155,7 +156,7 @@ namespace Eco
             //}
             CompetitivePosition = (Competitiveness / field.TotalCompetitiveness) //calculate Competitive Position
                 * field.companies.Count;
-            double ret = (CompetitivePosition * 
+            float ret = (CompetitivePosition * 
                 Master.Conjucture - 1) * //multiply by conjucture
                 modifier;//multiply by the modifier and Economic growth
             return ret;
@@ -164,7 +165,7 @@ namespace Eco
         public void Update()
         {
             
-            Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.00000001 * MainPage.master.SecondsPerTick;
+            Competitiveness += -MathF.Pow(Competitiveness - 100, 3) * 0.00000001f * MainPage.master.SecondsPerTick;
 
             //calculate profit
             if (CurrentTick % 10 == 0)
@@ -215,9 +216,8 @@ namespace Eco
             //check high and low
             if (tick % 20 == 0)
             {
-                Stock st = Master.inst.exchange.GetCheapestStock(this);
-                if (st != null) {
-                    float currentprice = (float)st.SellPrice;
+                if (BidAsk != null) {
+                    float currentprice = BidAsk.Bid;
                     if (currentprice > high)
                         high = currentprice;
                     if (currentprice < low)
@@ -285,7 +285,7 @@ namespace Eco
 
 
 
-        private Stock CreateStock(double percentage)
+        private Stock CreateStock(float percentage)
         {
             Stock ret = new Stock(this, percentage);
             ret.Owner = this;

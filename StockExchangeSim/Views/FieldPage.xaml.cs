@@ -51,17 +51,17 @@ namespace StockExchangeSim.Views
 
         }
 
-        public double TileBorderThickness = 5;
-        public double TileCornerRadius = 4;
+        public float TileBorderThickness = 5;
+        public float TileCornerRadius = 4;
 
-        private double tileHeight = 250;
-        private double tileWidth = 250;
-        public double TileHeight
+        private float tileHeight = 250;
+        private float tileWidth = 250;
+        public float TileHeight
         {
             get { return tileHeight; }
             set { tileHeight = value; }
         }
-        public double TileWidth
+        public float TileWidth
         {
             get { return tileWidth; }
             set { tileWidth = value; }
@@ -196,7 +196,7 @@ namespace StockExchangeSim.Views
         }
         
         
-        public static void SizeUpFrameWorkElement(FrameworkElement grid, double fromX, double fromY, double scaleX, double scaleY, Double mSecTimeSpan)
+        public static void SizeUpFrameWorkElement(FrameworkElement grid, float fromX, float fromY, float scaleX, float scaleY, float mSecTimeSpan)
         {
             grid.RenderTransform = new ScaleTransform { ScaleX = fromX, ScaleY = fromY };
             DoubleAnimation animateScaleX = CreateDoubleAnimation(grid.RenderTransform, fromX, scaleX, "(ScaleTransform.ScaleX)", mSecTimeSpan);
@@ -216,7 +216,7 @@ namespace StockExchangeSim.Views
                 scaleUpStoryBoard.Begin();
             }
         }
-        public static ColorAnimation AnimateBorderbrushProperty(FrameworkElement elem, System.Numerics.Vector4 from, System.Numerics.Vector4 to, double mSecTimeSpan)
+        public static ColorAnimation AnimateBorderbrushProperty(FrameworkElement elem, System.Numerics.Vector4 from, System.Numerics.Vector4 to, float mSecTimeSpan)
         {
             
             ColorAnimation borderBrushAnim = new ColorAnimation();
@@ -228,7 +228,7 @@ namespace StockExchangeSim.Views
             return borderBrushAnim;
         }
 
-        private static DoubleAnimation CreateDoubleAnimation(DependencyObject frameworkElement, double fromX, double toX, string propertyToAnimate, Double mSecInterval)
+        private static DoubleAnimation CreateDoubleAnimation(DependencyObject frameworkElement, float fromX, float toX, string propertyToAnimate, float mSecInterval)
         {
             DoubleAnimation animation = new DoubleAnimation();
             Storyboard.SetTarget(animation, frameworkElement);

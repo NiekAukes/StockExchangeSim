@@ -48,9 +48,9 @@ namespace StockExchangeSim.Views
 
     public class CPValueData
     {
-        public double Year { get; set; }
-        public double Value { get; set; }
-        public CPValueData(double year, double value)
+        public float Year { get; set; }
+        public float Value { get; set; }
+        public CPValueData(float year, float value)
         {
             Year = year;
             Value = value;
@@ -273,14 +273,14 @@ namespace StockExchangeSim.Views
                     //messageDialog = null;
                 }
                 double f = slider.Value;
-                master.SetSecondsPerTick((f * f * 0.01));
+                master.SetSecondsPerTick((float)(f * f * 0.01f));
             }
 
         }
         public void SetSliderValue()
         {
             double f = slider.Value;
-            master.SetSecondsPerTick((f * f * 0.01));
+            master.SetSecondsPerTick((float)(f * f * 0.01));
         }
 
 

@@ -188,15 +188,22 @@
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
     <Compile Include="Code\Company.cs" />
-    <Compile Include="Code\Exchange.cs" />
     <Compile Include="Code\Field.cs" />
     <Compile Include="Code\Master.cs" />
     <Compile Include="Code\MicroTimers.cs" />
-    <Compile Include="Code\Strategy.cs" />
     <Compile Include="Code\TableOfNames.cs" />
-    <Compile Include="Code\Trader.cs" />
+    <Compile Include="Code\Trading\MarketWatchers\BreakoutMarketWatcher.cs" />
+    <Compile Include="Code\Trading\Strategies\BreakoutStrategy.cs" />
+    <Compile Include="Code\Trading\Exchange.cs" />
     <Compile Include="Code\Trading\GraphUtil.cs" />
+    <Compile Include="Code\Trading\MarketWatcher.cs" />
+    <Compile Include="Code\Trading\Strategies\Strategy.cs" />
+    <Compile Include="Code\Trading\Tools\SupportResistanceTool.cs" />
     <Compile Include="Code\Trading\Tools\LiquidityTool.cs" />
+    <Compile Include="Code\Trading\Trader.cs" />
+    <Compile Include="Code\Trading\MarketWatchers\TrendMarketWatcher.cs" />
+    <Compile Include="Code\Trading\Strategies\TrendStrategy.cs" />
+    <Compile Include="Code\Trading\Tools\TrendTool.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
@@ -355,10 +362,7 @@
       <Name>StockExchangeSim.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\Trading\MarketWatchers\" />
-    <Folder Include="Code\Trading\Strategies\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

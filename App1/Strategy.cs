@@ -86,7 +86,7 @@ namespace Eco
 
             public override MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
             {
-                //double money = trader.money;
+                //float money = trader.money;
                 //Company cp = exchange.Companies[rn.Next(exchange.BidAskSpreads.Count - 1)]; //invest in this company
 
                 //Stock s = exchange.GetCheapestStock(cp);
@@ -103,7 +103,7 @@ namespace Eco
         
         public class PatternStrategy : Strategy
         {
-            double scale = 1;
+            float scale = 1;
             List<Company> interestedCompanies = null;
             public PatternStrategy()
             {
@@ -310,7 +310,7 @@ namespace Eco
             {
                 return null;
                 //price exploration
-                double money = trader.money;
+                float money = trader.money;
                 Company cp = interestedCompanies[rn.Next(interestedCompanies.Count)]; //invest in this company
                
                 if (cp.stockPrices.Count < MinimumPriceCount + 1) //safeguard
