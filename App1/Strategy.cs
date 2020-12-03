@@ -11,34 +11,29 @@ namespace Eco
     
     public partial class Trader
     {
-        
-        public static class StrategyFactory
+
+        public class StrategyFactory
         {
-            public static int StrategyAmount = 1;
-            public static Strategy RandomStrategy(Trader t)
+            Trader t = null;
+
+            List<Strategy> stratpool = null;
+            public StrategyFactory(Trader trader)
             {
-                int choice = rn.Next(StrategyAmount);
-                switch (choice)
+                t = trader;
+                stratpool = new List<Strategy>()
                 {
-                    case 0:
-                        return new BreakoutStrategy(t);
-                    case 1:
-                        return null ;
-                    case 2:
-                        return null;
-                    case 3:
-                        return null;
-                    case 4:
-                        return null;
-                    case 5:
-                        return null;
-                    case 6:
-                        return null;
-                    case 7:
-                        return null;
-                    default:
-                        return null;
-                }
+                    new BreakoutStrategy(t),
+                    new TrendStrategy(t),
+                };
+            }
+            public static int StrategyAmount = 1;
+            public Strategy RandomStrategy()
+            {
+                int choice = rn.Next(stratpool.Count);
+                Strategy ret = stratpool[choice];
+                stratpool.RemoveAt(choice);
+                return ret;
+                
             }
         }
 

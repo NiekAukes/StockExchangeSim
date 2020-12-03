@@ -79,21 +79,34 @@ namespace Eco
                 {
                     //if there is a double trend
                     // => watch market carefully
+
+                    //buy differences
+                    float UpDiff = price.Close - (TData.UpTrend.Multiplier * price.Year + TData.UpTrend.Adder);
+                    float DownDiff = (TData.DownTrend.Multiplier * price.Year + TData.DownTrend.Adder) - price.Close;
+                    ret += UpDiff - DownDiff;
                 }
                 else
                 {
                     if (!DowntrendInvalid)
                     {
                         //if only downtrend available => sell stocks
+                        ret += 15;
                     }
                     if (!UptrendInvalid)
                     {
                         //if only uptrend available => buy stocks
+                        ret -= 15;
+                    }
+                    if (UptrendInvalid && DowntrendInvalid)
+                    {
+                        //redo insights
+                        TData = null;
+                        return ret;
                     }
                 }
             }
 
-                throw new NotImplementedException();
+            return ret;
         }
     }
 }

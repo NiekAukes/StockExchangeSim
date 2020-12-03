@@ -8,8 +8,9 @@
     xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:qc="using:Ailon.QuickCharts"
     Style="{StaticResource PageStyle}"
-    mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    mc:Ignorable="d" 
+    Loaded="Page_Loaded"
+    NavigationCacheMode="Disabled">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

@@ -169,7 +169,7 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    Conjucture = (0.01 * Math.Sin(MainPage.master.Year * 1) + 1);
+                    Conjucture = (0.05 * Math.Sin(MainPage.master.Year * 1) + 1);
 
 
                     for (int j = 0; j < Fields.Count; j++)
