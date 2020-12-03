@@ -172,7 +172,7 @@ namespace Eco
             {
                 companies[i].age += tick;
                 companies[i].Update();
-                if (companies[i].Value < -300)
+                if (companies[i].Value < 0.1)
                 {
                     //BANKRUPT
                     companies[i].Bankrupt = true;

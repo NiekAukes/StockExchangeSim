@@ -10,12 +10,15 @@
     xmlns:ch="using:Syncfusion.UI.Xaml.Charts"
     xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:qc="using:Ailon.QuickCharts" Loaded="Page_Loaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Disabled">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,36 +31,46 @@
                        Grid.Row="0" Grid.Column="0" Text="TestFieldName"/>
         
         <ListView x:Name="companyList" Grid.Column="0" Grid.Row="1"
-                  Grid.RowSpan="2" Foreground="White" SelectionChanged="companyList_SelectionChanged">
+                  Grid.RowSpan="3" Foreground="White" SelectionChanged="companyList_SelectionChanged">
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsjfldkj</ListViewItem>
             <ListViewItem Foreground="white">fklsj fldkj</ListViewItem>
         </ListView>
 
-        <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Orientation="Vertical">
+        <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Orientation="Vertical">
             <TextBlock x:Name="CompanyName" Style="{StaticResource CompanyDetailTitleStyle}"
                        Text="TestCompanyName"/>
 
             <TextBlock x:Name="companyValue" Margin="20,20,0,20" Text="Company value: "/>
             <TextBlock x:Name="currStockPrice" Margin="20,20,0,20" Text="Stock price: "/>
 
-            <ch:SfChart x:Name="stockPriceChart" VerticalAlignment="Bottom" Height="auto">
+        </StackPanel>
+        <ch:SfChart Margin="10" x:Name="stockPriceChart" Grid.Column="1" Grid.Row="2"
+                        VerticalAlignment="Bottom" Height="auto">
                 <ch:SfChart.PrimaryAxis>
                     <ch:NumericalAxis x:Name="HorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.PrimaryAxis>
                 <ch:SfChart.SecondaryAxis>
                     <ch:NumericalAxis x:Name="VerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.SecondaryAxis>
+
+                <ch:SfChart.Behaviors>
+                    <ch:ChartTrackBallBehavior ShowLine="False" />
+                </ch:SfChart.Behaviors>
             </ch:SfChart>
-            <ch:SfChart x:Name="companyValueChart" VerticalAlignment="Bottom" Height="auto">
+            <ch:SfChart Margin="10" x:Name="companyValueChart" Grid.Column="1" Grid.Row="3"
+                        VerticalAlignment="Bottom" Height="auto">
                 <ch:SfChart.PrimaryAxis>
                     <ch:NumericalAxis x:Name="compValHorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.PrimaryAxis>
                 <ch:SfChart.SecondaryAxis>
                     <ch:NumericalAxis x:Name="compValVerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.SecondaryAxis>
+
+                <ch:SfChart.Behaviors>
+                    <ch:ChartTrackBallBehavior ShowLine="False" />
+                </ch:SfChart.Behaviors>
             </ch:SfChart>
-        </StackPanel>
     </Grid>
 </Page>

@@ -68,6 +68,8 @@ namespace Eco
 
                 bool Traded = false;
                 List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
+                if (stockPrices.Count < 110)
+                    return false;
                 for (int i = 0; i < 100; i++)
                 {
                     int m = cp.stockPrices1m.Count - 10 - (int)(i * scale);

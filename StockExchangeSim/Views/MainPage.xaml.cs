@@ -84,7 +84,7 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 3, trader = 10, hftrader = 1;
+        private int field = 1, trader = 10, hftrader = 1;
 
         public Master CreateMaster()
         {
@@ -107,7 +107,10 @@ namespace StockExchangeSim.Views
             //    series.ListenPropertyChange = true;
             //    chart.Series.Add(series);
             //}
-            
+
+            dataThread = new Thread(GatherData);
+            dataThread.Name = "dataThread";
+            dataThread.Start();
 
             return master;
         }
@@ -139,7 +142,7 @@ namespace StockExchangeSim.Views
         }
         public CompanyViewModel vm = new CompanyViewModel();
         public CompanyViewModel vm2 = new CompanyViewModel();
-        public Thread dataThread = null;
+        public static Thread dataThread = null;
         public MainPage()
         {
             InitializeComponent();
@@ -182,36 +185,43 @@ namespace StockExchangeSim.Views
 
 
             UpdateYear();
-            dataThread = new Thread(GatherData);
-            dataThread.Name = "dataThread";
-            dataThread.Start();
+            if (dataThread == null)
+            {
+                dataThread = new Thread(GatherData);
+                dataThread.Name = "dataThread";
+                dataThread.Start();
+            }
 
 
         }
 
-        //~MainPage ()
-        //{
-        //    master.active = false;
-        //}
+        ~MainPage()
+        {
+            master.active = false;
+        }
 
         public void GatherData()
         {
-            for(int tick = 0; true ;tick++)
+            for (long tick = 0; master.alive || tick <= 200; tick++)
             {
 
                 if (master.active)
                 {
-                    for (int i = 0; i < master.Fields.Count; i++)
+                    if ((tick % 1000) / master.SecondsPerTick < 1)
                     {
-                        Field field = master.Fields[i];
-                        //do Information Gathering from fields
-                        for (int j = 0; j < field.companies.Count; j++)
+                        for (int i = 0; i < master.Fields.Count; i++)
                         {
-                            Company cp = master.Fields[i].companies[j];
-                            cp.Data(tick);
+                            Field field = master.Fields[i];
+                            //do Information Gathering from fields
+                            for (int j = 0; j < field.companies.Count; j++)
+                            {
+
+                                field.companies[j].Data(tick);
+                            }
                         }
                     }
                     //Thread.Sleep(2);
+                    
 
                 }
 
@@ -220,6 +230,7 @@ namespace StockExchangeSim.Views
                     Thread.Sleep(10);
                 }
             }
+            System.Diagnostics.Debug.WriteLine("ended");
         }
         
 

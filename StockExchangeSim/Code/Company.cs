@@ -176,7 +176,7 @@ namespace Eco
         float open5m, close5m, high5m, low5m;
         float open10m, close10m, high10m, low10m;
         float open30m, close30m, high30m, low30m;
-        public void Data(int tick)
+        public void Data(long tick)
         {
             if (tick % 10 == 0)
             {
@@ -248,7 +248,7 @@ namespace Eco
                             }
                         }
 
-                        if (tick % 80000 == 0)
+                        if (tick % 800000 == 0)
                         {
                             //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 

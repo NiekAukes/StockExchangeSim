@@ -33,6 +33,11 @@ namespace StockExchangeSim.Views
 
 
         }
+
+        ~CompanyDetail()
+        {
+            System.Diagnostics.Debug.WriteLine("destroyed");
+        }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             InsertDetails(Field.companies, -1);
@@ -107,6 +112,7 @@ namespace StockExchangeSim.Views
                 YBindingPath = "Value"
             };
             series.ListenPropertyChange = true;
+
             companyValueChart.Series.Add(series);
 
             //INSERT STOCK PRICES
@@ -120,7 +126,13 @@ namespace StockExchangeSim.Views
                 Close = "Close"
             };
             candleSeries.ListenPropertyChange = true;
-            //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
+            candleSeries.BullFillColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 70, 220, 75));
+            candleSeries.BearFillColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 235, 30, 30));
+            //stockPriceChart.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 30, 30, 35));
+
+            (stockPriceChart.SecondaryAxis as NumericalAxis).ZoomFactor = 1.4;
+            candleSeries.ComparisonMode = FinancialPrice.None;
+
             stockPriceChart.Series.Add(candleSeries);
         }
 

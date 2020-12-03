@@ -9,7 +9,8 @@
    x:Name="thispage"
     Style="{StaticResource PageStyle}"
     xmlns:tc="using:Telerik.UI.Xaml.Controls.Chart"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Disabled">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <ScrollViewer>
