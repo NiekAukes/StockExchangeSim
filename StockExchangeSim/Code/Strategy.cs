@@ -36,6 +36,7 @@ namespace Eco
         public class PatternStrategy : Strategy
         {
             double scale = 1;
+            LiquidityTool liquidityTool = new LiquidityTool();
             List<Company> interestedCompanies = null;
             public PatternStrategy()
             {
@@ -258,6 +259,8 @@ namespace Eco
                 }
                 if (!Traded)
                 {
+                    float f = liquidityTool.StrategyOutcome(cp).ExpectedStockPrice;
+
                     for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
                     {
                         exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 2 +

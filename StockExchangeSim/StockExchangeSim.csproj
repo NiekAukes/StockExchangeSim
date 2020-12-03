@@ -195,6 +195,8 @@
     <Compile Include="Code\Strategy.cs" />
     <Compile Include="Code\TableOfNames.cs" />
     <Compile Include="Code\Trader.cs" />
+    <Compile Include="Code\Trading\GraphUtil.cs" />
+    <Compile Include="Code\Trading\Tools\LiquidityTool.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
@@ -352,6 +354,10 @@
       <Project>{7F366EF4-E762-43E8-A32F-51D7B3A3B6C3}</Project>
       <Name>StockExchangeSim.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Code\Trading\MarketWatchers\" />
+    <Folder Include="Code\Trading\Strategies\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

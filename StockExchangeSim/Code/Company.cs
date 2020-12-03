@@ -73,6 +73,9 @@ namespace Eco
 
         //setup values
         public int id;
+        public double CompetitivePosition = 1;
+        public double Dividend = 0;
+        public double StockPart = 0.01 / 50;
         public Company(Field f)
         {
             CompanyStock = CreateStock(100);
@@ -143,15 +146,16 @@ namespace Eco
         public double ValueGainPT = 0;
         double calcprof()
         {
-            
+
             //double usableValue = Value;
 
             //if (Value < 100)
             //{
             //    usableValue += 500;
             //}
-            double ret = ((Competitiveness / field.TotalCompetitiveness)
-                * field.companies.Count * //calculate Competitive Position
+            CompetitivePosition = (Competitiveness / field.TotalCompetitiveness) //calculate Competitive Position
+                * field.companies.Count;
+            double ret = (CompetitivePosition * 
                 Master.Conjucture - 1) * //multiply by conjucture
                 modifier;//multiply by the modifier and Economic growth
             return ret;
@@ -160,12 +164,13 @@ namespace Eco
         public void Update()
         {
             
-            Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.000001 * MainPage.master.SecondsPerTick;
+            Competitiveness += -Math.Pow(Competitiveness - 100, 3) * 0.00000001 * MainPage.master.SecondsPerTick;
 
             //calculate profit
             if (CurrentTick % 10 == 0)
             {
                 ValueGainPT = calcprof();
+                Dividend = ValueGainPT > 0 ? ValueGainPT * StockPart : 0;
             }
             CompanyStock.Update(ValueGainPT * MainPage.master.SecondsPerTick);
             Value += CompanyStock.Collect();
