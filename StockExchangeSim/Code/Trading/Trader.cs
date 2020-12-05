@@ -1,16 +1,12 @@
-﻿using App1;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
-    
+
     public enum HFTStrategy
     {
-        MarketMaking, 
+        MarketMaking,
         ArbitrageTrading,
         PairArbitrageTrading,
         MomentumIgnition,
@@ -28,7 +24,7 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
-        public static Random rn = new Random();
+        public static Random rn = new Random(Master.Seed);
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
         public float Money = 100;
@@ -52,8 +48,8 @@ namespace Eco
             {
                 Strategies.Add(stFact.RandomStrategy());
             }
-            
-            
+
+
         }
 
         public float money { get { return Money; } set { Money = value; } }
@@ -82,7 +78,7 @@ namespace Eco
                 foreach (Strategy strat in Strategies)
                     Final = Final + strat.StrategyOutcome(this, Master.inst.exchange);
 
-                foreach(var tp in Final.Results)
+                foreach (var tp in Final.Results)
                 {
                     if (tp.Item2 < 0)
                     {

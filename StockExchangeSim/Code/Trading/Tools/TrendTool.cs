@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
+﻿using System.Collections.Generic;
 
 namespace Eco
 {
@@ -22,8 +16,8 @@ namespace Eco
         {
 
             MinimumPriceCount = cp.stockPrices1m.Count;
-            List<StockPriceGraph> highs = new List<StockPriceGraph>(cp.stockPrices);
-            List<StockPriceGraph> lows = new List<StockPriceGraph>(cp.stockPrices);
+            SynchronizedCollection<StockPriceGraph> highs = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m);
+            SynchronizedCollection<StockPriceGraph> lows = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m);
             //
             //   These Comments are working code, they create highs and lows
             //

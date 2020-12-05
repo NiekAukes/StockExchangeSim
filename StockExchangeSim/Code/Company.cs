@@ -1,14 +1,9 @@
-﻿using System;
+﻿using StockExchangeSim.Views;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using StockExchangeSim;
-using StockExchangeSim.Views;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace Eco
 {
@@ -66,11 +61,11 @@ namespace Eco
 
         public StockViewModel stockViewModel = new StockViewModel();
         public ValueViewModel ValueviewModel = new ValueViewModel();
-        public List<StockPriceGraph> stockPrices1m = new List<StockPriceGraph>();
-        public List<StockPriceGraph> stockPrices5m = new List<StockPriceGraph>();
-        public List<StockPriceGraph> stockPrices10m = new List<StockPriceGraph>();
-        public List<StockPriceGraph> stockPrices30m = new List<StockPriceGraph>();
-        public List<ValueGraph> values = new List<ValueGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices1m = new SynchronizedCollection<StockPriceGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices5m = new SynchronizedCollection<StockPriceGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices10m = new SynchronizedCollection<StockPriceGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices30m = new SynchronizedCollection<StockPriceGraph>();
+        public SynchronizedCollection<ValueGraph> values = new SynchronizedCollection<ValueGraph>();
 
         //setup values
         public int id;
@@ -94,15 +89,13 @@ namespace Eco
 
             return ret;
         }
-        public void BecomePublic()
+        public Stock BecomePublic()
         {
             if (CompanyStock.Percentage == 100)
             {
-                for (int i = 0; i < 50; i++)
-                {
-                    Master.inst.exchange.SellStock(CompanyStock.SplitStock(1.0f / 50.0f));
-                }
+                return CompanyStock.SplitStock(1);
             }
+            return null;
         }
         //variable values
         #region variableValues
@@ -156,15 +149,15 @@ namespace Eco
             //}
             CompetitivePosition = (Competitiveness / field.TotalCompetitiveness) //calculate Competitive Position
                 * field.companies.Count;
-            float ret = (CompetitivePosition * 
+            float ret = (CompetitivePosition *
                 Master.Conjucture - 1) * //multiply by conjucture
                 modifier;//multiply by the modifier and Economic growth
             return ret;
-                
+
         }
         public void Update()
         {
-            
+
             Competitiveness += -MathF.Pow(Competitiveness - 100, 3) * 0.00000001f * MainPage.master.SecondsPerTick;
 
             //calculate profit
@@ -216,14 +209,15 @@ namespace Eco
             //check high and low
             if (tick % 20 == 0)
             {
-                if (BidAsk != null) {
+                if (BidAsk != null)
+                {
                     float currentprice = BidAsk.Bid;
                     if (currentprice > high)
                         high = currentprice;
                     if (currentprice < low)
                         low = currentprice;
 
-                    
+
 
                     //register datapoint
                     if (tick % 100 == 0)
@@ -277,9 +271,9 @@ namespace Eco
                             open = currentprice;
                         }
                     }
-                    
+
                 }
-                
+
             }
         }
 

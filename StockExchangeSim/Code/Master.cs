@@ -1,18 +1,11 @@
-﻿using System;
+﻿using StockExchangeSim.Views;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using MicroLibrary;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Reflection.Metadata.Ecma335;
-using StockExchangeSim.Views;
 
 namespace Eco
 {
-    
+
     public class Time
     {
         UInt64 seconds = 0;
@@ -36,7 +29,7 @@ namespace Eco
         public float GetDays()
         {
 
-            return seconds / 60.0f / 60/ 24;
+            return seconds / 60.0f / 60 / 24;
         }
         public float GetMonths()
         {
@@ -55,7 +48,7 @@ namespace Eco
             if (seconds > 60)
             {
                 //minutes
-                if (seconds > 60*60)
+                if (seconds > 60 * 60)
                 {
                     //hours
                     if (seconds > 60 * 60 * 24)
@@ -84,7 +77,7 @@ namespace Eco
             }
             return "";
         }
-        
+
     }
     public class Master
     {
@@ -110,7 +103,7 @@ namespace Eco
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
-        public Exchange exchange = new Exchange();
+        public ExchangeBroker exchange = new ExchangeBroker();
 
         public TableOfNames masterTable = new TableOfNames();
 
@@ -166,7 +159,7 @@ namespace Eco
         public void Update()
         {
 
-            
+
             for (; ticks < 100000000000 && alive; ticks++)
             {
 
@@ -186,9 +179,9 @@ namespace Eco
                     {
                         Fields[j].Update();
                     }
-                        
 
-                    
+
+
 
                     int n = Traders.Count;
                     while (n > 1)
@@ -207,9 +200,9 @@ namespace Eco
 
                     Year += SecondsPerTick / (365.25f * 24 * 60 * 60);
 
-                    
 
-                    
+
+
                 }
                 else
                 {

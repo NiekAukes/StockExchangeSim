@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 
 namespace Eco
 {
@@ -39,7 +34,8 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            List<StockPriceGraph> NewPrices = new List<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
+            IEnumerable<StockPriceGraph> nwe = cp.stockPrices1m.Skip(lastdatapoint);
+            SynchronizedCollection<StockPriceGraph> NewPrices = new SynchronizedCollection<StockPriceGraph>(nwe);
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
 

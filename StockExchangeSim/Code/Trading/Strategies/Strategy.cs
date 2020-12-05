@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
-    
+
     public partial class Trader
     {
 
@@ -32,14 +28,14 @@ namespace Eco
                 Strategy ret = stratpool[choice];
                 stratpool.RemoveAt(choice);
                 return ret;
-                
+
             }
         }
 
         public class MarketResults
         {
             public List<Tuple<Company, float>> Results = new List<Tuple<Company, float>>();
-            public static MarketResults operator+(MarketResults a, MarketResults b)
+            public static MarketResults operator +(MarketResults a, MarketResults b)
             {
                 List<Company> lscomp = new List<Company>();
                 List<float> lsfloat = new List<float>();
@@ -96,10 +92,10 @@ namespace Eco
                 //}
                 //trader.ActionTime -= 5;
                 return null;
-                
+
             }
         }
-        
+
         /*public class PatternStrategy : Strategy
         {
             float scale = 1;
@@ -357,5 +353,5 @@ namespace Eco
             }
         }*/
     }
-    
+
 }

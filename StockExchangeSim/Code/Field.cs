@@ -1,16 +1,7 @@
-﻿using System;
+﻿using StockExchangeSim.Views;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Data.Json;
-using StockExchangeSim;
-using StockExchangeSim.Views;
-using Telerik.UI.Xaml.Controls.Data;
-using Windows.Security.Authentication.Web.Provider;
-using System.Threading;
-using Windows.Web.Http.Headers;
 
 namespace Eco
 {
@@ -59,8 +50,8 @@ namespace Eco
                 cp.SetValue((float)rn.NextDouble() * 2000);
                 cp.stockprice = cp.Value / 100;
 
-                Master.inst.exchange.RegisterCompany(cp);
-                cp.BecomePublic();
+                Master.inst.exchange.RegisterCompany(cp, 50);
+                //cp.BecomePublic();
 
                 companies.Add(cp);
             }
@@ -70,7 +61,7 @@ namespace Eco
 
         }
         int scandaltick = 0;
-        
+
         public void Update()
         {
             //calculate innovation (FIXED)
@@ -123,7 +114,7 @@ namespace Eco
                         float totcomp = 0;
                         Company cp = null;
 
-                        for(int i = 0; cp == null; i++)
+                        for (int i = 0; cp == null; i++)
                         {
                             float qp = companies[i].Competitiveness / TotalCompetitiveness;
                             if (qp + totcomp > rand)
@@ -186,7 +177,7 @@ namespace Eco
                     }
                     companies.RemoveAt(i);
 
-                    
+
                 }
             }
         }
@@ -201,9 +192,9 @@ namespace Eco
         }
         public void print()
         {
-            
+
             Debug.WriteLine("\nfield id: " + id + ", started with " + startamount);
-            
+
             for (int i = 0; i < startcompanies.Count; i++)
             {
                 if (startcompanies[i].Bankrupt)
@@ -240,7 +231,7 @@ namespace Eco
                         displaay += "\n";
                         for (int k = 0; k < 15 && k < s.Length; k++)
                         {
-                            
+
                             displaay += s[k];
                             if (k == 14)
                             {
@@ -248,7 +239,7 @@ namespace Eco
                             }
                         }
 
-                        displaay += 
+                        displaay +=
                             ": " + Math.Floor(startcompanies[i].LastDeceMilleValue) +
                             ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
@@ -271,13 +262,13 @@ namespace Eco
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
                         displaay += "\n" + startcompanies[i].name +
                         ": " + Math.Floor(startcompanies[i].LastCentumValue) +
-                        ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 + 
+                        ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 +
                         ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                 }
             }
-            
-            
+
+
 
             return displaay + "\n\n";
         }

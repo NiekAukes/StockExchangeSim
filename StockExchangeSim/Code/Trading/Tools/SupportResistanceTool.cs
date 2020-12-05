@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
@@ -19,9 +16,9 @@ namespace Eco
         public override SupportResistanceData StrategyOutcome(Company cp)
         {
             MinimumPriceCount = cp.stockPrices1m.Count;
-            List<StockPriceGraph> highs = new List<StockPriceGraph>(cp.stockPrices1m);
+            SynchronizedCollection<StockPriceGraph> highs = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m);
             List<int> highpos = new List<int>();
-            List<StockPriceGraph> lows = new List<StockPriceGraph>(cp.stockPrices1m);
+            SynchronizedCollection<StockPriceGraph> lows = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m);
             List<int> lowpos = new List<int>();
             //highs.Add(cp.stockPrices[0]);
             highpos.Add(0);

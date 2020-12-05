@@ -1,8 +1,6 @@
-﻿using System;
+﻿using StockExchangeSim.Helpers;
+using System;
 using System.Threading.Tasks;
-
-using StockExchangeSim.Helpers;
-
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
