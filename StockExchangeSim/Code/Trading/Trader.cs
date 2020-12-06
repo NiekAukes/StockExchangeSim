@@ -32,6 +32,7 @@ namespace Eco
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
+        public string name = null;
 
         List<Strategy> Strategies = new List<Strategy>();
 
@@ -49,9 +50,12 @@ namespace Eco
                 Strategies.Add(stFact.RandomStrategy());
             }
 
-
+            name = PickRandomName();
         }
-
+        private string PickRandomName()
+        {
+            return "noname";
+        }
         public float money { get { return Money; } set { Money = value; } }
 
         public List<Stock> Stocks { get; set; }
