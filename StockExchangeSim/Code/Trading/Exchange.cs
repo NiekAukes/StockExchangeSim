@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Eco
 {
@@ -68,11 +69,7 @@ namespace Eco
     public class BidAsk
     {
         public List<Stock> Stocks = new List<Stock>();
-        public class AskData
-        {
-            Trader Asker;
-            int amount;
-        }
+        public ObservableCollection<Liquidity> liquidity1m = new ObservableCollection<Liquidity>();
         public Company cp;
         public float Bid, Ask;
         //public List<Stock> Bids;

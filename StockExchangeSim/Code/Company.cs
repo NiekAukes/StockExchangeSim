@@ -26,8 +26,10 @@ namespace Eco
 
     public class Liquidity
     {
+        public float Year { get; set; }
         public int SellAmount { get; set; }
         public int BuyAmount { get; set; }
+        public int Diff { get { return BuyAmount - SellAmount; } }
     }
     public class ValueGraph
     {
@@ -44,7 +46,6 @@ namespace Eco
         public ObservableCollection<StockPriceGraph> prices1m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices5m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices10m = new ObservableCollection<StockPriceGraph>();
-        public ObservableCollection<StockPriceGraph> prices15m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices30m = new ObservableCollection<StockPriceGraph>();
     }
     public class ValueViewModel
@@ -83,7 +84,7 @@ namespace Eco
             CompanyStock = CreateStock(100);
             field = f;
 
-            open = (float)Value;
+            open = Value;
             name = initName();
         }
         public string initName()
@@ -136,7 +137,7 @@ namespace Eco
         long CurrentTick = Master.ticks;
         float modifier = 30000 / 2629743.8f;
 
-        public float money { get { return Value; } set { Value = value; } }
+        public float money { get; set; }
 
 
         float open = 0;
@@ -211,7 +212,7 @@ namespace Eco
                     }
                 }
             }
-
+            
             //check high and low
             if (tick % 20 == 0)
             {
