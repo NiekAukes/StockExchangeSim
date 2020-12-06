@@ -23,6 +23,12 @@ namespace Eco
             Low = low;
         }
     }
+
+    public class Liquidity
+    {
+        public int SellAmount { get; set; }
+        public int BuyAmount { get; set; }
+    }
     public class ValueGraph
     {
         public float Year { get; set; }

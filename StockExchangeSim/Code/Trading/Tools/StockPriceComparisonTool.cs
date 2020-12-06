@@ -6,11 +6,31 @@ using System.Threading.Tasks;
 
 namespace Eco
 {
-    class StockPriceComparisonTool : MarketTool<LiquidityToolData>
+    public class StockPriceComparisonToolData
     {
-        public override LiquidityToolData StrategyOutcome(Company cp)
+        public StockPriceComparisonToolData(float ESP) { ExpectedStockPrice = ESP; }
+        public float ExpectedStockPrice;
+    }
+    class StockPriceComparisonTool : MarketTool<StockPriceComparisonToolData>
+    {
+        public float MeasuredDividend = -1, Dividend = -1, PrevDividend = -1;
+
+        public override StockPriceComparisonToolData StrategyOutcome(Company cp)
         {
-            throw new NotImplementedException();
+
+            if (cp.Dividend != MeasuredDividend)
+            {
+                MeasuredDividend = cp.Dividend;
+                PrevDividend = Dividend;
+                Dividend = (cp.Dividend * (31556926.0f / Master.inst.SecondsPerTick));
+            }
+            if (PrevDividend == -1)
+                PrevDividend = Dividend;
+
+            float MarketTrust = PrevDividend > 0 ? MathF.Pow(2, (Dividend - PrevDividend) / PrevDividend) : 0;
+            float StockPrice = 40 * Dividend * MathF.Pow(cp.CompetitivePosition, 3) * MarketTrust
+                + MathF.Pow(cp.CompetitivePosition, 3) * cp.Value * (float)cp.StockPart;
+            return new StockPriceComparisonToolData(StockPrice);
         }
     }
 }

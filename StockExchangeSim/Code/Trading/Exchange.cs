@@ -122,6 +122,7 @@ namespace Eco
             bidAsk.Stocks.Add(FullbuyStock);
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;
+            cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
         }
 
         public void RegisterTrader(Trader t)
