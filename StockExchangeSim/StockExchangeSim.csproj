@@ -192,14 +192,12 @@
     <Compile Include="Code\Master.cs" />
     <Compile Include="Code\MicroTimers.cs" />
     <Compile Include="Code\TableOfNames.cs" />
-    <Compile Include="Code\Trading\Investor.cs" />
     <Compile Include="Code\Trading\MarketWatchers\BreakoutMarketWatcher.cs" />
     <Compile Include="Code\Trading\Strategies\BreakoutStrategy.cs" />
     <Compile Include="Code\Trading\Exchange.cs" />
     <Compile Include="Code\Trading\GraphUtil.cs" />
     <Compile Include="Code\Trading\MarketWatcher.cs" />
     <Compile Include="Code\Trading\Strategies\Strategy.cs" />
-    <Compile Include="Code\Trading\Tools\StockPriceComparisonTool.cs" />
     <Compile Include="Code\Trading\Tools\SupportResistanceTool.cs" />
     <Compile Include="Code\Trading\Tools\LiquidityTool.cs" />
     <Compile Include="Code\Trading\Trader.cs" />
@@ -215,6 +213,9 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Views\ChartPage.xaml.cs">
       <DependentUpon>ChartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TraderDetail.xaml.cs">
+      <DependentUpon>TraderDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CompanyDetail.xaml.cs">
       <DependentUpon>CompanyDetail.xaml</DependentUpon>
@@ -260,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChartPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TraderDetail.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

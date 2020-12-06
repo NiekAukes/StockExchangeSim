@@ -54,7 +54,12 @@ namespace Eco
         }
         private string PickRandomName()
         {
-            return "noname";
+            //search a random name in list of names
+            int rng = rn.Next();
+            string ret = field.NameInfo.CompanyNames[rng];
+            field.NameInfo.CompanyNames.RemoveAt(rng);
+
+            return ret;
         }
         public float money { get { return Money; } set { Money = value; } }
 
