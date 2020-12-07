@@ -1,34 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
-    public class StockPriceGraph
-    {
-        public float Year { get; set; }
-        public float Open { get; set; }
-        public float Close { get; set; }
-        public float High { get; set; }
-        public float Low { get; set; }
-        public StockPriceGraph(float year, float open, float close, float high, float low)
-        {
-            Year = year;
-            Open = open;
-            Close = close;
-            High = high;
-            Low = low;
-        }
-    }
 
-    public class Company {
-        public BidAsk BidAsk;
-        public float Value, stockprice;
-        public ObservableCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
-    }
 
     public class Stock
     {
@@ -76,7 +52,7 @@ namespace Eco
         }
         public void Update(float totalProfit)
         {
-            Collected += totalProfit * Percentage * 0.01;
+            Collected += totalProfit * Percentage * 0.01f;
         }
         public float Collect()
         {
@@ -93,11 +69,7 @@ namespace Eco
     public class BidAsk
     {
         public List<Stock> Stocks = new List<Stock>();
-        public class AskData
-        {
-            Trader Asker;
-            int amount;
-        }
+        public ObservableCollection<Liquidity> liquidity1m = new ObservableCollection<Liquidity>();
         public Company cp;
         public float Bid, Ask;
         //public List<Stock> Bids;
@@ -116,24 +88,38 @@ namespace Eco
         List<BidAsk> BidAskSpreads { get; set; }
 
         bool BuyStock(Company cp, Trader buyer);
-        void RegisterCompany(Company cp);
+        void RegisterCompany(Company cp, int partition);
         void RegisterTrader(Trader t);
         void SellStock(Stock stock);
     }
     public class ExchangeBroker : IExchange
     {
-        public float money { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public float money { get; set; }
         public List<BidAsk> BidAskSpreads { get; set; }
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        
 
-        public void RegisterCompany(Company cp)
+        public ExchangeBroker()
+        {
+            BidAskSpreads = new List<BidAsk>();
+        }
+        public void RegisterCompany(Company cp, int partition)
         {
             Companies.Add(cp);
             BidAsk bidAsk = new BidAsk(cp); //create new bidask
             BidAskSpreads.Add(bidAsk);
             cp.BidAsk = bidAsk;
+
+            //buy stocks from company
+            Stock FullbuyStock = cp.BecomePublic();
+            for(int i = 0; i < partition - 1; i++)
+            {
+                bidAsk.Stocks.Add(FullbuyStock.SplitStock(1.0f / partition));
+            }
+            bidAsk.Stocks.Add(FullbuyStock);
+            bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
+            bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;
+            cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
         }
 
         public void RegisterTrader(Trader t)
@@ -197,7 +183,7 @@ namespace Eco
         }
         public float money { get; set; }
 
-        public void RegisterCompany(Company cp)
+        public void RegisterCompany(Company cp ,int part)
         {
             Companies.Add(cp);
             BidAsk bidAsk = new BidAsk(cp); //create new bidask

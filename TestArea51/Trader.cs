@@ -20,16 +20,16 @@ namespace Eco
         List<Stock> Stocks { get; set; }
         void AddStock(Stock stock);
         void UpdateHoldings();
-        double money { get; set; }
+        float money { get; set; }
     }
     public partial class Trader : IStockOwner
     {
         public static Random rn = new Random();
-        public Dictionary<Stock, double> stocks = new Dictionary<Stock, double>();
-        public double Money = 100;
-        public double BaseActionTimeRequired = 20 + rn.NextDouble() * 20; //in seconds
-        public double ActivityTime = 0;
-        public double ActionTime; //in seconds
+        public Dictionary<Stock, float> stocks = new Dictionary<Stock, float>();
+        public float Money = 100;
+        public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
+        public float ActivityTime = 0;
+        public float ActionTime; //in seconds
 
         Strategy strat = new PatternStrategy();
 
@@ -38,7 +38,7 @@ namespace Eco
             Stocks = new List<Stock>();
         }
 
-        public double money { get { return Money; } set { Money = value; } }
+        public float money { get { return Money; } set { Money = value; } }
 
         public List<Stock> Stocks { get; set; }
 

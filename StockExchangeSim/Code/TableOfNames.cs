@@ -1,16 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Eco
 {
+    public class TraderNames
+    {
+        public List<string> traderNames = new List<string>()
+        {
+            "Tom de Trader" ,
+            "Jan met de Korte Achternaam" ,
+            "Bob de Bouwer" ,
+            "Henk de Handelaar" ,
+            "Pietje Precies" ,
+            "Klaas Komma" ,
+            "Niek Aukes" ,
+            "Kees Postma" ,
+            "Max-Friso Schaap" ,
+            "Douwe Osinga" ,
+            "Jacob de Haas" ,
+            "Stevan Spekkie" ,
+            "Franz Ferdinand von Habsburg" ,
+            "" ,
+            "" ,
+            "" ,
+            "" ,
+            ""
+        };
+        public TraderNames()
+        {
+
+        }
+        public string getTraderName()
+        {
+            return "";
+        }
+}
+
     public class FieldNameInfo
     {
         public string FieldName { get; set; }
         public List<string> CompanyNames { get; set; }
     }
+
     public class TableOfNames
     {
         public List<FieldNameInfo> NameInfo = new List<FieldNameInfo>()

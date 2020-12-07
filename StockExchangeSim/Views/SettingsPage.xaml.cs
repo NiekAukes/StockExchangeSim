@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Eco;
+using StockExchangeSim.Helpers;
+using StockExchangeSim.Services;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Eco;
-using StockExchangeSim.Helpers;
-using StockExchangeSim.Services;
-
-using Windows.UI.Popups;
 using Windows.ApplicationModel;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -79,7 +78,7 @@ namespace StockExchangeSim.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
@@ -110,10 +109,10 @@ namespace StockExchangeSim.Views
             Master.CustomSeed = seed;
         }
 
-        private void CustomSeed_Click(object sender, RoutedEventArgs e)         => Master.fCustomSeed = CustomSeed.IsChecked.Value;
+        private void CustomSeed_Click(object sender, RoutedEventArgs e) => Master.fCustomSeed = CustomSeed.IsChecked.Value;
 
         private void asyncCompaniesFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncCompanies = asyncCompaniesFlag.IsChecked.Value;
 
-        private void asyncFieldFlag_Click(object sender, RoutedEventArgs e)     => Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
+        private void asyncFieldFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
     }
 }

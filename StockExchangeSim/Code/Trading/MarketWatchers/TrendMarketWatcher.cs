@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.UI;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App1;
-using Windows.UI.Xaml.Media;
 
 namespace Eco
 {
@@ -27,7 +21,7 @@ namespace Eco
 
             UptrendInvalid = false;
             DowntrendInvalid = false;
-            lastInsightTime = MainPage.Year;
+            lastInsightTime = (float)Master.inst.Year;
 
         }
 
@@ -37,15 +31,11 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            List<StockPriceGraph> NewPrices = new List<StockPriceGraph>(cp.stockPrices.Skip(lastdatapoint));
+            SynchronizedCollection<StockPriceGraph> NewPrices = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
 
             if (TData == null)
                 RedoInsights();
 
-            //bool UptrendInvalid = false, DowntrendInvalid = false;
-
-            MainPage.inst.AddContinuousline(TData.DownTrend, new SolidColorBrush(Colors.Magenta));
-            MainPage.inst.AddContinuousline(TData.UpTrend, new SolidColorBrush(Colors.Blue));
 
             foreach (var price in NewPrices)
             {
@@ -81,8 +71,8 @@ namespace Eco
                     // => watch market carefully
 
                     //buy differences
-                    float UpDiff = price.Close - (TData.UpTrend.Multiplier * price.Year + TData.UpTrend.Adder);
-                    float DownDiff = (TData.DownTrend.Multiplier * price.Year + TData.DownTrend.Adder) - price.Close;
+                    float UpDiff = price.Close - (TData.UpTrend.Multiplier * (float)price.Year + TData.UpTrend.Adder);
+                    float DownDiff = (TData.DownTrend.Multiplier * (float)price.Year + TData.DownTrend.Adder) - price.Close;
                     ret += UpDiff - DownDiff;
                 }
                 else

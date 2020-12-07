@@ -8,12 +8,12 @@ namespace Eco
 {
     public class StockPriceGraph
     {
-        public double Year { get; set; }
-        public double Open { get; set; }
-        public double Close { get; set; }
-        public double High { get; set; }
-        public double Low { get; set; }
-        public StockPriceGraph(double year, double open, double close, double high, double low)
+        public float Year { get; set; }
+        public float Open { get; set; }
+        public float Close { get; set; }
+        public float High { get; set; }
+        public float Low { get; set; }
+        public StockPriceGraph(float year, float open, float close, float high, float low)
         {
             Year = year;
             Open = open;
@@ -24,26 +24,26 @@ namespace Eco
     }
 
     public class Company { 
-        public double Value, stockprice;
+        public float Value, stockprice;
         public List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
     }
     public class Stock
     {
         public IStockOwner Owner;
         public Company company = null;
-        public double value { get { return company.Value * Percentage / 100; } }
-        public double tradevalue { get { return company.stockprice * Percentage; } }
-        public double SellPrice = 0;
-        public double Percentage = 0;
-        public double Collected = 0;
-        public Stock(Company cp, double percentage)
+        public float value { get { return company.Value * Percentage / 100; } }
+        public float tradevalue { get { return company.stockprice * Percentage; } }
+        public float SellPrice = 0;
+        public float Percentage = 0;
+        public float Collected = 0;
+        public Stock(Company cp, float percentage)
         {
             //create new stock from company
             company = cp;
             Percentage = percentage;
         }
 
-        public Stock(Stock s, double percentage)
+        public Stock(Stock s, float percentage)
         {
             Percentage = percentage;
             s.Percentage -= percentage;
@@ -55,7 +55,7 @@ namespace Eco
         {
 
         }
-        public Stock SplitStock(double percentage)
+        public Stock SplitStock(float percentage)
         {
             Stock ret = new Stock(this, percentage);
             return ret;
@@ -71,13 +71,13 @@ namespace Eco
             }
             Percentage += stock.Percentage;
         }
-        public void Update(double totalProfit)
+        public void Update(float totalProfit)
         {
-            Collected += totalProfit * Percentage * 0.01;
+            Collected += totalProfit * Percentage * 0.01f;
         }
-        public double Collect()
+        public float Collect()
         {
-            double ret = Collected;
+            float ret = Collected;
             Collected = 0;
             return ret;
         }
@@ -135,7 +135,7 @@ namespace Eco
         }
 
         //exchanging stocks
-        public void SellStock(Stock stock, double price)
+        public void SellStock(Stock stock, float price)
         {
             stock.SellPrice = price;
             if (!StocksForSale[stock.company].Contains(stock))

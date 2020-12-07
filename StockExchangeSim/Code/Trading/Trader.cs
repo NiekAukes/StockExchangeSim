@@ -1,16 +1,12 @@
-﻿using App1;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
-    
+
     public enum HFTStrategy
     {
-        MarketMaking, 
+        MarketMaking,
         ArbitrageTrading,
         PairArbitrageTrading,
         MomentumIgnition,
@@ -28,30 +24,43 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
-        public static Random rn = new Random();
+        public static Random rn = new Random(Master.Seed);
         public List<List<Stock>> stocks = new List<List<Stock>>();
-        public List<Company> InterestedCompanies = new List<Company>();
+        public List<Company> InterestedCompanies = null;
         public float Money = 100;
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
+        public string name = null;
 
         List<Strategy> Strategies = new List<Strategy>();
 
         public Trader()
         {
             Stocks = new List<Stock>();
-            InterestedCompanies.Add(MainPage.cp);
+            InterestedCompanies = Master.inst.GetAllCompanies();
+            while (InterestedCompanies.Count > 4)
+            {
+                InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
+            }
             StrategyFactory stFact = new StrategyFactory(this);
             while (Strategies.Count < 1) //pick strats till you have 2
             {
                 Strategies.Add(stFact.RandomStrategy());
             }
-            
-            
-        }
 
+            name = PickRandomName();
+        }
+        private string PickRandomName()
+        {
+            //search a random name in list of names
+            int rng = rn.Next();
+            string ret = field.NameInfo.CompanyNames[rng];
+            field.NameInfo.CompanyNames.RemoveAt(rng);
+
+            return ret;
+        }
         public float money { get { return Money; } set { Money = value; } }
 
         public List<Stock> Stocks { get; set; }
@@ -76,9 +85,9 @@ namespace Eco
             {
                 MarketResults Final = new MarketResults();
                 foreach (Strategy strat in Strategies)
-                    Final = Final + strat.StrategyOutcome(this, MainPage.exchange);
+                    Final = Final + strat.StrategyOutcome(this, Master.inst.exchange);
 
-                foreach(var tp in Final.Results)
+                foreach (var tp in Final.Results)
                 {
                     if (tp.Item2 < 0)
                     {
@@ -95,7 +104,7 @@ namespace Eco
                                 for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
                                 {
                                     //sell stocks with float value or until all stocks are sold
-                                    MainPage.exchange.SellStock(lsstocks[i]);
+                                    Master.inst.exchange.SellStock(lsstocks[i]);
                                 }
                             }
                         }
@@ -109,7 +118,7 @@ namespace Eco
                         for (int i = 0; i < tp.Item2 * 100; i++)
                         {
                             //buy stocks here
-                            MainPage.exchange.BuyStock(tp.Item1, this);
+                            Master.inst.exchange.BuyStock(tp.Item1, this);
                         }
                     }
 
@@ -124,7 +133,7 @@ namespace Eco
             int index = InterestedCompanies.IndexOf(cp);
             for (int i = 0; i < amount; i++)
             {
-                MainPage.exchange.SellStock(stocks[index][0]);
+                Master.inst.exchange.SellStock(stocks[index][0]);
                 stocks[index].RemoveAt(0);
             }
         }

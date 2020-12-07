@@ -1,16 +1,7 @@
-﻿using System;
+﻿using StockExchangeSim.Views;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Data.Json;
-using StockExchangeSim;
-using StockExchangeSim.Views;
-using Telerik.UI.Xaml.Controls.Data;
-using Windows.Security.Authentication.Web.Provider;
-using System.Threading;
-using Windows.Web.Http.Headers;
 
 namespace Eco
 {
@@ -27,13 +18,13 @@ namespace Eco
         public int companyAmount;
         public int maxCompanyStartAmount = 12;
 
-        public double Innovation = 0.5;
-        public double Scandals = 0.3;
-        public double ScandalSeverity = 1;
+        public float Innovation = 0.5f;
+        public float Scandals = 0.3f;
+        public float ScandalSeverity = 1;
 
-        public double MarketShare = 1.1;
-        public double TotalCompetitiveness = 0;
-        public double TotalValue = 0;
+        public float MarketShare = 1.1f;
+        public float TotalCompetitiveness = 0;
+        public float TotalValue = 0;
 
         int startamount;
         public List<Company> companies = new List<Company>();
@@ -56,11 +47,11 @@ namespace Eco
             {
                 Company cp = new Company(this);
                 cp.id = i;
-                cp.SetValue(rn.NextDouble() * 2000);
+                cp.SetValue((float)rn.NextDouble() * 2000);
                 cp.stockprice = cp.Value / 100;
 
-                Master.inst.exchange.RegisterCompany(cp);
-                cp.BecomePublic();
+                Master.inst.exchange.RegisterCompany(cp, 50);
+                //cp.BecomePublic();
 
                 companies.Add(cp);
             }
@@ -70,7 +61,7 @@ namespace Eco
 
         }
         int scandaltick = 0;
-        
+
         public void Update()
         {
             //calculate innovation (FIXED)
@@ -83,10 +74,10 @@ namespace Eco
                     {
                         Company newcp = new Company(this);
                         newcp.id = companyAmount++;
-                        newcp.SetValue(rn.NextDouble() * 600);
-                        double highvalue = Math.Pow(rn.NextDouble(), 2);
+                        newcp.SetValue((float)rn.NextDouble() * 600);
+                        float highvalue = MathF.Pow((float)rn.NextDouble(), 2);
 
-                        double highestcomp = 0;
+                        float highestcomp = 0;
                         for (int i = 0; i < companies.Count; i++)
                         {
                             if (companies[i].Competitiveness > highestcomp)
@@ -102,8 +93,8 @@ namespace Eco
                     else
                     {
                         Company cp = companies[rn.Next(companies.Count)];
-                        double highvalue = Math.Pow(rn.NextDouble(), 2);
-                        cp.Competitiveness += highvalue * 0.1 * cp.Value;
+                        float highvalue = MathF.Pow((float)rn.NextDouble(), 2);
+                        cp.Competitiveness += highvalue * 0.1f * cp.Value;
 
                     }
                 }
@@ -119,13 +110,13 @@ namespace Eco
                     {
                         //impact is based on company value
                         //Company cp = companies[rn.Next(companies.Count)];
-                        double rand = Math.Abs(rn.NextDouble() - 0.001);
-                        double totcomp = 0;
+                        float rand = MathF.Abs((float)rn.NextDouble() - 0.001f);
+                        float totcomp = 0;
                         Company cp = null;
 
-                        for(int i = 0; cp == null; i++)
+                        for (int i = 0; cp == null; i++)
                         {
-                            double qp = companies[i].Competitiveness / TotalCompetitiveness;
+                            float qp = companies[i].Competitiveness / TotalCompetitiveness;
                             if (qp + totcomp > rand)
                             {
                                 cp = companies[i];
@@ -134,8 +125,8 @@ namespace Eco
                             totcomp += qp;
                         }
 
-                        double highvalue = Math.Pow(rn.NextDouble() * 1, 2);
-                        cp.Competitiveness -= highvalue * 0.1 * ScandalSeverity * cp.Value;
+                        float highvalue = MathF.Pow((float)rn.NextDouble() * 1, 2);
+                        cp.Competitiveness -= highvalue * 0.1f * ScandalSeverity * cp.Value;
                         scandaltick = 0;
                     }
                 }
@@ -145,15 +136,15 @@ namespace Eco
             {
                 Company newcp = new Company(this);
                 newcp.id = companyAmount++;
-                newcp.SetValue(rn.NextDouble() * 500);
+                newcp.SetValue((float)rn.NextDouble() * 500);
                 companies.Add(newcp);
                 startcompanies.Add(newcp);
             }
 
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE => CHECK
-            double value = Math.Pow(rn.NextDouble() - 0.5, 3);
+            float value = MathF.Pow((float)rn.NextDouble() - 0.5f, 3);
             int select = rn.Next(0, companies.Count);
-            companies[select].Competitiveness += value * 0.001 * companies[select].Value;
+            companies[select].Competitiveness += value * 0.001f * companies[select].Value;
 
             TotalCompetitiveness = 0;
             TotalValue = 0;
@@ -170,7 +161,7 @@ namespace Eco
             }
             for (int i = 0; i < companies.Count; i++)
             {
-                companies[i].age += tick;
+                companies[i].age += (float)tick;
                 companies[i].Update();
                 if (companies[i].Value < 0.1)
                 {
@@ -186,7 +177,7 @@ namespace Eco
                     }
                     companies.RemoveAt(i);
 
-                    
+
                 }
             }
         }
@@ -201,9 +192,9 @@ namespace Eco
         }
         public void print()
         {
-            
+
             Debug.WriteLine("\nfield id: " + id + ", started with " + startamount);
-            
+
             for (int i = 0; i < startcompanies.Count; i++)
             {
                 if (startcompanies[i].Bankrupt)
@@ -240,7 +231,7 @@ namespace Eco
                         displaay += "\n";
                         for (int k = 0; k < 15 && k < s.Length; k++)
                         {
-                            
+
                             displaay += s[k];
                             if (k == 14)
                             {
@@ -248,7 +239,7 @@ namespace Eco
                             }
                         }
 
-                        displaay += 
+                        displaay +=
                             ": " + Math.Floor(startcompanies[i].LastDeceMilleValue) +
                             ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
@@ -271,13 +262,13 @@ namespace Eco
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
                         displaay += "\n" + startcompanies[i].name +
                         ": " + Math.Floor(startcompanies[i].LastCentumValue) +
-                        ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 + 
+                        ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 +
                         ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
                 }
             }
-            
-            
+
+
 
             return displaay + "\n\n";
         }

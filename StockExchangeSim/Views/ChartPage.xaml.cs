@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using StockExchangeSim.Core.Models;
+using StockExchangeSim.Core.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
-using StockExchangeSim.Core.Models;
-using StockExchangeSim.Core.Services;
-using Syncfusion.UI.Xaml.Charts;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -21,11 +18,16 @@ namespace StockExchangeSim.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
         T _val;
-        public T Value { get { return _val; } set {
+        public T Value
+        {
+            get { return _val; }
+            set
+            {
                 _val = value;
                 OnPropertyChanged();
-            } }
-        
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -45,7 +47,7 @@ namespace StockExchangeSim.Views
             //Add tiles programmatically, for debugging
             fieldGrid.Children.Clear();
             //ADD ALL FIELDS TO THE TILES
-            for(int i = 0; i < Eco.Master.inst.Fields.Count; i++)
+            for (int i = 0; i < Eco.Master.inst.Fields.Count; i++)
             {
                 AddFieldPage(Eco.Master.inst.Fields[i]);
             }
@@ -86,7 +88,7 @@ namespace StockExchangeSim.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Syncfusion.UI.Xaml.Charts;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Threading.Tasks;
-
-using Eco;
-using Syncfusion.UI.Xaml.Charts;
-using Windows.UI.Xaml.Media;
 using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Eco
 {

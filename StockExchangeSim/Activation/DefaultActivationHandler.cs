@@ -1,8 +1,6 @@
-﻿using System;
+﻿using StockExchangeSim.Services;
+using System;
 using System.Threading.Tasks;
-
-using StockExchangeSim.Services;
-
 using Windows.ApplicationModel.Activation;
 
 namespace StockExchangeSim.Activation

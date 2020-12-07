@@ -1,18 +1,11 @@
-﻿using System;
+﻿using StockExchangeSim.Views;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using MicroLibrary;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Reflection.Metadata.Ecma335;
-using StockExchangeSim.Views;
 
 namespace Eco
 {
-    
+
     public class Time
     {
         UInt64 seconds = 0;
@@ -36,7 +29,7 @@ namespace Eco
         public float GetDays()
         {
 
-            return seconds / 60.0f / 60/ 24;
+            return seconds / 60.0f / 60 / 24;
         }
         public float GetMonths()
         {
@@ -55,26 +48,26 @@ namespace Eco
             if (seconds > 60)
             {
                 //minutes
-                if (seconds > 60*60)
+                if (seconds > 60 * 60)
                 {
                     //hours
                     if (seconds > 60 * 60 * 24)
                     {
                         //days
-                        if (seconds > 60 * 60 * 24 * 365.25)
+                        if (seconds > 60 * 60 * 24 * 365.25f)
                         {
                             //years
                         }
                     }
                     else
                     {
-                        double hours = Math.Floor(seconds / 60.0 / 60.0);
+                        float hours = MathF.Floor(seconds / 60.0f / 60.0f);
                         return hours.ToString() + " : " + (((seconds / 60 / 60) - hours) * 60).ToString();
                     }
                 }
                 else
                 {
-                    double mins = Math.Floor(seconds / 60.0);
+                    float mins = MathF.Floor(seconds / 60.0f);
                     return mins.ToString() + " : " + (((seconds / 60) - mins) * 60).ToString();
                 }
             }
@@ -84,7 +77,7 @@ namespace Eco
             }
             return "";
         }
-        
+
     }
     public class Master
     {
@@ -96,26 +89,26 @@ namespace Eco
         public static Int32 Seed = (new Random()).Next();
         public static Random rn = new Random(Seed);
         Thread thread;
-        public void SetSecondsPerTick(double Seconds) //2103840 = 1 year per second
+        public void SetSecondsPerTick(float Seconds) //2103840 = 1 year per second
         {
             SecondsPerTick = Seconds;
         }
         public Time time;
-        public double SecondsPerTick = 15.0;
+        public float SecondsPerTick = 15.0f;
         public int FieldAmount;
         public int TraderAmount;
         public int HFTAmount;
-        //public double TPS = 2103840; //ticks per second. 1577880 = 20s per year
-        public double Year;
+        //public float TPS = 2103840; //ticks per second. 1577880 = 20s per year
+        public float Year;
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
-        public Exchange exchange = new Exchange();
+        public ExchangeBroker exchange = new ExchangeBroker();
 
         public TableOfNames masterTable = new TableOfNames();
 
-        public static double Conjucture { get; set; }
-        public static double TotalShare = 0;
+        public static float Conjucture { get; set; }
+        public static float TotalShare = 0;
 
         public Master(int fields, int traders, int hftraders)
         {
@@ -153,10 +146,20 @@ namespace Eco
         public bool active = false;
         public bool alive = true;
         public static long ticks = 0;
+
+        public List<Company> GetAllCompanies()
+        {
+            List<Company> ret = new List<Company>(Fields[0].companies);
+            for (int i = 1; i < Fields.Count; i++)
+            {
+                ret.AddRange(Fields[i].companies);
+            }
+            return ret;
+        }
         public void Update()
         {
 
-            
+
             for (; ticks < 100000000000 && alive; ticks++)
             {
 
@@ -169,16 +172,16 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    Conjucture = (0.05 * Math.Sin(MainPage.master.Year * 1) + 1);
+                    Conjucture = (0.05f * MathF.Sin(MainPage.master.Year) + 1);
 
 
                     for (int j = 0; j < Fields.Count; j++)
                     {
                         Fields[j].Update();
                     }
-                        
 
-                    
+
+
 
                     int n = Traders.Count;
                     while (n > 1)
@@ -195,11 +198,11 @@ namespace Eco
                         Traders[j].Update();
                     }
 
-                    Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
+                    Year += SecondsPerTick / (365.25f * 24 * 60 * 60);
 
-                    
 
-                    
+
+
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using Syncfusion.UI.Xaml.Charts;
+﻿using Eco;
+using Syncfusion.UI.Xaml.Charts;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,26 +13,31 @@ namespace StockExchangeSim.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CompanyDetail : Page
+    public sealed partial class TraderDetail : Page
     {
-        Eco.Field Field { get; set; }
-        List<Eco.Company> listofCompanies;
-        public CompanyDetail()
+        public Field Field { get; private set; }
+        public List<Trader> traders { get; private set; }
+
+        public TraderDetail()
         {
             this.InitializeComponent();
-            companyList.Items.Clear();
+
 
 
         }
 
-        ~CompanyDetail()
+        ~TraderDetail()
         {
             System.Diagnostics.Debug.WriteLine("destroyed");
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            InsertDetails(Field.companies, -1);
-
+            traders = Master.inst.Traders;
+            for(int i = 0; i< traders.Count;i++)
+            {
+                TextBlock newBlock = new TextBlock();
+                newBlock.Text = traders[i].Name;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -45,26 +51,28 @@ namespace StockExchangeSim.Views
 
         public void InsertDetails(List<Eco.Company> companies, int selectedindex)
         {
-            listofCompanies = companies;
+            //REPLACE WITH TRADERS
+            traders = Master.inst.Traders;
             FieldName.Text = Field.fieldName;
 
 
-            //insert company names:
-            if (companyList.Items.Count < 1)
-            {
-                companyList.Items.Clear();
-                for (int i = 0; i < listofCompanies.Count; i++)
-                {
-                    //make listboxitem to shove name into (with force)
-                    TextBlock item = new TextBlock();
-                    item.Text = listofCompanies[i].name;
-                    //item.PointerPressed += Item_PointerPressed;
-                    //item.PointerReleased += Item_PointerPressed;
-                    companyList.Items.Add(item);
-                }
-            }
+            //insert trader names is already done in initalisation of page (page_loaded)
+            
+            //if (companyList.Items.Count < 1)
+            //{
+            //    companyList.Items.Clear();
+            //    for (int i = 0; i < listofCompanies.Count; i++)
+            ////    {
+            //        //make listboxitem to shove name into (with force)
+            //        TextBlock item = new TextBlock();
+            //        item.Text = listofCompanies[i].name;
+            //        //item.PointerPressed += Item_PointerPressed;
+            //        //item.PointerReleased += Item_PointerPressed;
+            //        companyList.Items.Add(item);
+            //    }
+            //}
 
-            if (selectedindex != -1)
+            /*if (selectedindex != -1)
             {
                 Eco.Company selectedcomp = listofCompanies[companyList.SelectedIndex];
                 CompanyName.Text = selectedcomp.name;
@@ -85,25 +93,15 @@ namespace StockExchangeSim.Views
                 //shove stock prices into chart: biek baukes moet daarmit mar eem helpen
                 loadCompanyGraphs(listofCompanies[0]);
             }
+            */
         }
 
 
-
+        //REPLACE WITH LOAD TRADER GRAPHS
         void loadCompanyGraphs(Eco.Company comp)
         {
-            stockPriceChart.Series.Clear();
-            companyValueChart.Series.Clear();
-
-            //INSERT COMPANY VALUES
-            FastLineSeries series = new FastLineSeries()
-            {
-                ItemsSource = comp.ValueviewModel.values,
-                XBindingPath = "Year",
-                YBindingPath = "Value"
-            };
-            series.ListenPropertyChange = true;
-
-            companyValueChart.Series.Add(series);
+            stockpriceChart.Series.Clear();
+           
 
             //INSERT STOCK PRICES
             FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
@@ -120,18 +118,18 @@ namespace StockExchangeSim.Views
             candleSeries.BearFillColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 235, 30, 30));
             //stockPriceChart.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 30, 30, 35));
 
-            (stockPriceChart.SecondaryAxis as NumericalAxis).ZoomFactor = 1.4;
+            (stockpriceChart.SecondaryAxis as NumericalAxis).ZoomFactor = 1.4;
             candleSeries.ComparisonMode = FinancialPrice.None;
 
-            stockPriceChart.Series.Add(candleSeries);
+            stockpriceChart.Series.Add(candleSeries);
         }
 
-        private void companyList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void traderList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (companyList.SelectedIndex != -1)
+            /*if (companyList.SelectedIndex != -1)
             {
                 InsertDetails(listofCompanies, companyList.SelectedIndex);
-            }
+            }*/
         }
 
         /*private void companyList_PointerPressed(object sender, PointerRoutedEventArgs e)

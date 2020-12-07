@@ -1,22 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Resources;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -46,22 +35,22 @@ namespace StockExchangeSim.Views
         {
             //tell the chartpage to load this field
             chartpg.Frame.Navigate(typeof(CompanyDetail), Field);
-            
+
             //chrtPg.
 
         }
 
-        public double TileBorderThickness = 5;
-        public double TileCornerRadius = 4;
+        public float TileBorderThickness = 5;
+        public float TileCornerRadius = 4;
 
-        private double tileHeight = 250;
-        private double tileWidth = 250;
-        public double TileHeight
+        private float tileHeight = 250;
+        private float tileWidth = 250;
+        public float TileHeight
         {
             get { return tileHeight; }
             set { tileHeight = value; }
         }
-        public double TileWidth
+        public float TileWidth
         {
             get { return tileWidth; }
             set { tileWidth = value; }
@@ -94,7 +83,8 @@ namespace StockExchangeSim.Views
         public class Observable<T> : INotifyPropertyChanged
         {
 
-            public Observable(T val){
+            public Observable(T val)
+            {
                 _val = val;
             }
 
@@ -117,9 +107,9 @@ namespace StockExchangeSim.Views
         }
         public Observable<string> fieldtxt
         {
-            get;set;
+            get; set;
         }
-        
+
         #region AnimationStuffShit
 
         public static Storyboard scaleUpStoryBoard = new Storyboard();
@@ -138,9 +128,9 @@ namespace StockExchangeSim.Views
             //ColorAnimation bruh = AnimateBorderbrushProperty(Tile, new System.Numerics.Vector4(0, 255, 255, 255), new System.Numerics.Vector4(255, 255, 255, 255), 250);
             //Storyboard brushBoard = new Storyboard();
             //DoubleAnimation animateOpacityOfBorderBrush = CreateDoubleAnimation(backgroundbrush, 0, 1, "Opacity", 250);
-           // brushBoard.Children.Add(animateOpacityOfBorderBrush); brushBoard.Begin();
-            
-            SizeUpFrameWorkElement(Tile, Tile.Scale.X, Tile.Scale.Y, 1.2f,1.2f, 125); //time in ms
+            // brushBoard.Children.Add(animateOpacityOfBorderBrush); brushBoard.Begin();
+
+            SizeUpFrameWorkElement(Tile, Tile.Scale.X, Tile.Scale.Y, 1.2f, 1.2f, 125); //time in ms
         }
 
         private void FieldBlock_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -192,11 +182,11 @@ namespace StockExchangeSim.Views
         private System.Numerics.Vector3 scaleXYZ = new System.Numerics.Vector3(1.0f, 1.0f, 1.0f);
         public System.Numerics.Vector3 MouseOver
         {
-            get{return isMouseOver ? new System.Numerics.Vector3(1.2f, 1.2f, 1.2f) : new System.Numerics.Vector3(1.0f, 1.0f, 1.0f);}
+            get { return isMouseOver ? new System.Numerics.Vector3(1.2f, 1.2f, 1.2f) : new System.Numerics.Vector3(1.0f, 1.0f, 1.0f); }
         }
-        
-        
-        public static void SizeUpFrameWorkElement(FrameworkElement grid, double fromX, double fromY, double scaleX, double scaleY, Double mSecTimeSpan)
+
+
+        public static void SizeUpFrameWorkElement(FrameworkElement grid, float fromX, float fromY, float scaleX, float scaleY, float mSecTimeSpan)
         {
             grid.RenderTransform = new ScaleTransform { ScaleX = fromX, ScaleY = fromY };
             DoubleAnimation animateScaleX = CreateDoubleAnimation(grid.RenderTransform, fromX, scaleX, "(ScaleTransform.ScaleX)", mSecTimeSpan);
@@ -210,25 +200,25 @@ namespace StockExchangeSim.Views
                 SecondscaleUpStoryBoard.Begin();
             }
             else
-            {                
+            {
                 scaleUpStoryBoard.Children.Add(animateScaleX);
                 scaleUpStoryBoard.Children.Add(animateScaleY);
                 scaleUpStoryBoard.Begin();
             }
         }
-        public static ColorAnimation AnimateBorderbrushProperty(FrameworkElement elem, System.Numerics.Vector4 from, System.Numerics.Vector4 to, double mSecTimeSpan)
+        public static ColorAnimation AnimateBorderbrushProperty(FrameworkElement elem, System.Numerics.Vector4 from, System.Numerics.Vector4 to, float mSecTimeSpan)
         {
-            
+
             ColorAnimation borderBrushAnim = new ColorAnimation();
             Storyboard.SetTarget(borderBrushAnim, elem);
             Storyboard.SetTargetProperty(borderBrushAnim, (new TargetPropertyPath(BorderBrushProperty)).ToString()); //BorderBrushProperty
-            borderBrushAnim.From =  Windows.UI.Color.FromArgb((byte)from.W, (byte)from.X, (byte)from.Y, (byte)from.Z);
-            borderBrushAnim.To =    Windows.UI.Color.FromArgb((byte)to.W,   (byte)to.X,   (byte)to.Y,   (byte)to.Z);
+            borderBrushAnim.From = Windows.UI.Color.FromArgb((byte)from.W, (byte)from.X, (byte)from.Y, (byte)from.Z);
+            borderBrushAnim.To = Windows.UI.Color.FromArgb((byte)to.W, (byte)to.X, (byte)to.Y, (byte)to.Z);
             borderBrushAnim.Duration = TimeSpan.FromMilliseconds(mSecTimeSpan);
             return borderBrushAnim;
         }
 
-        private static DoubleAnimation CreateDoubleAnimation(DependencyObject frameworkElement, double fromX, double toX, string propertyToAnimate, Double mSecInterval)
+        private static DoubleAnimation CreateDoubleAnimation(DependencyObject frameworkElement, float fromX, float toX, string propertyToAnimate, float mSecInterval)
         {
             DoubleAnimation animation = new DoubleAnimation();
             Storyboard.SetTarget(animation, frameworkElement);
@@ -238,14 +228,14 @@ namespace StockExchangeSim.Views
             SineEase easeMode = new SineEase();
             easeMode.EasingMode = EasingMode.EaseIn;
             animation.EasingFunction = easeMode;
-            
+
             animation.Duration = TimeSpan.FromMilliseconds(mSecInterval);
             return animation;
         }
 
 
         #endregion
-        
+
     }
 
 }

@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="StockExchangeSim.Views.TraderDetail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StockExchangeSim.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+    xmlns:ch="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
+    xmlns:qc="using:Ailon.QuickCharts" Loaded="Page_Loaded"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Disabled">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock x:Name="FieldName" Style="{StaticResource CompanyDetailTitleStyle}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                       Grid.Row="0" Grid.Column="0" Text="TestFieldName"/>
+        
+        <ListView x:Name="traderList" Grid.Column="0" Grid.Row="1"
+                  Grid.RowSpan="3" Foreground="White" SelectionChanged="traderList_SelectionChanged">
+            <ListViewItem >fklsjfldkj</ListViewItem>
+            <ListViewItem >fklsjfldkj</ListViewItem>
+            <ListViewItem >fklsjfldkj</ListViewItem>
+            <ListViewItem >fklsj fldkj</ListViewItem>
+        </ListView>
+
+        <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Orientation="Vertical">
+            <TextBlock x:Name="CompanyName" Style="{StaticResource CompanyDetailTitleStyle}"
+                       Text="TestCompanyName"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="fillerThought" Margin="20,20,0,20" Text="Trader Thought: "/>
+                <ComboBox x:Name="companyThoughtSelector" VerticalAlignment="Center"
+                          Margin="10,0,0,0" MinWidth="100" MaxWidth="300">
+                    <ComboBoxItem Content="bruhCompanyTest"/>
+                </ComboBox>
+                <TextBlock x:Name="currThought" Margin="20,20,0,20" Text="I want to buy"/>
+            </StackPanel>
+            <TextBlock x:Name="currStockPrice" Margin="20,20,0,20" Text="Stock price: "/>
+
+        </StackPanel>
+        <ch:SfChart Margin="10" x:Name="stockpriceChart" Grid.Column="1" Grid.Row="2"
+                        VerticalAlignment="Bottom" Height="auto">
+                <ch:SfChart.PrimaryAxis>
+                    <ch:NumericalAxis x:Name="HorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                </ch:SfChart.PrimaryAxis>
+                <ch:SfChart.SecondaryAxis>
+                    <ch:NumericalAxis x:Name="VerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                </ch:SfChart.SecondaryAxis>
+
+                <ch:SfChart.Behaviors>
+                    <ch:ChartTrackBallBehavior ShowLine="False" />
+                </ch:SfChart.Behaviors>
+            </ch:SfChart>
+        
+    </Grid>
+</Page>

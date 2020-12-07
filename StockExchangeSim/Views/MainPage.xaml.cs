@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Eco;
+using Syncfusion.UI.Xaml.Charts;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Syncfusion.UI.Xaml.Charts;
-using Eco;
-using System.Collections.ObjectModel;
-using System.Threading;
-using Windows.UI.Core;
-using Windows.UI;
 
 namespace StockExchangeSim.Views
 {
@@ -48,19 +37,19 @@ namespace StockExchangeSim.Views
 
     public class CPValueData
     {
-        public double Year { get; set; }
-        public double Value { get; set; }
-        public CPValueData(double year, double value)
+        public float Year { get; set; }
+        public float Value { get; set; }
+        public CPValueData(float year, float value)
         {
             Year = year;
             Value = value;
         }
 
-        
+
     }
     public class CompanyViewModel
     {
-        
+
 
         public ObservableCollection<CPValueData> Data = new ObservableCollection<CPValueData>();
 
@@ -92,7 +81,7 @@ namespace StockExchangeSim.Views
             {
                 master.alive = false;
             }
-            
+
             master = new Master(field, trader, 1);
             SetSliderValue();
             RedoLines();
@@ -221,7 +210,7 @@ namespace StockExchangeSim.Views
                         }
                     }
                     //Thread.Sleep(2);
-                    
+
 
                 }
 
@@ -232,12 +221,12 @@ namespace StockExchangeSim.Views
             }
             System.Diagnostics.Debug.WriteLine("ended");
         }
-        
+
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-           SetSliderValue();
-           //master.active = true;
+            SetSliderValue();
+            //master.active = true;
         }
 
         public async Task UpdateYear()
@@ -255,7 +244,7 @@ namespace StockExchangeSim.Views
                 display = dis;
 
 
-                
+
                 await Task.Delay(5);
 
             }
@@ -273,20 +262,20 @@ namespace StockExchangeSim.Views
                     //messageDialog = null;
                 }
                 double f = slider.Value;
-                master.SetSecondsPerTick((f * f * 0.01));
+                master.SetSecondsPerTick((float)(f * f * 0.01f));
             }
 
         }
         public void SetSliderValue()
         {
             double f = slider.Value;
-            master.SetSecondsPerTick((f * f * 0.01));
+            master.SetSecondsPerTick((float)(f * f * 0.01));
         }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
@@ -318,7 +307,7 @@ namespace StockExchangeSim.Views
 
         private async void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
         {
-            
+
             int val = 0;
             TextBox box = (TextBox)sender;
             try

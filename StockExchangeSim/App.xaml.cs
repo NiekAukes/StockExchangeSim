@@ -1,14 +1,12 @@
-﻿using System;
-
-using StockExchangeSim.Services;
-using Syncfusion;
+﻿using StockExchangeSim.Services;
+using System;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 
 namespace StockExchangeSim
 {
 
-    
+
 
     public sealed partial class App : Application
     {

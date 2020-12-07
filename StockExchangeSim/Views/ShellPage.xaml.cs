@@ -1,19 +1,16 @@
-﻿using System;
+﻿using StockExchangeSim.Helpers;
+using StockExchangeSim.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
-using StockExchangeSim.Helpers;
-using StockExchangeSim.Services;
-
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-
 using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace StockExchangeSim.Views
@@ -152,7 +149,7 @@ namespace StockExchangeSim.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
