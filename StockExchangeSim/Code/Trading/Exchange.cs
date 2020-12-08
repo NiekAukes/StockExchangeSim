@@ -61,9 +61,12 @@ namespace Eco
             return ret;
         }
     }
-    public struct ExchangeDetails
+    public class Liquidity
     {
-
+        public float Year { get; set; }
+        public int SellAmount { get; set; }
+        public int BuyAmount { get; set; }
+        public int Diff { get { return BuyAmount - SellAmount; } }
     }
     //bid ask implementatie
     public class BidAsk
@@ -117,9 +120,14 @@ namespace Eco
                 bidAsk.Stocks.Add(FullbuyStock.SplitStock(1.0f / partition));
             }
             bidAsk.Stocks.Add(FullbuyStock);
+
+            bidAsk.liquidity1m.Add(new Liquidity() { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
+
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;
             cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
+
+
         }
 
         public void RegisterTrader(Trader t)
@@ -141,6 +149,8 @@ namespace Eco
 
             cp.BidAsk.Stocks[0].Owner = buyer;
             cp.BidAsk.Stocks.RemoveAt(0);
+
+            cp.BidAsk.liquidity1m[cp.BidAsk.liquidity1m.Count - 1].BuyAmount++;
             return true;
         }
 

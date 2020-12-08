@@ -198,6 +198,7 @@
     <Compile Include="Code\Trading\GraphUtil.cs" />
     <Compile Include="Code\Trading\MarketWatcher.cs" />
     <Compile Include="Code\Trading\Strategies\Strategy.cs" />
+    <Compile Include="Code\Trading\Tools\StockPriceComparisonTool.cs" />
     <Compile Include="Code\Trading\Tools\SupportResistanceTool.cs" />
     <Compile Include="Code\Trading\Tools\LiquidityTool.cs" />
     <Compile Include="Code\Trading\Trader.cs" />

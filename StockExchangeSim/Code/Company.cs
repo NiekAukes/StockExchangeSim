@@ -24,13 +24,7 @@ namespace Eco
         }
     }
 
-    public class Liquidity
-    {
-        public float Year { get; set; }
-        public int SellAmount { get; set; }
-        public int BuyAmount { get; set; }
-        public int Diff { get { return BuyAmount - SellAmount; } }
-    }
+    
     public class ValueGraph
     {
         public float Year { get; set; }
