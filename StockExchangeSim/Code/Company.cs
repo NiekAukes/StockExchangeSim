@@ -156,6 +156,10 @@ namespace Eco
             return ret;
 
         }
+        public override string ToString()
+        {
+            return name;
+        }
         public void Update()
         {
 
@@ -223,14 +227,23 @@ namespace Eco
                     //register datapoint
                     if (tick % 100 == 0)
                     {
-                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        stockPrices1m.Add(sp);
-                        ValueGraph vg = new ValueGraph(MainPage.master.Year, (float)Value);
-                        values.Add(vg);
                         if (stockPrices1m.Count > 10000)
                         {
                             stockPrices1m.RemoveAt(0);
                         }
+
+                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                        stockPrices1m.Add(sp);
+                        
+                        ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
+                        values.Add(vg);
+
+                        if (BidAsk.liquidity1m.Count > 1000)
+                        {
+                            BidAsk.liquidity1m.RemoveAt(0);
+                        }
+
+                        BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
 
                         //create new highlow
                         if (currentprice > high5m)

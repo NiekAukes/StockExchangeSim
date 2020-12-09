@@ -67,12 +67,16 @@ namespace Eco
         public int SellAmount { get; set; }
         public int BuyAmount { get; set; }
         public int Diff { get { return BuyAmount - SellAmount; } }
+        public Liquidity(float year)
+        {
+            Year = year;
+        }
     }
     //bid ask implementatie
     public class BidAsk
     {
         public List<Stock> Stocks = new List<Stock>();
-        public ObservableCollection<Liquidity> liquidity1m = new ObservableCollection<Liquidity>();
+        public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
         public Company cp;
         public float Bid, Ask;
         //public List<Stock> Bids;
@@ -121,7 +125,7 @@ namespace Eco
             }
             bidAsk.Stocks.Add(FullbuyStock);
 
-            bidAsk.liquidity1m.Add(new Liquidity() { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
+            bidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
 
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;

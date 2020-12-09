@@ -23,7 +23,7 @@ namespace Eco
             "Lena van Dijk" ,
             "Marjolein Voetberg" ,
             "Dita Steijn" ,
-            "Mitch mcConnel",
+            "Mitch McConnel",
             "Bram de Broker",
             "Julien Vries",
             "Salty Dennis",
@@ -32,19 +32,6 @@ namespace Eco
             "Jarno Babatunde",
             "Maarten Leuter Koning",
             "Tjitte",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
         };
         public TraderNames()
         {

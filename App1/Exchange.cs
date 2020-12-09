@@ -27,7 +27,7 @@ namespace Eco
     public class Company {
         public BidAsk BidAsk;
         public float Value, stockprice;
-        public ObservableCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
     }
 
     public class Stock
@@ -76,7 +76,7 @@ namespace Eco
         }
         public void Update(float totalProfit)
         {
-            Collected += totalProfit * Percentage * 0.01;
+            Collected += totalProfit * Percentage * 0.01f;
         }
         public float Collect()
         {

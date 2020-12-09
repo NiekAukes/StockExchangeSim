@@ -106,6 +106,7 @@ namespace Eco
         public ExchangeBroker exchange = new ExchangeBroker();
 
         public TableOfNames masterTable = new TableOfNames();
+        public TraderNames MasterTraderNames = new TraderNames();
 
         public static float Conjucture { get; set; }
         public static float TotalShare = 0;

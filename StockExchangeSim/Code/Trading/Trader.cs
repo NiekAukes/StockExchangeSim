@@ -55,9 +55,9 @@ namespace Eco
         private string PickRandomName()
         {
             //search a random name in list of names
-            int rng = rn.Next();
-            string ret = field.NameInfo.CompanyNames[rng];
-            field.NameInfo.CompanyNames.RemoveAt(rng);
+            int rng = rn.Next(Master.inst.MasterTraderNames.traderNames.Count);
+            string ret = Master.inst.MasterTraderNames.traderNames[rng];
+            Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
 
             return ret;
         }
@@ -70,6 +70,10 @@ namespace Eco
             stocks[InterestedCompanies.IndexOf(stock.company)].Add(stock);
         }
 
+        public override string ToString()
+        {
+            return name;
+        }
 
         public virtual void Update()
         {
