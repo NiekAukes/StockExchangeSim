@@ -10,8 +10,7 @@ namespace Eco
         ArbitrageTrading,
         PairArbitrageTrading,
         MomentumIgnition,
-        LiquidityDetection,
-        Somethin
+        LiquidityDetection
     }
     public interface IStockOwner
     {
