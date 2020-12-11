@@ -71,6 +71,15 @@ namespace Eco
         {
             Year = year;
         }
+
+        public static Liquidity operator+(Liquidity lq1, Liquidity lq2)
+        {
+            Liquidity ret = new Liquidity(lq1.Year);
+            ret.BuyAmount = lq1.BuyAmount + lq2.BuyAmount;
+            ret.SellAmount = lq1.SellAmount + lq2.SellAmount;
+
+            return ret;
+        }
     }
     //bid ask implementatie
     public class BidAsk

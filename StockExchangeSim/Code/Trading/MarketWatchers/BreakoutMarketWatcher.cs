@@ -34,8 +34,8 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            IEnumerable<StockPriceGraph> nwe = cp.stockPrices1m.Skip(lastdatapoint);
-            SynchronizedCollection<StockPriceGraph> NewPrices = new SynchronizedCollection<StockPriceGraph>(nwe);
+            SynchronizedCollection<StockPriceGraph> NewPrices =
+                new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
 
