@@ -27,7 +27,7 @@ namespace Eco
     public class Company {
         public BidAsk BidAsk;
         public float Value, stockprice;
-        public SynchronizedCollection<StockPriceGraph> stockPrices = new ObservableCollection<StockPriceGraph>();
+        public SynchronizedCollection<StockPriceGraph> stockPrices = new SynchronizedCollection<StockPriceGraph>();
     }
 
     public class Stock
