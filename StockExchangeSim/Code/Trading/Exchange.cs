@@ -82,10 +82,19 @@ namespace Eco
         }
     }
     //bid ask implementatie
-    public class BidAsk
+    public class Holder
     {
         public List<Stock> Stocks = new List<Stock>();
         public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
+        BidAsk bidask { get; set; }
+        public Holder(Company cp)
+        {
+            bidask = new BidAsk(cp);
+        }
+    }
+    public class BidAsk
+    {
+        
         public Company cp;
         public float Bid, Ask;
         //public List<Stock> Bids;
@@ -175,7 +184,7 @@ namespace Eco
             money += stock.company.BidAsk.Ask;
             stock.Owner.money += stock.company.BidAsk.Ask;
 
-            stock.company.BidAsk.Ask /= (float)(stock.company.BidAsk.Stocks[0].Percentage * 100.0f / (stock.company.BidAsk.Stocks.Count + 1));
+            stock.company.BidAsk.Ask /= (stock.company.BidAsk.Stocks[0].Percentage * 100.0f / (stock.company.BidAsk.Stocks.Count + 1));
             stock.company.BidAsk.Bid = stock.company.BidAsk.Ask * 1.001f;
 
             stock.Owner = null;
