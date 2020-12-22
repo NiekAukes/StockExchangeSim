@@ -59,7 +59,7 @@ namespace Eco
             string ret = Master.inst.MasterTraderNames.traderNames[rng];
             Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
 
-            //return ret;
+            return ret;
         }
         public float money { get { return Money; } set { Money = value; } }
 
@@ -114,7 +114,7 @@ namespace Eco
                         }
                         catch (Exception e)
                         {
-                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error");
+                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                         }
                     }
                     else
