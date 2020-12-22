@@ -53,7 +53,7 @@ namespace Eco
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
         public List<Stock> Stocks { get; set; }
-        public BidAsk BidAsk;
+        public OLD_BidAsk BidAsk;
         public float Value = 50;
         public float stockprice = 0;
         public float Competitiveness = 100;

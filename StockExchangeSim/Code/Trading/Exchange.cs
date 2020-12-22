@@ -86,31 +86,47 @@ namespace Eco
     {
         public List<Stock> Stocks = new List<Stock>();
         public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
-        BidAsk bidask { get; set; }
+        OLD_BidAsk bidask { get; set; }
         public Holder(Company cp)
         {
-            bidask = new BidAsk(cp);
+            bidask = new OLD_BidAsk(cp);
         }
     }
-    public class BidAsk
+
+    public interface IBidAsk
     {
-        
-        public Company cp;
-        public float Bid, Ask;
-        //public List<Stock> Bids;
-        //public List<AskData> Ask;
-        public BidAsk(Company company)
+        Company cp { get; set; }
+        float Bid { get; set; }
+        float Ask { get; set; }
+    }
+
+    public class BidAsk : IBidAsk
+    {
+        public Company cp { get; set; }
+        public float Bid { get; set; }
+        public float Ask { get; set; }
+    }
+    public class OLD_BidAsk : IBidAsk
+    {
+        public List<Stock> Stocks { get; set; }
+        public SynchronizedCollection<Liquidity> liquidity1m { get; set; }
+        public Company cp { get; set; }
+        public float Bid { get; set; }
+        public float Ask { get; set; }
+        public OLD_BidAsk(Company company)
         {
-            //Bids = new List<Stock>();
-            //Ask = new List<AskData>();
+            Stocks = new List<Stock>();
+            liquidity1m = new SynchronizedCollection<Liquidity>();
             cp = company;
+            Bid = 0;
+            Ask = 0;
         }
     }
 
     public interface IExchange
     {
         float money { get; set; }
-        List<BidAsk> BidAskSpreads { get; set; }
+        List<OLD_BidAsk> BidAskSpreads { get; set; }
 
         bool BuyStock(Company cp, Trader buyer);
         void RegisterCompany(Company cp, int partition);
@@ -120,7 +136,7 @@ namespace Eco
     public class ECNBroker : IExchange
     {
         public float money { get; set; }
-        public List<BidAsk> BidAskSpreads { get; set; }
+        public List<OLD_BidAsk> BidAskSpreads { get; set; }
 
         public bool BuyStock(Company cp, Trader buyer)
         {
@@ -145,18 +161,18 @@ namespace Eco
     public class ExchangeBrokerMM : IExchange
     {
         public float money { get; set; }
-        public List<BidAsk> BidAskSpreads { get; set; }
+        public List<OLD_BidAsk> BidAskSpreads { get; set; }
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
 
         public ExchangeBrokerMM()
         {
-            BidAskSpreads = new List<BidAsk>();
+            BidAskSpreads = new List<OLD_BidAsk>();
         }
         public void RegisterCompany(Company cp, int partition)
         {
             Companies.Add(cp);
-            BidAsk bidAsk = new BidAsk(cp); //create new bidask
+            OLD_BidAsk bidAsk = new OLD_BidAsk(cp); //create new bidask
             BidAskSpreads.Add(bidAsk);
             cp.BidAsk = bidAsk;
 
@@ -171,7 +187,7 @@ namespace Eco
             bidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
 
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
-            bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;
+            bidAsk.Ask = bidAsk.Bid * 0.0098f;
             cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
 
 
@@ -223,7 +239,7 @@ namespace Eco
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         List<int> compconverter = new List<int>();
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
-        public List<BidAsk> BidAskSpreads { get; set; }//Lijst van alle stocks die te koop staan ingedeeld per bedrijf
+        public List<OLD_BidAsk> BidAskSpreads { get; set; }//Lijst van alle stocks die te koop staan ingedeeld per bedrijf
 
         public List<Stock> Stocks
         {
@@ -243,7 +259,7 @@ namespace Eco
         public void RegisterCompany(Company cp ,int part)
         {
             Companies.Add(cp);
-            BidAsk bidAsk = new BidAsk(cp); //create new bidask
+            OLD_BidAsk bidAsk = new OLD_BidAsk(cp); //create new bidask
             BidAskSpreads.Add(bidAsk);
             cp.BidAsk = bidAsk;
         }
@@ -252,7 +268,7 @@ namespace Eco
             Traders.Add(t);
         }
 
-        public Exchange() { BidAskSpreads = new List<BidAsk>(); }
+        public Exchange() { BidAskSpreads = new List<OLD_BidAsk>(); }
 
 
         Stock GetCheapestStock(Company cp)
