@@ -68,7 +68,7 @@ namespace Eco
         public abstract class Strategy
         {
             Random rn = new Random();
-            public abstract MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange);
+            public abstract MarketResults StrategyOutcome(Trader trader, ExchangeBrokerMM exchange);
             public abstract void Observe();
         }
         [Obsolete]
@@ -79,7 +79,7 @@ namespace Eco
                 throw new NotImplementedException();
             }
 
-            public override MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
+            public override MarketResults StrategyOutcome(Trader trader, ExchangeBrokerMM exchange)
             {
                 //float money = trader.money;
                 //Company cp = exchange.Companies[rn.Next(exchange.BidAskSpreads.Count - 1)]; //invest in this company

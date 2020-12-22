@@ -20,7 +20,7 @@ namespace Eco
             throw new NotImplementedException();
         }
 
-        public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
+        public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBrokerMM exchange)
         {
             Trader.MarketResults MR = new Trader.MarketResults();
             for (int i = 0; i < MarketWatchers.Count; i++)

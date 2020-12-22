@@ -103,7 +103,7 @@ namespace Eco
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
-        public ExchangeBroker exchange = new ExchangeBroker();
+        public ExchangeBrokerMM exchange = new ExchangeBrokerMM();
 
         public TableOfNames masterTable = new TableOfNames();
         public TraderNames MasterTraderNames = new TraderNames();

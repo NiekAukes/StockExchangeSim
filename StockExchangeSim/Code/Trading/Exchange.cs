@@ -117,14 +117,39 @@ namespace Eco
         void RegisterTrader(Trader t);
         void SellStock(Stock stock);
     }
-    public class ExchangeBroker : IExchange
+    public class ECNBroker : IExchange
+    {
+        public float money { get; set; }
+        public List<BidAsk> BidAskSpreads { get; set; }
+
+        public bool BuyStock(Company cp, Trader buyer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterCompany(Company cp, int partition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterTrader(Trader t)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SellStock(Stock stock)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class ExchangeBrokerMM : IExchange
     {
         public float money { get; set; }
         public List<BidAsk> BidAskSpreads { get; set; }
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
 
-        public ExchangeBroker()
+        public ExchangeBrokerMM()
         {
             BidAskSpreads = new List<BidAsk>();
         }
