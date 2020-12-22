@@ -57,9 +57,9 @@
                     <ch:NumericalAxis x:Name="VerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
                 </ch:SfChart.SecondaryAxis>
 
-                <ch:SfChart.Behaviors>
+                <!-- ch:SfChart.Behaviors>
                     <ch:ChartTrackBallBehavior ShowLine="False" />
-                </ch:SfChart.Behaviors>
+                </-->
             </ch:SfChart>
         
     </Grid>
