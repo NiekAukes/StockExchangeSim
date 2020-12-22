@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Eco
 {
@@ -60,19 +61,40 @@ namespace Eco
             return ret;
         }
     }
-    public struct ExchangeDetails
+    public class Liquidity
     {
+        public float Year { get; set; }
+        public int SellAmount { get; set; }
+        public int BuyAmount { get; set; }
+        public int Diff { get { return BuyAmount - SellAmount; } }
+        public Liquidity(float year)
+        {
+            Year = year;
+        }
 
+        public static Liquidity operator+(Liquidity lq1, Liquidity lq2)
+        {
+            Liquidity ret = new Liquidity(lq1.Year);
+            ret.BuyAmount = lq1.BuyAmount + lq2.BuyAmount;
+            ret.SellAmount = lq1.SellAmount + lq2.SellAmount;
+
+            return ret;
+        }
     }
     //bid ask implementatie
-    public class BidAsk
+    public class Holder
     {
         public List<Stock> Stocks = new List<Stock>();
-        public class AskData
+        public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
+        BidAsk bidask { get; set; }
+        public Holder(Company cp)
         {
-            Trader Asker;
-            int amount;
+            bidask = new BidAsk(cp);
         }
+    }
+    public class BidAsk
+    {
+        
         public Company cp;
         public float Bid, Ask;
         //public List<Stock> Bids;
@@ -120,9 +142,14 @@ namespace Eco
                 bidAsk.Stocks.Add(FullbuyStock.SplitStock(1.0f / partition));
             }
             bidAsk.Stocks.Add(FullbuyStock);
+
+            bidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
+
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
             bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.0098f;
             cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
+
+
         }
 
         public void RegisterTrader(Trader t)
@@ -144,6 +171,8 @@ namespace Eco
 
             cp.BidAsk.Stocks[0].Owner = buyer;
             cp.BidAsk.Stocks.RemoveAt(0);
+
+            cp.BidAsk.liquidity1m[cp.BidAsk.liquidity1m.Count - 1].BuyAmount++;
             return true;
         }
 
@@ -155,7 +184,7 @@ namespace Eco
             money += stock.company.BidAsk.Ask;
             stock.Owner.money += stock.company.BidAsk.Ask;
 
-            stock.company.BidAsk.Ask /= (float)(stock.company.BidAsk.Stocks[0].Percentage * 100.0f / (stock.company.BidAsk.Stocks.Count + 1));
+            stock.company.BidAsk.Ask /= (stock.company.BidAsk.Stocks[0].Percentage * 100.0f / (stock.company.BidAsk.Stocks.Count + 1));
             stock.company.BidAsk.Bid = stock.company.BidAsk.Ask * 1.001f;
 
             stock.Owner = null;

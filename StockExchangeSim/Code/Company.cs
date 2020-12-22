@@ -24,11 +24,7 @@ namespace Eco
         }
     }
 
-    public class Liquidity
-    {
-        public int SellAmount { get; set; }
-        public int BuyAmount { get; set; }
-    }
+    
     public class ValueGraph
     {
         public float Year { get; set; }
@@ -44,7 +40,6 @@ namespace Eco
         public ObservableCollection<StockPriceGraph> prices1m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices5m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices10m = new ObservableCollection<StockPriceGraph>();
-        public ObservableCollection<StockPriceGraph> prices15m = new ObservableCollection<StockPriceGraph>();
         public ObservableCollection<StockPriceGraph> prices30m = new ObservableCollection<StockPriceGraph>();
     }
     public class ValueViewModel
@@ -83,7 +78,7 @@ namespace Eco
             CompanyStock = CreateStock(100);
             field = f;
 
-            open = (float)Value;
+            open = Value;
             name = initName();
         }
         public string initName()
@@ -136,7 +131,7 @@ namespace Eco
         long CurrentTick = Master.ticks;
         float modifier = 30000 / 2629743.8f;
 
-        public float money { get { return Value; } set { Value = value; } }
+        public float money { get; set; }
 
 
         float open = 0;
@@ -160,6 +155,10 @@ namespace Eco
                 modifier;//multiply by the modifier and Economic growth
             return ret;
 
+        }
+        public override string ToString()
+        {
+            return name;
         }
         public void Update()
         {
@@ -211,7 +210,7 @@ namespace Eco
                     }
                 }
             }
-
+            
             //check high and low
             if (tick % 20 == 0)
             {
@@ -228,14 +227,23 @@ namespace Eco
                     //register datapoint
                     if (tick % 100 == 0)
                     {
-                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        stockPrices1m.Add(sp);
-                        ValueGraph vg = new ValueGraph(MainPage.master.Year, (float)Value);
-                        values.Add(vg);
                         if (stockPrices1m.Count > 10000)
                         {
                             stockPrices1m.RemoveAt(0);
                         }
+
+                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                        stockPrices1m.Add(sp);
+                        
+                        ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
+                        values.Add(vg);
+
+                        if (BidAsk.liquidity1m.Count > 1000)
+                        {
+                            BidAsk.liquidity1m.RemoveAt(0);
+                        }
+
+                        BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
 
                         //create new highlow
                         if (currentprice > high5m)

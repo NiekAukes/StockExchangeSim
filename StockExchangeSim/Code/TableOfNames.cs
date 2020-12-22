@@ -17,13 +17,22 @@ namespace Eco
             "Max-Friso Schaap" ,
             "Douwe Osinga" ,
             "Jacob de Haas" ,
-            "Stevan Spekkie" ,
+            "Stefan Spekreijse" ,
             "Franz Ferdinand von Habsburg" ,
-            "Camille Camilton" ,
-            "" ,
-            "" ,
-            "" ,
-            ""
+            "Louis Dijk" ,
+            "Lena van Dijk" ,
+            "Marjolein Voetberg" ,
+            "Dita Steijn" ,
+            "Mitch McConnel",
+            "Bram de Broker",
+            "Julien Vries",
+            "Salty Dennis",
+            "Frank Frankington",
+            "Ashura Babangida",
+            "Jarno Babatunde",
+            "Maarten Leuter Koning",
+            "Tjitte",
+            "Camille"
         };
         public TraderNames()
         {
