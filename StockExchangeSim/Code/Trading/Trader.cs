@@ -33,6 +33,7 @@ namespace Eco
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
+        //IMPLEMENT TRADER.THOUGHT
 
         List<Strategy> Strategies = new List<Strategy>();
 

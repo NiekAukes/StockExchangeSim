@@ -50,12 +50,15 @@ namespace StockExchangeSim.Views
 
         public void InsertDetails(int selectedindex)
         {
-            //REPLACE WITH TRADERS
-            traderName.Text = traders[selectedindex].name;
             //insert trader names is already done in initalisation of page (page_loaded)
 
             //load the selected trader into the contentpage, if no trader is selected, load the first trader.
             Trader selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
+            companyThoughtSelector.Items.Clear();
+            foreach (Company comp in selectedTrader.InterestedCompanies) {
+                companyThoughtSelector.Items.Add(comp.name);
+            }
+            companyThoughtSelector.SelectedIndex = 0; // so that a company is selected in the choose menu
 
             traderName.Text = selectedTrader.name;
             currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
@@ -78,7 +81,8 @@ namespace StockExchangeSim.Views
         private void companyThoughtSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //load the stock prices of the company that is selected via the thought selector into the graph
-            loadTraderGraphs(traders[traderList.SelectedIndex].InterestedCompanies[companyThoughtSelector.SelectedIndex]);
+            if(companyThoughtSelector.SelectedIndex != -1 && traderList.SelectedIndex != -1)
+                loadTraderGraphs(traders[traderList.SelectedIndex].InterestedCompanies[companyThoughtSelector.SelectedIndex]);
         }
 
         //REPLACE WITH LOAD TRADER GRAPHS

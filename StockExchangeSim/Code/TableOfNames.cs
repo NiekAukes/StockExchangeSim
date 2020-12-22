@@ -29,9 +29,12 @@ namespace Eco
             "Salty Dennis",
             "Frank Frankington",
             "Ashura Babangida",
+            "Uvuvwevwe Onyetenyevwe Ugwembubwem Ossas",
+            "Nhlanhla Ganiah Nhlakanipho",
+            "Louis Ouioui",
             "Jarno Babatunde",
             "Maarten Leuter Koning",
-            "Tjitte",
+            "Tjitte Kast",
             "Camille"
         };
         public TraderNames()
