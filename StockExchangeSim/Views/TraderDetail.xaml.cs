@@ -68,10 +68,10 @@ namespace StockExchangeSim.Views
 
             //load prices of stocks of interested companies of trader into graph
             List<Company> interestedComp = selectedTrader.InterestedCompanies;
-            if (companyThoughtSelector.SelectedIndex != -1)
-                loadTraderGraphs(interestedComp[companyThoughtSelector.SelectedIndex]);
-            else
-                loadTraderGraphs(interestedComp[0]);
+            loadTraderGraphs(
+                companyThoughtSelector.SelectedIndex != -1
+                ? interestedComp[companyThoughtSelector.SelectedIndex]
+                : interestedComp[0]);
 
         }
 
