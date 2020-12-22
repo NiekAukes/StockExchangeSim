@@ -94,15 +94,14 @@ namespace Eco
     }
     public class BidAsk
     {
-        
+        public List<Stock> Stocks { get; set; }
+        public SynchronizedCollection<Liquidity> liquidity1m { get; set; }
         public Company cp;
         public float Bid, Ask;
-        //public List<Stock> Bids;
-        //public List<AskData> Ask;
         public BidAsk(Company company)
         {
-            //Bids = new List<Stock>();
-            //Ask = new List<AskData>();
+            Stocks = new List<Stock>();
+            liquidity1m = new SynchronizedCollection<Liquidity>();
             cp = company;
         }
     }
