@@ -32,6 +32,7 @@ namespace Eco
             "Jarno Babatunde",
             "Maarten Leuter Koning",
             "Tjitte",
+            "Camille"
         };
         public TraderNames()
         {

@@ -114,7 +114,7 @@ namespace Eco
                         }
                         catch (Exception e)
                         {
-                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error");
+                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                         }
                     }
                     else
