@@ -16,6 +16,7 @@ namespace StockExchangeSim.Views
     {
         Eco.Field Field { get; set; }
         List<Eco.Company> listofCompanies;
+
         public CompanyDetail()
         {
             this.InitializeComponent();
@@ -63,28 +64,15 @@ namespace StockExchangeSim.Views
                     companyList.Items.Add(item);
                 }
             }
-
-            if (selectedindex != -1)
-            {
-                Eco.Company selectedcomp = listofCompanies[companyList.SelectedIndex];
+            //load selected company into contentpage, if not, load the first one
+                Eco.Company selectedcomp = selectedindex != -1 ? listofCompanies[companyList.SelectedIndex] : listofCompanies[0];
                 CompanyName.Text = selectedcomp.name;
                 companyValue.Text = "Company value: " + selectedcomp.Value.ToString();
                 currStockPrice.Text = "Stock price: " + selectedcomp.stockprice.ToString();
 
                 //shove prices into graphs
                 loadCompanyGraphs(selectedcomp);
-            }
-            else
-            {
-                //load the first company's details in already, before the user has to click anything
-                Eco.Company comp1 = listofCompanies[0];
-                CompanyName.Text = comp1.name;
-                companyValue.Text = "Company value: " + comp1.Value.ToString();
-                currStockPrice.Text = "Stock price: " + comp1.stockprice.ToString();
-
-                //shove stock prices into chart: biek baukes moet daarmit mar eem helpen
-                loadCompanyGraphs(listofCompanies[0]);
-            }
+            
         }
 
 

@@ -26,82 +26,62 @@ namespace StockExchangeSim.Views
 
         }
 
-        ~TraderDetail()
+        ~TraderDetail() //When page is destroyed
         {
             System.Diagnostics.Debug.WriteLine("destroyed");
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            //init traders
             traders = Master.inst.Traders;
-            for(int i = 0; i< traders.Count;i++)
+            traderList.Items.Clear();
+            //Add all traders to the textboxes
+            for (int i = 0; i< traders.Count;i++)
             {
                 TextBlock newBlock = new TextBlock();
                 newBlock.Text = traders[i].name;
+                traderList.Items.Add(newBlock);
             }
+
+            InsertDetails(-1);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (e.Parameter is Eco.Field)
-            {
-                Field = (e.Parameter as Eco.Field);
-            }
-            base.OnNavigatedTo(e);
-        }
 
-        public void InsertDetails(List<Eco.Company> companies, int selectedindex)
+
+        public void InsertDetails(int selectedindex)
         {
             //REPLACE WITH TRADERS
-            traders = Master.inst.Traders;
-            FieldName.Text = Field.fieldName;
-
-
+            traderName.Text = traders[selectedindex].name;
             //insert trader names is already done in initalisation of page (page_loaded)
-            
-            //if (companyList.Items.Count < 1)
-            //{
-            //    companyList.Items.Clear();
-            //    for (int i = 0; i < listofCompanies.Count; i++)
-            ////    {
-            //        //make listboxitem to shove name into (with force)
-            //        TextBlock item = new TextBlock();
-            //        item.Text = listofCompanies[i].name;
-            //        //item.PointerPressed += Item_PointerPressed;
-            //        //item.PointerReleased += Item_PointerPressed;
-            //        companyList.Items.Add(item);
-            //    }
-            //}
 
-            /*if (selectedindex != -1)
+            //load the selected trader into the contentpage, if no trader is selected, load the first trader.
+            Trader selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
+
+            traderName.Text = selectedTrader.name;
+            currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
+
+            currStockPrice.Text = "Stock prices: ";
+            for (int i = 0; i < selectedTrader.InterestedCompanies.Count; i++)
             {
-                Eco.Company selectedcomp = listofCompanies[companyList.SelectedIndex];
-                CompanyName.Text = selectedcomp.name;
-                companyValue.Text = "Company value: " + selectedcomp.Value.ToString();
-                currStockPrice.Text = "Stock price: " + selectedcomp.stockprice.ToString();
-
-                //shove prices into graphs
-                loadCompanyGraphs(selectedcomp);
+                currStockPrice.Text += selectedTrader.InterestedCompanies[i].BidAsk.Bid + " ";
             }
-            else
-            {
-                //load the first company's details in already, before the user has to click anything
-                Eco.Company comp1 = listofCompanies[0];
-                CompanyName.Text = comp1.name;
-                companyValue.Text = "Company value: " + comp1.Value.ToString();
-                currStockPrice.Text = "Stock price: " + comp1.stockprice.ToString();
 
-                //shove stock prices into chart: biek baukes moet daarmit mar eem helpen
-                loadCompanyGraphs(listofCompanies[0]);
-            }
-            */
+            //load prices of stocks of interested companies of trader into graph
+            List<Company> interestedComp = selectedTrader.InterestedCompanies;
+            companyThoughtSelector.SelectedIndex != -1 ? loadTraderGraphs(interestedComp[companyThoughtSelector.SelectedIndex]) : loadTraderGraphs(interestedComp[0]);
+
         }
 
+        private void companyThoughtSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //load the stock prices of the company that is selected via the thought selector into the graph
+            loadTraderGraphs(traders[traderList.SelectedIndex].InterestedCompanies[companyThoughtSelector.SelectedIndex]);
+        }
 
         //REPLACE WITH LOAD TRADER GRAPHS
-        void loadCompanyGraphs(Eco.Company comp)
+        void loadTraderGraphs(Company comp)
         {
             stockpriceChart.Series.Clear();
-           
 
             //INSERT STOCK PRICES
             FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
@@ -126,31 +106,19 @@ namespace StockExchangeSim.Views
 
         private void traderList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*if (companyList.SelectedIndex != -1)
+            if (traderList.SelectedIndex != -1)
             {
-                InsertDetails(listofCompanies, companyList.SelectedIndex);
-            }*/
-        }
-
-        /*private void companyList_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            //make style of selected listboxitem different
-            //doen we niks mee aangezien windows' standaardstijl zeer schmecksy is
-        }
-
-        private void companyList_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            //if pressed and released load new company data into the page
-            //LOAD DATA INTO PAGE
-            if(companyList.SelectedIndex != -1)
-            {
-                InsertDetails(listofCompanies);
+                InsertDetails(traderList.SelectedIndex);
             }
         }
-        private void Item_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            companyList_PointerReleased(sender, e);
-        }*/
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is Eco.Field)
+            {
+                Field = (e.Parameter as Eco.Field);
+            }
+            base.OnNavigatedTo(e);
+        }
     }
 }

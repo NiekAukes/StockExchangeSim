@@ -25,11 +25,6 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="FieldName" Style="{StaticResource CompanyDetailTitleStyle}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                       Grid.Row="0" Grid.Column="0" Text="TestFieldName"/>
-        
         <ListView x:Name="traderList" Grid.Column="0" Grid.Row="1"
                   Grid.RowSpan="3" Foreground="White" SelectionChanged="traderList_SelectionChanged">
             <ListViewItem >fklsjfldkj</ListViewItem>
@@ -39,12 +34,12 @@
         </ListView>
 
         <StackPanel x:Name="contentStackPanel"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Orientation="Vertical">
-            <TextBlock x:Name="CompanyName" Style="{StaticResource CompanyDetailTitleStyle}"
-                       Text="TestCompanyName"/>
+            <TextBlock x:Name="traderName" Style="{StaticResource CompanyDetailTitleStyle}"
+                       Text="TestTraderName"/>
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="fillerThought" Margin="20,20,0,20" Text="Trader Thought: "/>
-                <ComboBox x:Name="companyThoughtSelector" VerticalAlignment="Center"
+                <ComboBox x:Name="companyThoughtSelector" VerticalAlignment="Center" SelectionChanged="companyThoughtSelector_SelectionChanged"
                           Margin="10,0,0,0" MinWidth="100" MaxWidth="300">
                     <ComboBoxItem Content="bruhCompanyTest"/>
                 </ComboBox>
@@ -53,7 +48,7 @@
             <TextBlock x:Name="currStockPrice" Margin="20,20,0,20" Text="Stock price: "/>
 
         </StackPanel>
-        <ch:SfChart Margin="10" x:Name="stockpriceChart" Grid.Column="1" Grid.Row="2"
+        <ch:SfChart Margin="10" x:Name="stockpriceChart" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2"
                         VerticalAlignment="Bottom" Height="auto">
                 <ch:SfChart.PrimaryAxis>
                     <ch:NumericalAxis x:Name="HorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
