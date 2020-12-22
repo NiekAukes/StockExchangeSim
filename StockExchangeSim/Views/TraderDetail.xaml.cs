@@ -36,7 +36,7 @@ namespace StockExchangeSim.Views
             for(int i = 0; i< traders.Count;i++)
             {
                 TextBlock newBlock = new TextBlock();
-                newBlock.Text = traders[i].Name;
+                //newBlock.Text = traders[i].Name;
             }
         }
 

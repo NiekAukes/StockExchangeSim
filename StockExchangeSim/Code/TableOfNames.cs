@@ -19,7 +19,7 @@ namespace Eco
             "Jacob de Haas" ,
             "Stevan Spekkie" ,
             "Franz Ferdinand von Habsburg" ,
-            "" ,
+            "Camille Camilton" ,
             "" ,
             "" ,
             "" ,

@@ -56,10 +56,12 @@ namespace Eco
         {
             //search a random name in list of names
             int rng = rn.Next();
-            string ret = field.NameInfo.CompanyNames[rng];
-            field.NameInfo.CompanyNames.RemoveAt(rng);
+            return "";
+            //TO BE FIXED
+            //string ret = field.NameInfo.CompanyNames[rng];
+            //field.NameInfo.CompanyNames.RemoveAt(rng);
 
-            return ret;
+            //return ret;
         }
         public float money { get { return Money; } set { Money = value; } }
 
