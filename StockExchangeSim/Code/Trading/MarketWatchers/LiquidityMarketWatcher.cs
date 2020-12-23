@@ -21,20 +21,21 @@ namespace Eco
 
         public override float UpdateInsights()
         {
-            if (LTD == null)
-            {
-                RedoInsights();
-            }
-            SynchronizedCollection<Liquidity> slq =
-                new SynchronizedCollection<Liquidity>(cp.BidAsk.liquidity1m.Skip(lastdatapoint));
-            Liquidity liquidity = slq[0];
-            for(int i = 1; i < slq.Count; i++)
-            {
-                liquidity += slq[i];
-            }
-            lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
-            LTD = null;
-            return liquidity.Diff;
+            //if (LTD == null)
+            //{
+            //    RedoInsights();
+            //}
+            //SynchronizedCollection<Liquidity> slq =
+            //    new SynchronizedCollection<Liquidity>(cp.BidAsk.liquidity1m.Skip(lastdatapoint));
+            //Liquidity liquidity = slq[0];
+            //for(int i = 1; i < slq.Count; i++)
+            //{
+            //    liquidity += slq[i];
+            //}
+            //lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
+            //LTD = null;
+            //return liquidity.Diff;
+            return 0;
         }
     }
 }
