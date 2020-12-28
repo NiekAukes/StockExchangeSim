@@ -24,6 +24,7 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
+        Thoughts thoughts = new Thoughts();
         public static Random rn = new Random(Master.Seed);
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
@@ -33,8 +34,35 @@ namespace Eco
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
-        //IMPLEMENT TRADER.THOUGHT
+        public class TraderThought
+        {
+            public Company comp;
+            public string thought;
+            public TraderThought()
+            {
+                comp = null; thought = null;
+            }
+        }
 
+        public List<TraderThought> traderthoughts = null;
+        //IMPLEMENT TRADER.THOUGHT
+        public void UpdateTraderThought(MarketWatcher<Strategy> watcher)
+        {
+            //vind een mogelijke match van watcher en thought
+            if (traderthoughts != null || traderthoughts.Count < 1){
+                for (int i = 0; i < traderthoughts.Count; i++)
+                {
+                    if(traderthoughts[i].comp == watcher.cp)
+                    {
+                        traderthoughts[i].thought = thoughts.buy; //zoiets als dit
+                        //maybe implement function that chooses thought based on events of the market watcher.
+                        //so if there is a breakout, set thought "I'm going to buy" of weet ik veel.
+                        //traderthoughts[i].thought = watcher.thought; DOES NOT EXIST YET
+                    }
+                }
+            }
+
+        }
         List<Strategy> Strategies = new List<Strategy>();
 
         public Trader()

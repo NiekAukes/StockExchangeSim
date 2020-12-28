@@ -2,6 +2,15 @@
 
 namespace Eco
 {
+    public class Thoughts
+    {
+        public string buy = "I'm going to buy.";
+        public string sell = "I'm going to sell.";
+        public string idk = "I'm not sure what to do.";
+        public string wait = "I'm going to wait a little.";
+        public string hate = "I fucking hate this company.";
+        public Thoughts(){}
+    }
     public class TraderNames
     {
         public List<string> traderNames = new List<string>()
@@ -40,10 +49,6 @@ namespace Eco
         public TraderNames()
         {
 
-        }
-        public string getTraderName()
-        {
-            return "";
         }
 }
 
