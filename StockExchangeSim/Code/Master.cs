@@ -138,6 +138,7 @@ namespace Eco
             for (int i = 0; i < traders; i++)
             {
                 Traders.Add(new Trader());
+                
             }
 
             thread = new System.Threading.Thread(Update);

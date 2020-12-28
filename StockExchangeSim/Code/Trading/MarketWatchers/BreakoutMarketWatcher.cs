@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Eco
 {
     public class BreakoutMarketWatcher : MarketWatcher<BreakoutStrategy>
     {
-        SupportResistanceTool SRTool = new SupportResistanceTool();
-        SupportResistanceData SRData = null;
+        public SupportResistanceTool SRTool = new SupportResistanceTool();
+        public SupportResistanceData SRData = null;
         float lastInsightTime = 0;
         int lastdatapoint = 0;
+
 
         public BreakoutMarketWatcher(Company company)
         {
@@ -17,13 +19,12 @@ namespace Eco
 
         public override void RedoInsights()
         {
-            //TODO
-
             //Search for Support and Resistance
             SRData = SRTool.StrategyOutcome(cp);
 
             lastInsightTime = Master.inst.Year;
 
+            OnRedoneInsights(null);
 
         }
         int LastRememberUp = 0, LastRememberDown = 0;

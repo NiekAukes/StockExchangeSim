@@ -22,7 +22,7 @@ namespace Eco
             UptrendInvalid = false;
             DowntrendInvalid = false;
             lastInsightTime = (float)Master.inst.Year;
-
+            OnRedoneInsights(null);
         }
 
         public override float UpdateInsights()

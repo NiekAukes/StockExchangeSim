@@ -15,7 +15,7 @@ namespace Eco
         public override void RedoInsights()
         {
             LTD = LT.StrategyOutcome(cp);
-
+            OnRedoneInsights(null);
             lastInsightTime = Master.inst.Year;
         }
 

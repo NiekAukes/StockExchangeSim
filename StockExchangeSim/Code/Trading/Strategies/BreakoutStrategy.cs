@@ -18,6 +18,7 @@ namespace Eco
         public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
             //TODO
+            MarketWatchers[0].RedoneInsights += BreakoutStrategy_RedoneInsights;
             Trader.MarketResults MR = new Trader.MarketResults();
             for (int i = 0; i < MarketWatchers.Count; i++)
             {
@@ -25,6 +26,12 @@ namespace Eco
             }
             return MR;
         }
+
+        private void BreakoutStrategy_RedoneInsights(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Observe()
         {
             //Observe the market
