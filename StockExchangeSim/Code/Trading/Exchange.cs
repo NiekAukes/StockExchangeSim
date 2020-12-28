@@ -81,82 +81,93 @@ namespace Eco
             return ret;
         }
     }
-    //bid ask implementatie
-    public class Holder
-    {
-        public List<Stock> Stocks = new List<Stock>();
-        public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
-        OLD_BidAsk bidask { get; set; }
-        public Holder(Company cp)
-        {
-            bidask = new OLD_BidAsk(cp);
-        }
-    }
-
-    public interface IBidAsk
-    {
-        Company cp { get; set; }
-        float Bid { get; set; }
-        float Ask { get; set; }
-    }
-
-    public class BidAsk : IBidAsk
-    {
-        public Company cp { get; set; }
-        public float Bid { get; set; }
-        public float Ask { get; set; }
-    }
-    public class OLD_BidAsk : IBidAsk
-    {
-        public List<Stock> Stocks { get; set; }
-        public SynchronizedCollection<Liquidity> liquidity1m { get; set; }
-        public Company cp { get; set; }
-        public float Bid { get; set; }
-        public float Ask { get; set; }
-        public OLD_BidAsk(Company company)
-        {
-            Stocks = new List<Stock>();
-            liquidity1m = new SynchronizedCollection<Liquidity>();
-            cp = company;
-            Bid = 0;
-            Ask = 0;
-        }
-    }
-
-    public interface IExchange
-    {
-        float money { get; set; }
-        List<OLD_BidAsk> BidAskSpreads { get; set; }
-
-        bool BuyStock(Company cp, Trader buyer);
-        void RegisterCompany(Company cp, int partition);
-        void RegisterTrader(Trader t);
-        void SellStock(Stock stock);
-    }
+    
     public class ECNBroker : IExchange
     {
         public float money { get; set; }
-        public List<OLD_BidAsk> BidAskSpreads { get; set; }
+
+        public List<BidAsk> BidAsks { get; set; }
+
+
+
+        public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
+        public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
+
+        
 
         public bool BuyStock(Company cp, Trader buyer)
         {
-            throw new NotImplementedException();
+            if (cp.BidAsk == null)
+                return false;
+            if (cp.SellOrders.list.Count < 1)
+                return false;
+
+            SellOrder SellStock = cp.SellOrders.list[0];
+            cp.SellOrders.list.RemoveAt(0);
+            SellStock.Stock.Owner.money += SellStock.LimitPrice;
+            buyer.money -= SellStock.LimitPrice;
+
+           
+
+            SellStock.Stock.Owner = buyer;
+
+            //cp.BidAsk.liquidity1m[cp.BidAsk.liquidity1m.Count - 1].BuyAmount++;
+            return true;
         }
 
-        public void RegisterCompany(Company cp, int partition)
+        public void BuyOrder(Company cp, Trader buyer, float Limit)
         {
-            throw new NotImplementedException();
+            if (cp.SellOrders.list[0].LimitPrice < Limit)
+            {
+                //directly issue transaction
+                BuyStock(cp, buyer);
+                return;
+            }
+            cp.BuyOrders.AddSortedItem(new BuyOrder(cp, buyer, Limit), "LimitPrice");
         }
-
-        public void RegisterTrader(Trader t)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SellStock(Stock stock)
         {
             throw new NotImplementedException();
         }
+
+        public void SellOrder(Stock stock, float Limit)
+        {
+            if (stock.company.BuyOrders.list[0].LimitPrice > Limit)
+            {
+                //directly issue transaction
+                SellStock(stock);
+                return;
+            }
+            stock.company.SellOrders.AddSortedItem(new Eco.SellOrder(stock.company, stock, Limit), "LimitPrice");
+        }
+        public void RegisterCompany(Company cp, int partition)
+        {
+            Companies.Add(cp);
+            BidAsk bidAsk = new BidAsk(cp); //create new bidask
+            BidAsks.Add(bidAsk);
+            cp.BidAsk = bidAsk;
+
+            //buy stocks from company => to Inverstors
+            //Stock FullbuyStock = cp.BecomePublic();
+            //for (int i = 0; i < partition - 1; i++)
+            //{
+            //    bidAsk.Stocks.Add(FullbuyStock.SplitStock(1.0f / partition));
+            //}
+            //bidAsk.Stocks.Add(FullbuyStock);
+
+            //bidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { BuyAmount = partition, SellAmount = 0, Year = Master.inst.Year });
+
+            //bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
+            //bidAsk.Ask = bidAsk.Bid * 0.0098f;
+            //cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
+        }
+
+        public void RegisterTrader(Trader t)
+        {
+            Traders.Add(t);
+        }
+
+        
     }
     public class ExchangeBrokerMM : IExchange
     {

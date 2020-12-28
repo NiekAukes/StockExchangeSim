@@ -53,7 +53,11 @@ namespace Eco
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
         public List<Stock> Stocks { get; set; }
-        public OLD_BidAsk BidAsk;
+
+        public SortedSyncCollection<BuyOrder> BuyOrders { get; set; }
+        public SortedSyncCollection<SellOrder> SellOrders { get; set; }
+
+        public BidAsk BidAsk;
         public float Value = 50;
         public float stockprice = 0;
         public float Competitiveness = 100;
@@ -238,12 +242,12 @@ namespace Eco
                         ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
                         values.Add(vg);
 
-                        if (BidAsk.liquidity1m.Count > 1000)
-                        {
-                            BidAsk.liquidity1m.RemoveAt(0);
-                        }
+                        //if (BidAsk.liquidity1m.Count > 1000)
+                        //{
+                        //    BidAsk.liquidity1m.RemoveAt(0);
+                        //}
 
-                        BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
+                        //BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
 
                         //create new highlow
                         if (currentprice > high5m)
