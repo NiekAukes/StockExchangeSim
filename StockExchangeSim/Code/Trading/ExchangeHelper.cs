@@ -9,11 +9,13 @@ namespace Eco
     //bid ask implementatie
     public class Holder
     {
-        public List<Stock> Stocks = new List<Stock>();
-        public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
+        public Trader Owner { get; set; }
+        public IEnumerable<Stock> Stocks { get; set; }
+        //public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
         BidAsk bidask { get; set; }
-        public Holder(Company cp)
+        public Holder(Company cp, Trader trader)
         {
+            Owner = trader;
             bidask = new BidAsk(cp);
         }
     }
