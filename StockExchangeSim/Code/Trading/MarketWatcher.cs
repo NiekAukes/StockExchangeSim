@@ -12,6 +12,7 @@ namespace Eco
         public event EventHandler RedoneInsights;
         protected virtual void OnRedoneInsights(EventArgs e)
         {
+            
             EventHandler handler = RedoneInsights;
             handler?.Invoke(this, e);
         }
@@ -19,7 +20,7 @@ namespace Eco
         public abstract float UpdateInsights();
         public virtual void RedoInsights()
         {
-            UpdateTraderThoughts();
+            //UpdateTraderThoughts();
         }
         public void UpdateTraderThoughts()
         {
