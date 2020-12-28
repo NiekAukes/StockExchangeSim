@@ -18,6 +18,8 @@ namespace StockExchangeSim.Views
         public Field Field { get; private set; }
         public List<Trader> traders { get; private set; }
 
+        public Trader selectedTrader;
+
         public TraderDetail()
         {
             this.InitializeComponent();
@@ -30,6 +32,7 @@ namespace StockExchangeSim.Views
         {
             System.Diagnostics.Debug.WriteLine("destroyed");
         }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             //init traders
@@ -53,7 +56,7 @@ namespace StockExchangeSim.Views
             //insert trader names is already done in initalisation of page (page_loaded)
 
             //load the selected trader into the contentpage, if no trader is selected, load the first trader.
-            Trader selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
+            selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
             companyThoughtSelector.Items.Clear();
             foreach (Company comp in selectedTrader.InterestedCompanies) {
                 companyThoughtSelector.Items.Add(comp.name);
@@ -83,6 +86,13 @@ namespace StockExchangeSim.Views
             //load the stock prices of the company that is selected via the thought selector into the graph
             if(companyThoughtSelector.SelectedIndex != -1 && traderList.SelectedIndex != -1)
                 loadTraderGraphs(traders[traderList.SelectedIndex].InterestedCompanies[companyThoughtSelector.SelectedIndex]);
+
+            //Change the trader thought (this is updated via the marketWatchers, via the event Update
+            //
+            //
+            if (!(selectedTrader.traderthoughts.Count < 1) || selectedTrader.traderthoughts != null || companyThoughtSelector.SelectedIndex != -1) {
+                currThought.Text = selectedTrader.traderthoughts[companyThoughtSelector.SelectedIndex].thought;
+            }
         }
 
         //REPLACE WITH LOAD TRADER GRAPHS

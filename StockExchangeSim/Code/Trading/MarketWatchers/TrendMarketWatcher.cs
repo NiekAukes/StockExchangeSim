@@ -23,6 +23,9 @@ namespace Eco
             DowntrendInvalid = false;
             lastInsightTime = (float)Master.inst.Year;
             OnRedoneInsights(null);
+
+            UpdateTraderThoughts();
+
         }
 
         public override float UpdateInsights()

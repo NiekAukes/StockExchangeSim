@@ -46,18 +46,21 @@ namespace Eco
 
         public List<TraderThought> traderthoughts = null;
         //IMPLEMENT TRADER.THOUGHT
-        public void UpdateTraderThought(MarketWatcher<Strategy> watcher)
+        public void UpdateTraderThought(object e)
         {
+            //werkt deze MarketWatcher<Strategy>? Idk maarja t mot maar weer
+            MarketWatcher<Strategy> watcher = (MarketWatcher<Strategy>)e;
             //vind een mogelijke match van watcher en thought
             if (traderthoughts != null || traderthoughts.Count < 1){
                 for (int i = 0; i < traderthoughts.Count; i++)
                 {
                     if(traderthoughts[i].comp == watcher.cp)
                     {
-                        traderthoughts[i].thought = thoughts.buy; //zoiets als dit
-                        //maybe implement function that chooses thought based on events of the market watcher.
+                        traderthoughts[i].thought = thoughts.buy; //TIJDELIJKE ONZIN
+                        //CHOOSE TRADER THOUGHT BASED ON CHANGED MARKET CONDITIONS
+                        //implement function that chooses thought based on events of the market watcher.
                         //so if there is a breakout, set thought "I'm going to buy" of weet ik veel.
-                        //traderthoughts[i].thought = watcher.thought; DOES NOT EXIST YET
+
                     }
                 }
             }

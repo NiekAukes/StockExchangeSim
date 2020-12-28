@@ -17,6 +17,9 @@ namespace Eco
             LTD = LT.StrategyOutcome(cp);
             OnRedoneInsights(null);
             lastInsightTime = Master.inst.Year;
+
+            UpdateTraderThoughts();
+
         }
 
         public override float UpdateInsights()
