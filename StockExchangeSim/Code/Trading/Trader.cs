@@ -3,14 +3,20 @@ using System.Collections.Generic;
 
 namespace Eco
 {
-
-    public enum HFTStrategy
+    /*public enum HFTStrategy
     {
         MarketMaking,
         ArbitrageTrading,
         PairArbitrageTrading,
         MomentumIgnition,
         LiquidityDetection
+    }*/
+    public interface ITraderThought
+    {
+        //MarketWatcher<Strategy> watcher { get; set; }
+        Company comp { get; set; }
+        Trader trader { get; set; }
+        //must have a void UpdateTraderThought
     }
     public interface IStockOwner
     {
@@ -24,8 +30,11 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
-        Thoughts thoughts = new Thoughts();
+        public Thoughts possibleThoughts;
+        public List<TraderThought> traderthoughts = null;
+
         public static Random rn = new Random(Master.Seed);
+
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
         public float Money = 100;
@@ -34,42 +43,39 @@ namespace Eco
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
-        public class TraderThought
+
+        public class TraderThought : ITraderThought
         {
-            public Company comp;
-            public string thought;
+            public Company comp { get ; set; }
+            public Trader trader { get; set; }
+            public string thought { get; set; }
             public TraderThought()
             {
-                comp = null; thought = null;
+                comp = null; trader.possibleThoughts = null;
             }
+            
         }
-
-        public List<TraderThought> traderthoughts = null;
-        //IMPLEMENT TRADER.THOUGHT
-        public void UpdateTraderThought(object e)
+        public void UpdateTraderThought(object marketWatcher, int thoughtIndex)
         {
             //werkt deze MarketWatcher<Strategy>? Idk maarja t mot maar weer
-            MarketWatcher<Strategy> watcher = (MarketWatcher<Strategy>)e;
-            //vind een mogelijke match van watcher en thought
-            if (traderthoughts != null || traderthoughts.Count < 1){
-                for (int i = 0; i < traderthoughts.Count; i++)
-                {
-                    if(traderthoughts[i].comp == watcher.cp)
-                    {
-                        traderthoughts[i].thought = thoughts.buy; //TIJDELIJKE ONZIN
-                        //CHOOSE TRADER THOUGHT BASED ON CHANGED MARKET CONDITIONS
-                        //implement function that chooses thought based on events of the market watcher.
-                        //so if there is a breakout, set thought "I'm going to buy" of weet ik veel.
+            MarketWatcher<Strategy> watcher = (MarketWatcher<Strategy>)marketWatcher;
 
-                    }
-                }
-            }
+            //vind een mogelijke match van watcher en thought
+            
+            traderthoughts[thoughtIndex].thought = possibleThoughts.buy; //TIJDELIJKE ONZIN
+                                                                //CHOOSE TRADER THOUGHT BASED ON CHANGED MARKET CONDITIONS
+                                                                //implement function that chooses thought based on events of the market watcher.
+                                                                //so if there is a breakout, set thought "I'm going to buy" of weet ik veel.
+
 
         }
+
         List<Strategy> Strategies = new List<Strategy>();
 
         public Trader()
         {
+            possibleThoughts = new Thoughts();
+
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             while (InterestedCompanies.Count > 4)

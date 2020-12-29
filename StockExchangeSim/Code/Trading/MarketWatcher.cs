@@ -33,7 +33,7 @@ namespace Eco
                 {
                     if (tr.InterestedCompanies[i] == cp)
                     {
-                        tr.UpdateTraderThought(this);
+                        tr.UpdateTraderThought(this, i);
                     }
                 }
             }
