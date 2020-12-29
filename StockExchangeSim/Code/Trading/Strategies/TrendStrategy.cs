@@ -13,19 +13,17 @@ namespace Eco
             trader = t;
 
             foreach (Company cp in t.InterestedCompanies)
-                MarketWatchers.Add(new TrendMarketWatcher(cp));
+                MarketWatchers.Add(new TrendMarketWatcher(this,cp));
         }
-        public override void Observe()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
             Trader.MarketResults MR = new Trader.MarketResults();
             for (int i = 0; i < MarketWatchers.Count; i++)
             {
-                MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].UpdateInsights()));
+                MarketWatchers[i].latestInsightResult = MarketWatchers[i].UpdateInsights();
+                MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].latestInsightResult));
             }
             return MR;
         }

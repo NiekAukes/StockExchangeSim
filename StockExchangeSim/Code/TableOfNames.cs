@@ -2,14 +2,14 @@
 
 namespace Eco
 {
-    public class Thoughts
+    public static class Thoughts
     {
-        public string buy = "I'm going to buy.";
-        public string sell = "I'm going to sell.";
-        public string idk = "I'm not sure what to do.";
-        public string wait = "I'm going to wait a little.";
-        public string hate = "I fucking hate this company.";
-        public Thoughts(){}
+        public static string buy = "I'm going to buy.";
+        public static string sell = "I'm going to sell.";
+        public static string idk = "I'm not sure what to do.";
+        public static string wait = "I'm going to wait a little.";
+        public static string hold = "I think I'm going to hold onto my stocks.";
+        public static string hate = "I absolutely despise this company.";
     }
     public class TraderNames
     {
