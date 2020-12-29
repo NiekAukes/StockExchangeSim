@@ -76,19 +76,19 @@ namespace Eco
                     //buy differences
                     float UpDiff = price.Close - (TData.UpTrend.Multiplier * (float)price.Year + TData.UpTrend.Adder);
                     float DownDiff = (TData.DownTrend.Multiplier * (float)price.Year + TData.DownTrend.Adder) - price.Close;
-                    ret += UpDiff - DownDiff;
+                    ret += (UpDiff - DownDiff) / 5;
                 }
                 else
                 {
                     if (!DowntrendInvalid)
                     {
                         //if only downtrend available => sell stocks
-                        ret += 15;
+                        ret += 5;
                     }
                     if (!UptrendInvalid)
                     {
                         //if only uptrend available => buy stocks
-                        ret -= 15;
+                        ret -= 5;
                     }
                     if (UptrendInvalid && DowntrendInvalid)
                     {
