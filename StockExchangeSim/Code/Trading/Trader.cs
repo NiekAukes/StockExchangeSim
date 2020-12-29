@@ -11,13 +11,7 @@ namespace Eco
         MomentumIgnition,
         LiquidityDetection
     }*/
-    public interface ITraderThought
-    {
-        //MarketWatcher<Strategy> watcher { get; set; }
-        Company comp { get; set; }
-        Trader trader { get; set; }
-        //must have a void UpdateTraderThought
-    }
+    
     public interface IStockOwner
     {
         List<Stock> Stocks { get; set; }
@@ -30,8 +24,6 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
-        public Thoughts possibleThoughts;
-        public List<TraderThought> traderthoughts = null;
 
         public static Random rn = new Random(Master.Seed);
 
@@ -44,38 +36,13 @@ namespace Eco
         public float skill = 1;
         public string name = null;
 
-        public class TraderThought : ITraderThought
-        {
-            public Company comp { get ; set; }
-            public Trader trader { get; set; }
-            public string thought { get; set; }
-            public TraderThought()
-            {
-                comp = null; trader.possibleThoughts = null;
-            }
+        public MarketResults latestResults;
             
-        }
-        public void UpdateTraderThought(object marketWatcher, int thoughtIndex)
-        {
-            //werkt deze MarketWatcher<Strategy>? Idk maarja t mot maar weer
-            MarketWatcher<Strategy> watcher = (MarketWatcher<Strategy>)marketWatcher;
-
-            //vind een mogelijke match van watcher en thought
-            
-            traderthoughts[thoughtIndex].thought = possibleThoughts.buy; //TIJDELIJKE ONZIN
-                                                                //CHOOSE TRADER THOUGHT BASED ON CHANGED MARKET CONDITIONS
-                                                                //implement function that chooses thought based on events of the market watcher.
-                                                                //so if there is a breakout, set thought "I'm going to buy" of weet ik veel.
-
-
-        }
 
         List<Strategy> Strategies = new List<Strategy>();
 
         public Trader()
         {
-            possibleThoughts = new Thoughts();
-
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             while (InterestedCompanies.Count > 4)
@@ -125,11 +92,11 @@ namespace Eco
             }
             if (ActionTime > 0)
             {
-                MarketResults Final = new MarketResults();
+                latestResults = new MarketResults();
                 foreach (Strategy strat in Strategies)
-                    Final = Final + strat.StrategyOutcome(this, Master.inst.exchange);
+                    latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
-                foreach (var tp in Final.Results)
+                foreach (var tp in latestResults.Results)
                 {
                     if (tp.Item2 < 0)
                     {

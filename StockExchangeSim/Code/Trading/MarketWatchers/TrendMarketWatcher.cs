@@ -10,11 +10,12 @@ namespace Eco
         float lastInsightTime = 0;
         int lastdatapoint = 0;
         bool UptrendInvalid = false, DowntrendInvalid = false;
-        public TrendMarketWatcher(Company company)
+        public TrendMarketWatcher(TrendStrategy strat, Company company) : base(strat)
         {
             cp = company;
 
         }
+        
         public override void RedoInsights()
         {
             TData = TTool.StrategyOutcome(cp);
@@ -100,6 +101,12 @@ namespace Eco
             }
 
             return ret;
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            //IMPLEMENT
+            //throw new System.NotImplementedException();
         }
     }
 }

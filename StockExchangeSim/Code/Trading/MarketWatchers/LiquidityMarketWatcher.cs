@@ -12,6 +12,12 @@ namespace Eco
         LiquidityToolData LTD = null;
         float lastInsightTime = 0;
         int lastdatapoint = 0;
+
+        public LiquidityMarketWatcher(MarketMakingStrategy strat) : base(strat)
+        {
+
+        }
+
         public override void RedoInsights()
         {
             LTD = LT.StrategyOutcome(cp);
@@ -38,6 +44,11 @@ namespace Eco
             lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
             LTD = null;
             return liquidity.Diff;
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            throw new NotImplementedException();
         }
     }
 }

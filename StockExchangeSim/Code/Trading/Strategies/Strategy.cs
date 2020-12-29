@@ -33,7 +33,7 @@ namespace Eco
         }
 
         public class MarketResults
-        {
+        {//Float results 0 = will not buy, negative value = sell, positive value = buy
             public List<Tuple<Company, float>> Results = new List<Tuple<Company, float>>();
             public static MarketResults operator +(MarketResults a, MarketResults b)
             {
@@ -69,15 +69,12 @@ namespace Eco
         {
             Random rn = new Random();
             public abstract MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange);
-            public abstract void Observe();
+            
         }
         [Obsolete]
         public class SimpleStrategy : Strategy
         {
-            public override void Observe()
-            {
-                throw new NotImplementedException();
-            }
+            
 
             public override MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
             {

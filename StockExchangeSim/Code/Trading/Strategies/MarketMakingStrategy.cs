@@ -8,11 +8,8 @@ namespace Eco
 {
     class MarketMakingStrategy : Trader.Strategy
     {
-        public override void Observe()
-        {
-            throw new NotImplementedException();
-        }
-
+        
+        //DON'T FORGET TO IMPLEMENT: float latestInsightResult
         public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
         {
             throw new NotImplementedException();

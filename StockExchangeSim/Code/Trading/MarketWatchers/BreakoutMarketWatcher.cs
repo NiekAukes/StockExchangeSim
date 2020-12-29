@@ -12,7 +12,7 @@ namespace Eco
         int lastdatapoint = 0;
 
 
-        public BreakoutMarketWatcher(Company company)
+        public BreakoutMarketWatcher(BreakoutStrategy strat, Company company) : base(strat)
         {
             cp = company;
         }
@@ -91,6 +91,11 @@ namespace Eco
             lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
             return ret;
             //apply Support and Resistance to Breakouts
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            
         }
     }
 }

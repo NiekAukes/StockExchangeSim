@@ -1,11 +1,12 @@
 ﻿using Eco;
 using Syncfusion.UI.Xaml.Charts;
+
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using Random = System.Random;
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace StockExchangeSim.Views
@@ -19,13 +20,12 @@ namespace StockExchangeSim.Views
         public List<Trader> traders { get; private set; }
 
         public Trader selectedTrader;
+        public Random rnd = new Random();
 
         public TraderDetail()
         {
             this.InitializeComponent();
-
-
-
+            rnd.Next();
         }
 
         ~TraderDetail() //When page is destroyed
@@ -39,7 +39,7 @@ namespace StockExchangeSim.Views
             traders = Master.inst.Traders;
             traderList.Items.Clear();
             //Add all traders to the textboxes
-            for (int i = 0; i< traders.Count;i++)
+            for (int i = 0; i < traders.Count; i++)
             {
                 TextBlock newBlock = new TextBlock();
                 newBlock.Text = traders[i].name;
@@ -48,9 +48,6 @@ namespace StockExchangeSim.Views
 
             InsertDetails(-1);
         }
-
-
-
         public void InsertDetails(int selectedindex)
         {
             //insert trader names is already done in initalisation of page (page_loaded)
@@ -79,6 +76,7 @@ namespace StockExchangeSim.Views
                 ? interestedComp[companyThoughtSelector.SelectedIndex]
                 : interestedComp[0]);
 
+            ChangeTraderThought();
         }
 
         private void companyThoughtSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -87,11 +85,76 @@ namespace StockExchangeSim.Views
             if(companyThoughtSelector.SelectedIndex != -1 && traderList.SelectedIndex != -1)
                 loadTraderGraphs(traders[traderList.SelectedIndex].InterestedCompanies[companyThoughtSelector.SelectedIndex]);
 
-            //Change the trader thought (this is updated via the marketWatchers, via the event Update
-            //
-            //
-            if (!(selectedTrader.traderthoughts.Count < 1) || selectedTrader.traderthoughts != null || companyThoughtSelector.SelectedIndex != -1) {
-                currThought.Text = selectedTrader.traderthoughts[companyThoughtSelector.SelectedIndex].thought;
+            //Change the trader thought
+            ChangeTraderThought();
+        }
+        public void ChangeTraderThought()
+        {
+            if (companyThoughtSelector.SelectedIndex == -1) {
+                int rand = rnd.Next(0, 3);
+                switch(rand){
+                    case 0:
+                        currThought.Text = Thoughts.idk;
+                        break;
+                       case 1:
+                        currThought.Text = Thoughts.hold;
+                        break;
+                       case 2:
+                        currThought.Text = Thoughts.wait;
+                        break;
+                }
+            }
+            else
+            {
+                Company selectedComp = selectedTrader.InterestedCompanies[companyThoughtSelector.SelectedIndex];
+                if (selectedTrader.latestResults != null)
+                {
+                    for (int i = 0; i < selectedTrader.latestResults.Results.Count; i++)
+                    {
+                        if (selectedTrader.latestResults.Results[i].Item1 == selectedComp)
+                        {
+                            //formulate thought based on market results
+                            float MarketOutcome = selectedTrader.latestResults.Results[i].Item2;
+                            //Bij de breakout is een breakout -5 of +5, dus de float schommelt daartussen.
+                            if (MarketOutcome <= -1)
+                            {
+                                //sell thought
+                                //inefficientie is leuk
+                                currThought.Text = Thoughts.sell;
+                                if (MarketOutcome <= -4.5)
+                                {
+                                    //despise thought
+                                    currThought.Text = Thoughts.hate;
+
+                                }
+                            }
+                            else if (MarketOutcome >= 1)
+                            {
+                                //buy thought
+                                currThought.Text = Thoughts.buy;
+                            }
+                            else
+                            {
+                                int rand = rnd.Next(0, 3);
+                                //doubt thought
+                                switch (rand)
+                                {
+                                    case 0:
+                                        currThought.Text = Thoughts.idk;
+                                        break;
+                                    case 1:
+                                        currThought.Text = Thoughts.hold;
+                                        break;
+                                    case 2:
+                                        currThought.Text = Thoughts.wait;
+                                        break;
+                                }
+                            }
+
+                            break;
+                        }
+                    }
+                }
             }
         }
 
