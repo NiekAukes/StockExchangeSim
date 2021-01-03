@@ -234,17 +234,22 @@ namespace Eco
                     //register datapoint
                     if (tick % 100 == 0)
                     {
-                        if (stockPrices1m.Count > 10000)
-                        {
-                            stockPrices1m.RemoveAt(0);
-                        }
-
                         StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        stockPrices1m.Add(sp);
-                        
                         ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
-                        values.Add(vg);
+                        lock (stockPrices1m)
+                        {
+                            if (stockPrices1m.Count > 10000)
+                            {
+                                stockPrices1m.RemoveAt(0);
+                            }
 
+                            stockPrices1m.Add(sp);
+                            lock (values)
+                            {
+                                
+                                values.Add(vg);
+                            }
+                        }
                         //if (BidAsk.liquidity1m.Count > 1000)
                         //{
                         //    BidAsk.liquidity1m.RemoveAt(0);
@@ -260,11 +265,15 @@ namespace Eco
 
                         if (tick % 500 == 0)
                         {
+                            
                             StockPriceGraph sp5m = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                            stockPrices5m.Add(sp5m);
-                            if (stockPrices5m.Count > 10000)
+                            lock (stockPrices5m)
                             {
-                                stockPrices5m.RemoveAt(0);
+                                stockPrices5m.Add(sp5m);
+                                if (stockPrices5m.Count > 10000)
+                                {
+                                    stockPrices5m.RemoveAt(0);
+                                }
                             }
                         }
 

@@ -15,7 +15,7 @@ namespace Eco
                 MarketWatchers.Add(new BreakoutMarketWatcher(cp));
         }
 
-        public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBrokerMM exchange)
+        public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
         {
             //TODO
             Trader.MarketResults MR = new Trader.MarketResults();

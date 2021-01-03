@@ -26,7 +26,7 @@ namespace Eco
                 RedoInsights();
             }
             SynchronizedCollection<Liquidity> slq =
-                new SynchronizedCollection<Liquidity>(cp.BidAsk.liquidity1m.Skip(lastdatapoint));
+                new SynchronizedCollection<Liquidity>(/*cp.BidAsk.liquidity1m.Skip(lastdatapoint)*/);
             Liquidity liquidity = slq[0];
             for(int i = 1; i < slq.Count; i++)
             {

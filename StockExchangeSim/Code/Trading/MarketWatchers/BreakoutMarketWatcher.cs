@@ -34,8 +34,11 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            SynchronizedCollection<StockPriceGraph> NewPrices =
-                new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
+            List<StockPriceGraph> NewPrices;
+            lock (cp.stockPrices1m)
+            {
+                NewPrices = new List<StockPriceGraph>(cp.stockPrices1m.Skip(cp.stockPrices1m.Count - 20));
+            }
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
 
@@ -79,13 +82,13 @@ namespace Eco
                 }
 
             }
-            if (Master.inst.Year - lastInsightTime > 0.2)
+            if (Master.inst.Year - lastInsightTime > 0.2 / (365.25f * 24))
                 SRData = null;
             if ((potentialBreakoutDown) || (potentialBreakoutUp))
                 SRData = null;
 
 
-            lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
+            lastdatapoint = cp.stockPrices1m.Count - (cp.stockPrices1m.Count > 20 ? 20 : 0);
             return ret;
             //apply Support and Resistance to Breakouts
         }

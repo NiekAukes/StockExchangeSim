@@ -93,7 +93,11 @@ namespace Eco
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
         public List<Holder> holders = new List<Holder>(); //lijst van alle marketmaker holders
-        
+
+        public ECNBroker()
+        {
+            BidAsks = new List<BidAsk>();
+        }
 
         public bool BuyStock(Company cp, Trader buyer)
         {
