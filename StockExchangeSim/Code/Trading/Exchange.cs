@@ -102,7 +102,29 @@ namespace Eco
             if (cp.SellOrders.list.Count < 1)
                 return false;
 
+            float cheapest = cp.SellOrders.list[0].LimitPrice;
+            int cheapestholder = -1;
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.Bid < cheapest)
+                {
+                    cheapest = holders[i].bidask.Bid;
+                    cheapestholder = i;
+                }
+            }
+
+            if (cheapestholder >= 0)
+            {
+                //buy from holder
+                holders[cheapestholder].Owner.money += cheapest;
+                buyer.money -= cheapest;
+                holders[cheapestholder].Stocks[0].Owner = buyer;
+                holders[cheapestholder].Stocks.RemoveAt(0);
+                return true;
+            }
+            
             SellOrder SellStock = cp.SellOrders.list[0];
+
             cp.SellOrders.list.RemoveAt(0);
             SellStock.Stock.Owner.money += SellStock.LimitPrice;
             buyer.money -= SellStock.LimitPrice;
@@ -117,6 +139,14 @@ namespace Eco
 
         public void BuyOrder(Company cp, Trader buyer, float Limit)
         {
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.Bid < Limit)
+                {
+                    BuyStock(cp, buyer);
+                    return;
+                }
+            }
             if (cp.SellOrders.list[0].LimitPrice < Limit)
             {
                 //directly issue transaction
@@ -132,6 +162,27 @@ namespace Eco
             if (stock.company.BuyOrders.list.Count < 1)
                 return;
 
+            float best = stock.company.BuyOrders.list[0].LimitPrice;
+            int bestholder = -1;
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.Ask < best)
+                {
+                    best = holders[i].bidask.Ask;
+                    bestholder = i;
+                }
+            }
+
+            if (bestholder >= 0)
+            {
+                //sell to holder
+                holders[bestholder].Owner.money += best;
+                stock.Owner.money += best;
+                holders[bestholder].Stocks[0].Owner = holders[bestholder].Owner;
+                holders[bestholder].Stocks.Add(stock);
+                return;
+            }
+
             Eco.BuyOrder order = stock.company.BuyOrders.list[0];
 
             order.Buyer.money -= order.LimitPrice;
@@ -143,6 +194,14 @@ namespace Eco
 
         public void SellOrder(Stock stock, float Limit)
         {
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.Ask > Limit)
+                {
+                    SellStock(stock);
+                    return;
+                }
+            }
             if (stock.company.BuyOrders.list[0].LimitPrice > Limit)
             {
                 //directly issue transaction
@@ -171,6 +230,10 @@ namespace Eco
             //bidAsk.Bid = cp.Value * FullbuyStock.Percentage * 0.01f;
             //bidAsk.Ask = bidAsk.Bid * 0.0098f;
             //cp.Value += cp.Value * FullbuyStock.Percentage * partition * 0.01f;
+        }
+        public void RegisterHolder(Holder hd)
+        {
+            holders.Add(hd);
         }
 
         public void RegisterTrader(Trader t)

@@ -56,7 +56,6 @@ namespace Eco
 
         public SortedSyncCollection<BuyOrder> BuyOrders { get; set; }
         public SortedSyncCollection<SellOrder> SellOrders { get; set; }
-
         public BidAsk BidAsk;
         public float Value = 50;
         public float stockprice = 0;
@@ -81,6 +80,10 @@ namespace Eco
         {
             CompanyStock = CreateStock(100);
             field = f;
+
+            BuyOrders = new SortedSyncCollection<BuyOrder>();
+            SellOrders = new SortedSyncCollection<SellOrder>();
+            SellOrders.Ascending = true;
 
             open = Value;
             name = initName();

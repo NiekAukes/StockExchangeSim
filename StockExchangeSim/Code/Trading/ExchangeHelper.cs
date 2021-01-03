@@ -10,9 +10,9 @@ namespace Eco
     public class Holder
     {
         public Trader Owner { get; set; }
-        public IEnumerable<Stock> Stocks { get; set; }
+        public List<Stock> Stocks { get; set; }
         //public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
-        BidAsk bidask { get; set; }
+        public BidAsk bidask { get; set; }
         public Holder(Company cp, Trader trader)
         {
             Owner = trader;
@@ -67,10 +67,15 @@ namespace Eco
                     
             }
         }
+        public SortedSyncCollection()
+        {
+            list = new SynchronizedCollection<T>();
+        }
     }
 
     public class SellOrder
     {
+        public bool isPermanent { get; set; }
         public Company cp { get; set; }
         public Stock Stock { get; set; }
         public float LimitPrice { get; set; }
@@ -83,6 +88,7 @@ namespace Eco
     }
     public class BuyOrder
     {
+        public bool isPermanent { get; set; }
         public Company cp { get; set; }
         public Trader Buyer { get; set; }
         public float LimitPrice { get; set; }
