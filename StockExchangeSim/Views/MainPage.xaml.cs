@@ -209,7 +209,6 @@ namespace StockExchangeSim.Views
                             }
                         }
                     }
-                    //Thread.Sleep(2);
 
 
                 }

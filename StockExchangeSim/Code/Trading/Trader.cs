@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Eco
 {
@@ -34,16 +35,21 @@ namespace Eco
         public float skill = 1;
         public string name = null;
 
+        public Thread TraderThread = null;
+
         List<Strategy> Strategies = new List<Strategy>();
 
         public Trader()
         {
+            //stocks & init
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             while (InterestedCompanies.Count > 4)
             {
                 InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
             }
+
+            //strategies
             StrategyFactory stFact = new StrategyFactory(this);
             while (Strategies.Count < 1) //pick strats till you have 2
             {
@@ -51,6 +57,10 @@ namespace Eco
             }
 
             name = PickRandomName();
+
+            //loops and threads
+            TraderThread = new Thread(ThreadUpdate);
+            TraderThread.Start();
         }
         private string PickRandomName()
         {
@@ -73,6 +83,14 @@ namespace Eco
         public override string ToString()
         {
             return name;
+        }
+
+        public void ThreadUpdate()
+        {
+            while (true)
+            {
+                Update();
+            }
         }
 
         public virtual void Update()
