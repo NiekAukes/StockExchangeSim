@@ -16,6 +16,7 @@ namespace StockExchangeSim.Views
     {
         Eco.Field Field { get; set; }
         List<Eco.Company> listofCompanies;
+        public static CompanyDetail inst;
 
         public CompanyDetail()
         {
@@ -31,6 +32,7 @@ namespace StockExchangeSim.Views
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            inst = this;
             InsertDetails(Field.companies, -1);
 
         }

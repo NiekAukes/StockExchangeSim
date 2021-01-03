@@ -16,6 +16,8 @@ namespace StockExchangeSim.Views
     /// </summary>
     public sealed partial class TraderDetail : Page
     {
+        public SfChart stockpricechrt;
+        public static TraderDetail inst;
         public Field Field { get; private set; }
         public List<Trader> traders { get; private set; }
 
@@ -25,6 +27,7 @@ namespace StockExchangeSim.Views
         public TraderDetail()
         {
             this.InitializeComponent();
+            
             rnd.Next();
         }
 
@@ -35,6 +38,8 @@ namespace StockExchangeSim.Views
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            inst = this;
+            this.stockpricechrt = stockpriceChart;
             //init traders
             traders = Master.inst.Traders;
             traderList.Items.Clear();

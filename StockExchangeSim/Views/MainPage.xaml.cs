@@ -49,8 +49,6 @@ namespace StockExchangeSim.Views
     }
     public class CompanyViewModel
     {
-
-
         public ObservableCollection<CPValueData> Data = new ObservableCollection<CPValueData>();
 
     }
@@ -118,6 +116,8 @@ namespace StockExchangeSim.Views
             candleSeries.ListenPropertyChange = true;
             //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
             chart.Series.Add(candleSeries);
+
+
         }
         string _display;
         public string display
@@ -129,9 +129,12 @@ namespace StockExchangeSim.Views
                 _display = value;
             }
         }
+        public event PropertyChangedEventHandler PropertyChanged;
         public CompanyViewModel vm = new CompanyViewModel();
         public CompanyViewModel vm2 = new CompanyViewModel();
         public static Thread dataThread = null;
+        bool badInput = false;
+
         public MainPage()
         {
             InitializeComponent();
@@ -143,8 +146,8 @@ namespace StockExchangeSim.Views
             slider.ThumbToolTipValueConverter = new TooltipConverter(f => (f * f * 0.01 * 15));
             //DataContext = master;
 
-            axisside.Header = "Value (in $)";//master.Fields[0].companies[0].Value;
-            axismain.Header = "Time (in years)";
+            axisside.Header = "Value ($)";//master.Fields[0].companies[0].Value;
+            axismain.Header = "Time (years)";
 
 
             //LineSeries series1 = new LineSeries()
@@ -249,18 +252,18 @@ namespace StockExchangeSim.Views
 
             }
         }
-        MessageDialog messageDialog = null;
-        private async void slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        //MessageDialog messageDialog = null;
+        private void slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (master != null)
             {
-                if (messageDialog == null)
+                /*if (messageDialog == null)
                 {
                     messageDialog = new MessageDialog((slider.Value).ToString());
                     messageDialog.Commands.Add(new UICommand("Close"));
                     await messageDialog.ShowAsync();
                     //messageDialog = null;
-                }
+                }*/
                 double f = slider.Value;
                 master.SetSecondsPerTick((float)(f * f * 0.01f));
             }
@@ -273,7 +276,6 @@ namespace StockExchangeSim.Views
         }
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
@@ -288,21 +290,41 @@ namespace StockExchangeSim.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+
+        async void ShowInvalidInputMessageBox()
+        {
+            MessageDialog messageDialog = new MessageDialog("Invalid input in Fields, Traders or HFTraders. Could not start Simulation");
+            messageDialog.Commands.Add(new UICommand("Close"));
+            await messageDialog.ShowAsync();
+        }
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            master.active = false;
-            master.alive = false;
-            CreateMaster();
-        }
 
+            if (!badInput)
+            {
+                master.active = false;
+                master.alive = false;
+                CreateMaster();
+            }
+            else
+                ShowInvalidInputMessageBox();
+        }
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            master.active = false;
+            if(!badInput)
+                master.active = false;
+            else
+                ShowInvalidInputMessageBox();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            master.active = true;
+            if(!badInput)
+                master.active = true;
+            else
+            {
+                ShowInvalidInputMessageBox();
+            }
         }
 
         private async void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
@@ -313,26 +335,25 @@ namespace StockExchangeSim.Views
             try
             {
                 val = int.Parse(box.Text);
+                badInput = false;
             }
             catch
             {
-                MessageDialog messageDialog = new MessageDialog("Invalid input in Fields, Traders or HFTraders.");
-                messageDialog.Commands.Add(new UICommand("Close"));
-                await messageDialog.ShowAsync();
-                return;
+                ShowInvalidInputMessageBox();
+                badInput = true;
             }
 
-            if (box.Name == "FieldsAm")
+            if (box.Name == "FieldsAm" && !badInput)
             {
                 field = val;
             }
 
-            if (box.Name == "TraderAm")
+            if (box.Name == "TraderAm" && !badInput)
             {
                 trader = val;
             }
 
-            if (box.Name == "HFTradersAm")
+            if (box.Name == "HFTradersAm" && !badInput)
             {
                 hftrader = val;
             }
