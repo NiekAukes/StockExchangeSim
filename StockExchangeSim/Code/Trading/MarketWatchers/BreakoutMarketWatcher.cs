@@ -1,29 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Eco
 {
     public class BreakoutMarketWatcher : MarketWatcher<BreakoutStrategy>
     {
-        SupportResistanceTool SRTool = new SupportResistanceTool();
-        SupportResistanceData SRData = null;
+        public SupportResistanceTool SRTool = new SupportResistanceTool();
+        public SupportResistanceData SRData = null;
         float lastInsightTime = 0;
         int lastdatapoint = 0;
 
-        public BreakoutMarketWatcher(Company company)
+
+        public BreakoutMarketWatcher(BreakoutStrategy strat, Company company) : base(strat)
         {
             cp = company;
         }
 
         public override void RedoInsights()
         {
-            //TODO
-
             //Search for Support and Resistance
             SRData = SRTool.StrategyOutcome(cp);
 
             lastInsightTime = Master.inst.Year;
 
+            OnRedoneInsights(null);
+
+            UpdateTraderThoughts();
 
         }
         int LastRememberUp = 0, LastRememberDown = 0;
@@ -88,6 +91,11 @@ namespace Eco
             lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
             return ret;
             //apply Support and Resistance to Breakouts
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            
         }
     }
 }

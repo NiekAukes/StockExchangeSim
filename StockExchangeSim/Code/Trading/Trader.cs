@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Eco
 {
-
-    public enum HFTStrategy
+    /*public enum HFTStrategy
     {
         MarketMaking,
         ArbitrageTrading,
         PairArbitrageTrading,
         MomentumIgnition,
         LiquidityDetection
-    }
+    }*/
+    
     public interface IStockOwner
     {
         List<Stock> Stocks { get; set; }
@@ -24,7 +24,9 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
+
         public static Random rn = new Random(Master.Seed);
+
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
         public float Money = 100;
@@ -33,7 +35,9 @@ namespace Eco
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
-        //IMPLEMENT TRADER.THOUGHT
+
+        public MarketResults latestResults;
+            
 
         List<Strategy> Strategies = new List<Strategy>();
 
@@ -88,11 +92,11 @@ namespace Eco
             }
             if (ActionTime > 0)
             {
-                MarketResults Final = new MarketResults();
+                latestResults = new MarketResults();
                 foreach (Strategy strat in Strategies)
-                    Final = Final + strat.StrategyOutcome(this, Master.inst.exchange);
+                    latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
-                foreach (var tp in Final.Results)
+                foreach (var tp in latestResults.Results)
                 {
                     if (tp.Item2 < 0)
                     {

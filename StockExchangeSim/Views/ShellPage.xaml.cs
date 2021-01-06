@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using WinUI = Microsoft.UI.Xaml.Controls;
+using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 
 namespace StockExchangeSim.Views
 {
@@ -52,9 +53,50 @@ namespace StockExchangeSim.Views
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
             navigationView.BackRequested += OnBackRequested;
+
+           navigationView.SelectionChanged += NavigationView_SelectionChanged;
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void NavigationView_SelectionChanged(WinUI.NavigationView sender, WinUI.NavigationViewSelectionChangedEventArgs args)
+        {
+            if (this.Frame != null)
+            {
+                foreach (var item in this.Frame.BackStack.ToList())
+                    this.Frame.BackStack.Remove(item);
+            }
+            Views.MainPage.master.active = false;
+
+            //disable all graphs of other pages
+                string selectedPage = navigationView.SelectedItem == null ? "" : (string)((NavigationViewItem)navigationView.SelectedItem).Content;
+
+                if (selectedPage == "Simulation")
+                {
+                    //kaboom the graphs of Traders and Companies
+                    if(TraderDetail.inst != null)
+                        Views.TraderDetail.inst.IsEnabled = false;
+                    if(CompanyDetail.inst != null)
+                        Views.CompanyDetail.inst.IsEnabled = false;
+                }
+                else if(selectedPage == "Companies")
+                {
+                //kaboom the graphs of Simluation and traders
+                if (TraderDetail.inst != null)
+                    Views.TraderDetail.inst.IsEnabled = false;
+                if (MainPage.inst != null)
+                    Views.MainPage.inst.IsEnabled = false;
+                }
+                else if(selectedPage == "Traders")
+                {
+                //kaboom the graphs of Simulation and Companies
+                if (MainPage.inst != null)
+                    Views.MainPage.inst.IsEnabled = false;
+                if (CompanyDetail.inst != null)
+                    Views.CompanyDetail.inst.IsEnabled = false;
+                }
+            
+        }
+
+private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8

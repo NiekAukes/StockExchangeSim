@@ -16,13 +16,27 @@ namespace StockExchangeSim.Views
     {
         Eco.Field Field { get; set; }
         List<Eco.Company> listofCompanies;
+        public static CompanyDetail inst;
 
         public CompanyDetail()
         {
             this.InitializeComponent();
             companyList.Items.Clear();
 
+            Unloaded += CompanyDetail_Unloaded;
+            Loaded += CompanyDetail_Loaded;
+        }
 
+        private void CompanyDetail_Loaded(object sender, RoutedEventArgs e)
+        {
+            stockPriceChart.ResumeSeriesNotification();
+            companyValueChart.ResumeSeriesNotification();
+        }
+
+        private void CompanyDetail_Unloaded(object sender, RoutedEventArgs e)
+        {
+            stockPriceChart.SuspendSeriesNotification();
+            companyValueChart.SuspendSeriesNotification();
         }
 
         ~CompanyDetail()
@@ -31,6 +45,7 @@ namespace StockExchangeSim.Views
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            inst = this;
             InsertDetails(Field.companies, -1);
 
         }

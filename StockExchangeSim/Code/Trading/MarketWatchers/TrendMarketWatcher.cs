@@ -10,11 +10,12 @@ namespace Eco
         float lastInsightTime = 0;
         int lastdatapoint = 0;
         bool UptrendInvalid = false, DowntrendInvalid = false;
-        public TrendMarketWatcher(Company company)
+        public TrendMarketWatcher(TrendStrategy strat, Company company) : base(strat)
         {
             cp = company;
 
         }
+        
         public override void RedoInsights()
         {
             TData = TTool.StrategyOutcome(cp);
@@ -22,6 +23,9 @@ namespace Eco
             UptrendInvalid = false;
             DowntrendInvalid = false;
             lastInsightTime = (float)Master.inst.Year;
+            OnRedoneInsights(null);
+
+            UpdateTraderThoughts();
 
         }
 
@@ -73,19 +77,19 @@ namespace Eco
                     //buy differences
                     float UpDiff = price.Close - (TData.UpTrend.Multiplier * (float)price.Year + TData.UpTrend.Adder);
                     float DownDiff = (TData.DownTrend.Multiplier * (float)price.Year + TData.DownTrend.Adder) - price.Close;
-                    ret += UpDiff - DownDiff;
+                    ret += (UpDiff - DownDiff) / 5;
                 }
                 else
                 {
                     if (!DowntrendInvalid)
                     {
                         //if only downtrend available => sell stocks
-                        ret += 15;
+                        ret += 5;
                     }
                     if (!UptrendInvalid)
                     {
                         //if only uptrend available => buy stocks
-                        ret -= 15;
+                        ret -= 5;
                     }
                     if (UptrendInvalid && DowntrendInvalid)
                     {
@@ -97,6 +101,12 @@ namespace Eco
             }
 
             return ret;
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            //IMPLEMENT
+            //throw new System.NotImplementedException();
         }
     }
 }

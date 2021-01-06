@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Eco
 {
-    class SupportResistanceData
+    public class SupportResistanceData
     {
         public List<Line> resistanceLevels = new List<Line>(), supportLevels = new List<Line>();
         public Line MainResistance, MainSupport;
     }
     //needs optimalization
-    class SupportResistanceTool : MarketTool<SupportResistanceData>
+    public class SupportResistanceTool : MarketTool<SupportResistanceData>
     {
         public int minimumLineLength = 3;
         public int minimumMargin = 25000;
