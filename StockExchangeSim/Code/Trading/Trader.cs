@@ -60,6 +60,7 @@ namespace Eco
 
             //loops and threads
             TraderThread = new Thread(ThreadUpdate);
+            TraderThread.Name = name;
             TraderThread.Start();
         }
         private string PickRandomName()
@@ -87,9 +88,12 @@ namespace Eco
 
         public void ThreadUpdate()
         {
-            while (true)
+            while (true && Master.inst.alive)
             {
-                Update();
+                if (Master.inst.active)
+                    Update();
+                else
+                    Thread.Sleep(10);
             }
         }
 

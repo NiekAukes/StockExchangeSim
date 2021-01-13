@@ -196,21 +196,16 @@ namespace StockExchangeSim.Views
 
                 if (master.active)
                 {
-                    if ((tick % 1000) / master.SecondsPerTick < 1)
+                    for (int i = 0; i < master.Fields.Count; i++)
                     {
-                        for (int i = 0; i < master.Fields.Count; i++)
+                        Field field = master.Fields[i];
+                        //do Information Gathering from fields
+                        for (int j = 0; j < field.companies.Count; j++)
                         {
-                            Field field = master.Fields[i];
-                            //do Information Gathering from fields
-                            for (int j = 0; j < field.companies.Count; j++)
-                            {
 
-                                field.companies[j].Data(tick);
-                            }
+                            field.companies[j].Data(tick * 10);
                         }
                     }
-
-
                 }
 
                 else

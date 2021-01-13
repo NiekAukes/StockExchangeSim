@@ -194,10 +194,10 @@ namespace Eco
                         Traders[n] = value;
                     }
 
-                    for (int j = 0; j < TraderAmount; j++)
-                    {
-                        Traders[j].Update();
-                    }
+                    //for (int j = 0; j < TraderAmount; j++)
+                    //{
+                    //    Traders[j].Update();
+                    //}
 
                     Year += SecondsPerTick / (365.25f * 24 * 60 * 60);
 

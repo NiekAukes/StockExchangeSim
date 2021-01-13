@@ -277,7 +277,7 @@ namespace Eco
                             }
                         }
 
-                        if (tick % 800000 == 0)
+                        if (tick % 8000 == 0)
                         {
                             //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
@@ -292,7 +292,7 @@ namespace Eco
                                 {
                                     stockViewModel.prices1m.RemoveAt(0);
                                 }
-                                //MainPage.inst.SetNewYearLimit();
+                                string str = MainPage.inst.Name;
 
                             });
 

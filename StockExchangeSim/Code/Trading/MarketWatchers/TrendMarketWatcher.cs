@@ -18,7 +18,11 @@ namespace Eco
         public override void RedoInsights()
         {
             TData = TTool.StrategyOutcome(cp);
-
+            if (TData == null)
+            {
+                //something happened
+                throw new System.Exception();
+            }
             UptrendInvalid = false;
             DowntrendInvalid = false;
             lastInsightTime = (float)Master.inst.Year;
@@ -31,8 +35,11 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            SynchronizedCollection<StockPriceGraph> NewPrices = new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
-
+            IEnumerable<StockPriceGraph> NewPrices;
+            lock (cp.stockPrices1m)
+            {
+                NewPrices = cp.stockPrices1m.Skip(lastdatapoint).ToList();
+            }
             if (TData == null)
                 RedoInsights();
 
