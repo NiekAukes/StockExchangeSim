@@ -23,6 +23,7 @@ namespace Eco
             {
                 MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].UpdateInsights()));
             }
+            //trader.ActionTime -= 100;
             return MR;
         }
         public override void Observe()

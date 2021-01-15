@@ -26,6 +26,7 @@ namespace Eco
     public partial class Trader : ITrader
     {
         public static Random rn = new Random(Master.Seed);
+        public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
         public float Money = 100;
@@ -34,6 +35,7 @@ namespace Eco
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
+        public bool CatchUp = false;
 
         public Thread TraderThread = null;
 
@@ -66,10 +68,18 @@ namespace Eco
         private string PickRandomName()
         {
             //search a random name in list of names
-            int rng = rn.Next(Master.inst.MasterTraderNames.traderNames.Count);
-            string ret = Master.inst.MasterTraderNames.traderNames[rng];
-            Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
-
+            string ret = "";
+            if (Master.inst.MasterTraderNames.traderNames.Count > 0)
+            {
+                int rng = rn.Next(Master.inst.MasterTraderNames.traderNames.Count);
+                ret = Master.inst.MasterTraderNames.traderNames[rng];
+                Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
+            }
+            else
+            {
+                ret = "Trader " + TraderCreated;
+            }
+            TraderCreated++;
             return ret;
         }
         public float money { get { return Money; } set { Money = value; } }
@@ -88,9 +98,9 @@ namespace Eco
 
         public void ThreadUpdate()
         {
-            while (true && Master.inst.alive)
+            while (Master.inst.alive)
             {
-                if (Master.inst.active)
+                if (Master.inst.active && !CatchUp)
                     Update();
                 else
                     Thread.Sleep(10);
