@@ -223,7 +223,7 @@ namespace Eco
             {
                 if (BidAsk != null)
                 {
-                    float currentprice = BidAsk.Bid;
+                    float currentprice = stockprice;
                     if (currentprice > high)
                         high = currentprice;
                     if (currentprice < low)
@@ -234,8 +234,8 @@ namespace Eco
                     //register datapoint
                     if (tick % 100 == 0)
                     {
-                        StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
-                        ValueGraph vg = new ValueGraph(MainPage.master.Year, Value);
+                        StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
+                        ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
                         lock (stockPrices1m)
                         {
                             if (stockPrices1m.Count > 10000)
@@ -266,7 +266,7 @@ namespace Eco
                         if (tick % 500 == 0)
                         {
                             
-                            StockPriceGraph sp5m = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+                            StockPriceGraph sp5m = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
                             lock (stockPrices5m)
                             {
                                 stockPrices5m.Add(sp5m);

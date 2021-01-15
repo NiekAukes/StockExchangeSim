@@ -124,6 +124,8 @@ namespace Eco
                 buyer.money -= cheapest;
                 holders[cheapestholder].Stocks[0].Owner = buyer;
                 holders[cheapestholder].Stocks.RemoveAt(0);
+
+                cp.stockprice = cheapest;
                 return true;
             }
             
@@ -184,6 +186,8 @@ namespace Eco
                 stock.Owner.money += best;
                 holders[bestholder].Stocks[0].Owner = holders[bestholder].Owner;
                 holders[bestholder].Stocks.Add(stock);
+
+                stock.company.stockprice = best;
                 return;
             }
 

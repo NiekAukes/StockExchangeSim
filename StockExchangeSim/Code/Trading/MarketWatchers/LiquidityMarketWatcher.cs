@@ -8,33 +8,41 @@ namespace Eco
 {
     class LiquidityMarketWatcher : MarketWatcher<MarketMakingStrategy>
     {
-        LiquidityTool LT = new LiquidityTool();
-        LiquidityToolData LTD = null;
-        float lastInsightTime = 0;
-        int lastdatapoint = 0;
+        int BufferTarget = 25;
+        float Spread = 0.0001f;
+        float GeneralPrice = 2;
+        Holder Holder { get; set; }
+
+        public LiquidityMarketWatcher(Company cp, Trader td)
+        {
+            this.cp = cp;
+            Holder = new Holder(cp, td);
+            GeneralPrice = cp.stockprice;
+            UpdateInsights();
+        }
         public override void RedoInsights()
         {
-            LTD = LT.StrategyOutcome(cp);
-
-            lastInsightTime = Master.inst.Year;
         }
 
         public override float UpdateInsights()
         {
-            if (LTD == null)
+            int BufferAmps = Holder.Stocks.Count - BufferTarget;
+            if (BufferAmps >= 0)
             {
-                RedoInsights();
+                //too many stocks, higher spread
+                Spread *= 1.2f;
             }
-            SynchronizedCollection<Liquidity> slq =
-                new SynchronizedCollection<Liquidity>(/*cp.BidAsk.liquidity1m.Skip(lastdatapoint)*/);
-            Liquidity liquidity = slq[0];
-            for(int i = 1; i < slq.Count; i++)
+            else
             {
-                liquidity += slq[i];
+                //too few stocks, lower spread
+                Spread /= 1.2f;
             }
-            lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
-            LTD = null;
-            return liquidity.Diff;
+
+            GeneralPrice = cp.stockprice;
+
+            Holder.bidask.Ask = GeneralPrice -= Spread;
+            Holder.bidask.Bid = GeneralPrice += Spread;
+            return 0;
         }
     }
 }

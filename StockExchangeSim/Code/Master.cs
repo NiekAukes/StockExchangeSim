@@ -99,7 +99,7 @@ namespace Eco
         public int TraderAmount;
         public int HFTAmount;
         //public float TPS = 2103840; //ticks per second. 1577880 = 20s per year
-        public float Year;
+        public double Year;
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
@@ -173,7 +173,7 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    Conjucture = (0.05f * MathF.Sin(MainPage.master.Year) + 1);
+                    Conjucture = (0.05f * MathF.Sin((float)MainPage.master.Year) + 1);
 
 
                     for (int j = 0; j < Fields.Count; j++)
@@ -205,7 +205,7 @@ namespace Eco
                         }
                     }
 
-                    Year += SecondsPerTick / (365.25f * 24 * 60 * 60);
+                    Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
 
 
 

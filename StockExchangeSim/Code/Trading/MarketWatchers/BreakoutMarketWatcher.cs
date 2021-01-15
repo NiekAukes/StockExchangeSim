@@ -22,7 +22,7 @@ namespace Eco
             //Search for Support and Resistance
             SRData = SRTool.StrategyOutcome(cp);
 
-            lastInsightTime = Master.inst.Year;
+            lastInsightTime = (float)Master.inst.Year;
 
 
         }

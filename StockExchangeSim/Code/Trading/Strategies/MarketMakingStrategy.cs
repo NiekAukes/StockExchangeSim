@@ -8,12 +8,27 @@ namespace Eco
 {
     class MarketMakingStrategy : Trader.Strategy
     {
-        public override void Observe()
+
+        public List<LiquidityMarketWatcher> MarketWatchers = new List<LiquidityMarketWatcher>();
+
+        public MarketMakingStrategy(Trader t)
         {
-            throw new NotImplementedException();
+            foreach (Company cp in t.InterestedCompanies)
+                MarketWatchers.Add(new LiquidityMarketWatcher(cp, t));
         }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
+        {
+            //TODO
+            Trader.MarketResults MR = new Trader.MarketResults();
+            for (int i = 0; i < MarketWatchers.Count; i++)
+            {
+                MarketWatchers[i].UpdateInsights();
+            }
+            //trader.ActionTime -= 100;
+            return MR;
+        }
+        public override void Observe()
         {
             throw new NotImplementedException();
         }
