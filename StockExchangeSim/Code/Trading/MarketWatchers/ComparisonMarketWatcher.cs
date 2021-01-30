@@ -40,11 +40,10 @@ namespace Eco
             RedoInsights();
 
             // keer -2 om de effectieve range tussen -2 en 2 te maken
-            ret = 2 * (SPCData.ExpectedStockPrice - cp.stockprice) / cp.stockprice;
+            ret = 2 * (SPCData.ExpectedStockPrice - cp.stockprice) / (cp.stockprice + SPCData.ExpectedStockPrice) ;
 
             
             return MathF.Round(ret) * 2.5f;
-            //apply Support and Resistance to Breakouts
         }
     }
 }

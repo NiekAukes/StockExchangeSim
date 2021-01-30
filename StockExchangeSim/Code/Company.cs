@@ -52,6 +52,7 @@ namespace Eco
         public Field field = null;
         Random rn = new Random(Master.Seed);
         Stock CompanyStock = null;
+        public float percentageSold { get { return 100 - CompanyStock.Percentage; } }
         public List<Stock> Stocks { get; set; }
 
         public SortedSyncCollection<BuyOrder> BuyOrders { get; set; }
@@ -107,6 +108,8 @@ namespace Eco
         }
         public List<Stock> TradeStocks(float percentage, Trader buyer)
         {
+            if (percentage <= 0)
+                return new List<Stock>();
             int newstocksamount = 0;
             List<Stock> stocks = new List<Stock>();
             while (percentage > newstocksamount * StockPart)
@@ -115,8 +118,8 @@ namespace Eco
                 stocks.Add(CompanyStock.SplitStock(StockPart));
             }
 
-            buyer.money -= percentage * Value * 1.2f;
-            Value += percentage * Value * 1.2f;
+            buyer.money -= percentage * Value * 1.02f;
+            Value += percentage * Value * 1.02f;
 
             return stocks;
         }

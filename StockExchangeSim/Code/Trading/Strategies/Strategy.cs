@@ -85,8 +85,7 @@ namespace Eco
         public abstract class Strategy
         {
             Random rn = new Random();
-            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange);
-            public abstract void Observe();
+            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
         }
         [Obsolete]
         public class SimpleStrategy : Strategy

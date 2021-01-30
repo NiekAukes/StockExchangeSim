@@ -8,7 +8,7 @@ namespace Eco
 {
     class LiquidityMarketWatcher : MarketWatcher<MarketMakingStrategy>
     {
-        int BufferTarget = 25;
+        int BufferTarget = 1;
         float Spread = 0.01f;
         float GeneralPrice = 2;
         Holder Holder { get; set; }

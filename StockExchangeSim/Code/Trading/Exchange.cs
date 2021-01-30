@@ -106,7 +106,7 @@ namespace Eco
             {
                 if (holders[i].bidask.cp == cp)
                 {
-                    if (holders[i].bidask.Bid < cheapest)
+                    if (holders[i].bidask.Bid < cheapest && holders[i].Stocks.Count > 1)
                     {
                         cheapest = holders[i].bidask.Bid;
                     }
@@ -127,7 +127,7 @@ namespace Eco
             {
                 if (holders[i].bidask.cp == cp)
                 {
-                    if (holders[i].bidask.Bid < cheapest)
+                    if (holders[i].bidask.Bid < cheapest && holders[i].MaxStockLimit > holders[i].Stocks.Count)
                     {
                         cheapest = holders[i].bidask.Bid;
                         cheapestholder = i;
@@ -161,26 +161,30 @@ namespace Eco
             return true;
         }
 
-        public void BuyOrder(Company cp, Trader buyer, float Limit)
+        public void BuyOrder(Company cp, Trader buyer, float Limit, int amount = 1)
         {
-            for (int i = 0; i < holders.Count; i++)
-            {
-                if (holders[i].bidask.cp == cp)
+            //bodge,
+#warning THIS IS A BODGE, PLEASE FIX!
+            for (int a = 0; a < amount; a++) {
+                for (int i = 0; i < holders.Count; i++)
                 {
-                    if (holders[i].bidask.Bid < Limit)
+                    if (holders[i].bidask.cp == cp && holders[i].MaxStockLimit > holders[i].Stocks.Count)
                     {
-                        BuyStock(cp, buyer);
-                        return;
+                        if (holders[i].bidask.Bid < Limit)
+                        {
+                            BuyStock(cp, buyer);
+                            return;
+                        }
                     }
                 }
+                if (cp.SellOrders.list[0].LimitPrice < Limit)
+                {
+                    //directly issue transaction
+                    BuyStock(cp, buyer);
+                    return;
+                }
+                cp.BuyOrders.AddSortedItem(new BuyOrder(cp, buyer, Limit), "LimitPrice");
             }
-            if (cp.SellOrders.list[0].LimitPrice < Limit)
-            {
-                //directly issue transaction
-                BuyStock(cp, buyer);
-                return;
-            }
-            cp.BuyOrders.AddSortedItem(new BuyOrder(cp, buyer, Limit), "LimitPrice");
         }
         public void SellStock(Stock stock)
         {
@@ -192,7 +196,7 @@ namespace Eco
                 int bestholder = -1;
                 for (int i = 0; i < holders.Count; i++)
                 {
-                    if (holders[i].bidask.cp == stock.company)
+                    if (holders[i].bidask.cp == stock.company && holders[i].MaxStockLimit > holders[i].Stocks.Count)
                     {
                         if (holders[i].bidask.Ask < best)
                         {
@@ -227,7 +231,7 @@ namespace Eco
         {
             for (int i = 0; i < holders.Count; i++)
             {
-                if (holders[i].bidask.Ask > Limit)
+                if (holders[i].bidask.Ask > Limit && holders[i].MaxStockLimit > holders[i].Stocks.Count)
                 {
                     SellStock(stock);
                     return;

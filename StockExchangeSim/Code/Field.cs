@@ -21,6 +21,7 @@ namespace Eco
         public float Innovation = 0.5f;
         public float Scandals = 0.3f;
         public float ScandalSeverity = 1;
+        public readonly float baseChance = 99.0f / 31500000.0f;
 
         public float MarketShare = 1.1f;
         public float TotalCompetitiveness = 0;
@@ -99,14 +100,14 @@ namespace Eco
                     }
                 }
             }
-
+            float scandalval = MathF.Sqrt(Scandals * 99 * MainPage.master.SecondsPerTick / 31500000);
             //calculate scandals
-            if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+            if (rn.NextDouble() < scandalval)
             {
-                if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+                if (rn.NextDouble() < scandalval)
                 {
                     scandaltick++;
-                    if (scandaltick > 9999)
+                    if (scandaltick > 99)
                     {
                         //impact is based on company value
                         //Company cp = companies[rn.Next(companies.Count)];
