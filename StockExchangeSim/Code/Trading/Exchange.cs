@@ -99,6 +99,21 @@ namespace Eco
             BidAsks = new List<BidAsk>();
         }
 
+        public float GetCheapestHolderBid(Company cp)
+        {
+            float cheapest = 10000000.0f;
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.cp == cp)
+                {
+                    if (holders[i].bidask.Bid < cheapest)
+                    {
+                        cheapest = holders[i].bidask.Bid;
+                    }
+                }
+            }
+            return cheapest;
+        }
         public bool BuyStock(Company cp, Trader buyer)
         {
             if (cp.BidAsk == null)
@@ -110,10 +125,13 @@ namespace Eco
             int cheapestholder = -1;
             for (int i = 0; i < holders.Count; i++)
             {
-                if (holders[i].bidask.Bid < cheapest)
+                if (holders[i].bidask.cp == cp)
                 {
-                    cheapest = holders[i].bidask.Bid;
-                    cheapestholder = i;
+                    if (holders[i].bidask.Bid < cheapest)
+                    {
+                        cheapest = holders[i].bidask.Bid;
+                        cheapestholder = i;
+                    }
                 }
             }
 
@@ -147,10 +165,13 @@ namespace Eco
         {
             for (int i = 0; i < holders.Count; i++)
             {
-                if (holders[i].bidask.Bid < Limit)
+                if (holders[i].bidask.cp == cp)
                 {
-                    BuyStock(cp, buyer);
-                    return;
+                    if (holders[i].bidask.Bid < Limit)
+                    {
+                        BuyStock(cp, buyer);
+                        return;
+                    }
                 }
             }
             if (cp.SellOrders.list[0].LimitPrice < Limit)
@@ -165,26 +186,28 @@ namespace Eco
         {
             if (stock.company.BidAsk == null)
                 return;
-            if (stock.company.BuyOrders.list.Count < 1)
-                return;
 
-            float best = stock.company.BuyOrders.list[0].LimitPrice;
-            int bestholder = -1;
-            for (int i = 0; i < holders.Count; i++)
-            {
-                if (holders[i].bidask.Ask < best)
+                float best = stock.company.BuyOrders.list.Count > 0 ?
+                stock.company.BuyOrders.list[0].LimitPrice : 100000000;
+                int bestholder = -1;
+                for (int i = 0; i < holders.Count; i++)
                 {
-                    best = holders[i].bidask.Ask;
-                    bestholder = i;
+                    if (holders[i].bidask.cp == stock.company)
+                    {
+                        if (holders[i].bidask.Ask < best)
+                        {
+                            best = holders[i].bidask.Ask;
+                            bestholder = i;
+                        }
+                    }
                 }
-            }
 
             if (bestholder >= 0)
             {
                 //sell to holder
-                holders[bestholder].Owner.money += best;
+                holders[bestholder].Owner.money -= best;
                 stock.Owner.money += best;
-                holders[bestholder].Stocks[0].Owner = holders[bestholder].Owner;
+                stock.Owner = holders[bestholder].Owner;
                 holders[bestholder].Stocks.Add(stock);
 
                 stock.company.stockprice = best;

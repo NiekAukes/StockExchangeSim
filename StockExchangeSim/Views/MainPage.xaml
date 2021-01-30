@@ -35,9 +35,9 @@
                 <Button x:Name="Reset" Content="Reset" Click="Reset_Click" Style="{StaticResource buttonSimStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="3"
+                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="1"
                          x:Name="FieldsAm" Style="{StaticResource textBoxSimStyle}"/>
-                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="10"
+                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="20"
                          x:Name="TraderAm" Style="{StaticResource textBoxSimStyle}"/>
                 <TextBox Header="HFTraders: " LostFocus="FieldsAm_LostFocus" Text="1"
                           x:Name="HFTraderAm" Style="{StaticResource textBoxSimStyle}"/>

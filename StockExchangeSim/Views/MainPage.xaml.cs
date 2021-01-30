@@ -73,7 +73,7 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 1, trader = 10, hftrader = 1;
+        private int field = 1, trader = 20, hftrader = 1;
 
         public Master CreateMaster()
         {
@@ -99,6 +99,8 @@ namespace StockExchangeSim.Views
 
             dataThread = new Thread(GatherData);
             dataThread.Name = "dataThread";
+            dataThread.Priority = ThreadPriority.Highest;
+
             dataThread.Start();
 
             return master;
@@ -178,6 +180,8 @@ namespace StockExchangeSim.Views
             {
                 dataThread = new Thread(GatherData);
                 dataThread.Name = "dataThread";
+                dataThread.Priority = ThreadPriority.Highest;
+
                 dataThread.Start();
             }
 

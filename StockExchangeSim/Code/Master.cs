@@ -142,6 +142,7 @@ namespace Eco
 
             thread = new System.Threading.Thread(Update);
             thread.Name = "Master Thread";
+            thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
         public bool active = false;

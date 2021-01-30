@@ -75,7 +75,7 @@ namespace Eco
         public int id;
         public float CompetitivePosition = 1;
         public float Dividend = 0;
-        public float StockPart = 0.01f / 50;
+        public float StockPart = 0.01f / 500;
         public Company(Field f)
         {
             CompanyStock = CreateStock(100);
@@ -104,6 +104,21 @@ namespace Eco
                 return CompanyStock.SplitStock(1);
             }
             return null;
+        }
+        public List<Stock> TradeStocks(float percentage, Trader buyer)
+        {
+            int newstocksamount = 0;
+            List<Stock> stocks = new List<Stock>();
+            while (percentage > newstocksamount * StockPart)
+            {
+                newstocksamount++;
+                stocks.Add(CompanyStock.SplitStock(StockPart));
+            }
+
+            buyer.money -= percentage * Value * 1.2f;
+            Value += percentage * Value * 1.2f;
+
+            return stocks;
         }
         //variable values
         #region variableValues
@@ -187,29 +202,30 @@ namespace Eco
         float open5m, close5m, high5m, low5m;
         float open10m, close10m, high10m, low10m;
         float open30m, close30m, high30m, low30m;
+        int checkModifier = 1;
         public void Data(long tick)
         {
-            if (tick % 10 == 0)
+            if (tick % checkModifier == 0)
             {
                 LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
                 LastDecemValue = Value;
 
-                if (tick % 100 == 0)
+                if (tick % (10 * checkModifier) == 0)
                 {
                     LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
                     LastCentumValue = Value;
 
-                    if (tick % 1000 == 0)
+                    if (tick % (100 * checkModifier) == 0)
                     {
                         LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
                         LastMilleValue = Value;
 
-                        if (tick % 10000 == 0)
+                        if (tick % (1000 * checkModifier) == 0)
                         {
                             LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
                             LastDeceMilleValue = Value;
                         }
-                        if (tick % 100000 == 0)
+                        if (tick % (10000 * checkModifier) == 0)
                         {
                             LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
                             LastCentuMilleValue = Value;
@@ -219,11 +235,17 @@ namespace Eco
             }
             
             //check high and low
-            if (tick % 20 == 0)
+            if (tick % (2 * checkModifier) == 0)
             {
                 if (BidAsk != null)
                 {
-                    float currentprice = stockprice;
+
+                    float currentprice = Master.inst.exchange.GetCheapestHolderBid(this);
+                    if (stockprice < currentprice)
+                        currentprice = stockprice;
+                    else
+                        stockprice = currentprice;
+
                     if (currentprice > high)
                         high = currentprice;
                     if (currentprice < low)
@@ -232,7 +254,7 @@ namespace Eco
 
 
                     //register datapoint
-                    if (tick % 100 == 0)
+                    if (tick % (10 * checkModifier) == 0)
                     {
                         StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
                         ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
@@ -263,7 +285,7 @@ namespace Eco
                         if (currentprice < low5m)
                             low5m = currentprice;
 
-                        if (tick % 500 == 0)
+                        if (tick % (50 * checkModifier) == 0)
                         {
                             
                             StockPriceGraph sp5m = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
@@ -277,7 +299,7 @@ namespace Eco
                             }
                         }
 
-                        if (tick % 8000 == 0)
+                        if (tick % (800 * checkModifier) == 0)
                         {
                             //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 

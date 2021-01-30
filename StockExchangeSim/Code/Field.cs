@@ -47,7 +47,7 @@ namespace Eco
             {
                 Company cp = new Company(this);
                 cp.id = i;
-                cp.SetValue((float)rn.NextDouble() * 2000);
+                cp.SetValue((float)rn.NextDouble() * 2000000);
                 cp.stockprice = cp.Value / 100;
 
                 Master.inst.exchange.RegisterCompany(cp, 50);

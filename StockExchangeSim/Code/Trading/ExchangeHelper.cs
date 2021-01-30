@@ -17,6 +17,11 @@ namespace Eco
         {
             Owner = trader;
             bidask = new BidAsk(cp);
+            Stocks = new List<Stock>();
+        }
+        public override string ToString()
+        {
+            return "owned by: " + Owner.ToString();
         }
     }
 

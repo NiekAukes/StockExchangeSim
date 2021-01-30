@@ -25,7 +25,7 @@ namespace Eco
             {
                 MarketWatchers[i].UpdateInsights();
             }
-            //trader.ActionTime -= 100;
+            trader.ActionTime -= 100;
             return MR;
         }
         public override void Observe()

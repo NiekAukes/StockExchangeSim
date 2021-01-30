@@ -11,23 +11,40 @@ namespace Eco
         {
             Trader t = null;
 
-            List<Strategy> stratpool = null;
+            List<Strategy> multistratpool = null;
+            List<Strategy> monostratpool = null;
             public StrategyFactory(Trader trader)
             {
                 t = trader;
-                stratpool = new List<Strategy>()
+                multistratpool = new List<Strategy>()
                 {
                     new BreakoutStrategy(t),
                     new TrendStrategy(t),
+                    
+                };
+                monostratpool = new List<Strategy>()
+                {
+                    new MarketMakingStrategy(t),
+                    new InvestorStrategy(t),
                 };
             }
-            public static int StrategyAmount = 1;
-            public Strategy RandomStrategy()
+            public static int StrategyAmount = 2;
+            public Strategy RandomStrategy(bool multistrat)
             {
-                int choice = rn.Next(stratpool.Count);
-                Strategy ret = stratpool[choice];
-                stratpool.RemoveAt(choice);
-                return ret;
+
+                if (multistrat)
+                {
+                    int choice = rn.Next(multistratpool.Count);
+                    Strategy ret = multistratpool[choice];
+                    multistratpool.RemoveAt(choice);
+                    return ret;
+                }
+                else
+                {
+                    int choice = rn.Next(monostratpool.Count);
+                    Strategy ret = monostratpool[choice];
+                    return ret;
+                }
 
             }
         }
