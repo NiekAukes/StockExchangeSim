@@ -11,7 +11,7 @@
     xmlns:in="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:qc="using:Ailon.QuickCharts" Loaded="Page_Loaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    NavigationCacheMode="Disabled">
+    NavigationCacheMode="Disabled" Foreground="White">
 
     <Grid>
         <Grid.RowDefinitions>
