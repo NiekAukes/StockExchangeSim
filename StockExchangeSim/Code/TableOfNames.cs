@@ -4,12 +4,22 @@ namespace Eco
 {
     public static class Thoughts
     {
+        //for normal traders
         public static string buy = "I'm going to buy.";
         public static string sell = "I'm going to sell.";
         public static string idk = "I'm not sure what to do.";
         public static string wait = "I'm going to wait a little.";
         public static string hold = "I think I'm going to hold onto my stocks.";
         public static string hate = "I absolutely despise this company.";
+
+        //for liquidity traders
+        public static string loweringPrice = "I'm lowering my price.";
+        public static string increasingPrice = "I'm increasing my price.";
+        /*public static string loweringBidPrice = "I'm lowering my bid price.";
+        public static string increasingBidPrice = "I'm increasing my bid price.";*/
+
+        //for breakout traders
+
     }
     public class TraderNames
     {
