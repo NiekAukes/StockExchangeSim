@@ -58,6 +58,9 @@ namespace StockExchangeSim.Views
         public static Master master = null;
         public static MainPage inst;
         double _year;
+
+        bool badInput;
+
         public double year
         {
             get { return _year; }
@@ -270,8 +273,6 @@ namespace StockExchangeSim.Views
             master.SetSecondsPerTick((float)(f * f * 0.01));
         }
 
-
-
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
@@ -285,7 +286,6 @@ namespace StockExchangeSim.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-
         async void ShowInvalidInputMessageBox()
         {
             MessageDialog messageDialog = new MessageDialog("Invalid input in Fields, Traders or HFTraders. Could not start Simulation");
@@ -294,7 +294,6 @@ namespace StockExchangeSim.Views
         }
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-
             if (!badInput)
             {
                 master.active = false;
