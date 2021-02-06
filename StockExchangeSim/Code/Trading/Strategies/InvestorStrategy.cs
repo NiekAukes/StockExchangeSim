@@ -19,7 +19,7 @@ namespace Eco
 
         public override void Init()
         {
-            trader.money += 100000;
+            trader.money += 1000 * Master.MoneyScaler;
 
                 //request stocks
                 for (int i = 0; i < trader.InterestedCompanies.Count; i++)
@@ -54,6 +54,8 @@ namespace Eco
                 int comp = trader.InterestedCompanies.IndexOf(result.Item1);
                 if (result.Item2 > 0)
                 {
+                    if (MarketWatchers[comp].SPCData.ExpectedStockPrice < 0)
+                        throw new Exception("Que mas?");
                     //wants stocks
                     if (result.Item1.percentageSold < 10 && trader.money > 0)
                     {
@@ -73,7 +75,7 @@ namespace Eco
                     else
                     {
                         //does not have stocks, buy some (10% max money investing)
-                        int stockamount = (int)(trader.money * (result.Item2 * 0.02) / (result.Item1.stockprice));
+                        int stockamount = (int)(trader.money * (result.Item2 * 0.02) / (MarketWatchers[comp].SPCData.ExpectedStockPrice));
 
                         holders[comp].bidask.Bid = int.MaxValue;
                         holders[comp].bidask.Ask = MarketWatchers[comp].SPCData.ExpectedStockPrice;

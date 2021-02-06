@@ -99,7 +99,7 @@ namespace Eco
                 //if stocks fall, sell
                 //otherwise buy
                 int n = cp.stockPrices1m.Count - 10 < 800 ? cp.stockPrices1m.Count - 10 : 800;
-                if (cp.stockPrices1m[100].High > cp.stockPrices1m[n].High)
+                if (cp.stockPrices1m[10].High > cp.stockPrices1m[n].High)
                 {
                     //falling stock
                     ret = 2.5f;

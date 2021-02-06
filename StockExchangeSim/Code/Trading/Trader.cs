@@ -30,7 +30,9 @@ namespace Eco
         public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
-        public float Money = 0.1f * Master.MoneyScaler;
+        double _money = 0.1f * Master.MoneyScaler;
+        public float Money { get { return (float)_money; }
+            set { _money = value >= 0 ? value : throw new Exception("Que mas?"); } }
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
@@ -48,6 +50,7 @@ namespace Eco
         public Trader(bool isinvestor)
         {
             //stocks & init
+            money = 0.1f * Master.MoneyScaler;
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             //while (InterestedCompanies.Count > 4)
@@ -77,6 +80,8 @@ namespace Eco
         public Trader()
         {
             //stocks & init
+            money = 0.1f * Master.MoneyScaler;
+
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             while (InterestedCompanies.Count > 4)

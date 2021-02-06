@@ -22,7 +22,7 @@ namespace Eco
 
                 //request stocks from companies
                 List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(
-                    0.1f * (float)Master.rn.NextDouble(), trader);
+                    0.1f * (float)Master.rn.NextDouble(), trader, true);
                 trader.stocks[i].AddRange(stocks);
             }
         }

@@ -119,7 +119,7 @@ namespace Eco
             }
             return null;
         }
-        public List<Stock> TradeStocks(float percentage, Trader buyer)
+        public List<Stock> TradeStocks(float percentage, Trader buyer, bool forfree = false)
         {
             if (percentage <= 0)
                 return new List<Stock>();
@@ -130,9 +130,11 @@ namespace Eco
                 newstocksamount++;
                 stocks.Add(CompanyStock.SplitStock(StockPart, buyer));
             }
-
-            buyer.money -= percentage * Value * 1.00f;
-            Value += percentage * Value * 0.6f;
+            if (!forfree)
+            {
+                buyer.money -= percentage * Value * .01f;
+                Value += percentage * Value * 0.006f;
+            }
 
 
             return stocks;
