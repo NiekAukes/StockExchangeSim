@@ -41,7 +41,7 @@ namespace StockExchangeSim.Views
 
         ~CompanyDetail()
         {
-            System.Diagnostics.Debug.WriteLine("destroyed");
+            System.Diagnostics.Debug.WriteLine("CompanyDetail page destroyed.");
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {

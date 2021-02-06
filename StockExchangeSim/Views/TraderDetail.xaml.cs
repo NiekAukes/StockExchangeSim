@@ -33,7 +33,7 @@ namespace StockExchangeSim.Views
 
         ~TraderDetail() //When page is destroyed
         {
-            System.Diagnostics.Debug.WriteLine("destroyed");
+            System.Diagnostics.Debug.WriteLine("TraderDetail page destoyed.");
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
