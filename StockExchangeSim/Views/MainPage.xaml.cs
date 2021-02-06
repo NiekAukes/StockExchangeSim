@@ -71,7 +71,7 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 1, trader = 10, hftrader = 1;
+        private int field = 1, trader = 20, hftrader = 1;
 
         public Master CreateMaster()
         {
@@ -93,11 +93,13 @@ namespace StockExchangeSim.Views
             //    };
             //    series.ListenPropertyChange = true;
             //    chart.Series.Add(series);
-            //}
+            ////}
 
-            dataThread = new Thread(GatherData);
-            dataThread.Name = "dataThread";
-            dataThread.Start();
+            //dataThread = new Thread(GatherData);
+            //dataThread.Name = "dataThread";
+            //dataThread.Priority = ThreadPriority.Highest;
+
+            //dataThread.Start();
 
             return master;
         }
@@ -132,9 +134,6 @@ namespace StockExchangeSim.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public CompanyViewModel vm = new CompanyViewModel();
         public CompanyViewModel vm2 = new CompanyViewModel();
-        public static Thread dataThread = null;
-        bool badInput = false;
-
         public MainPage()
         {
             InitializeComponent();
@@ -177,12 +176,14 @@ namespace StockExchangeSim.Views
 
 
             UpdateYear();
-            if (dataThread == null)
-            {
-                dataThread = new Thread(GatherData);
-                dataThread.Name = "dataThread";
-                dataThread.Start();
-            }
+            //if (dataThread == null)
+            //{
+            //    dataThread = new Thread(GatherData);
+            //    dataThread.Name = "dataThread";
+            //    dataThread.Priority = ThreadPriority.Highest;
+
+            //    dataThread.Start();
+            //}
 
 
         }
@@ -199,22 +200,16 @@ namespace StockExchangeSim.Views
 
                 if (master.active)
                 {
-                    if ((tick % 1000) / master.SecondsPerTick < 1)
+                    for (int i = 0; i < master.Fields.Count; i++)
                     {
-                        for (int i = 0; i < master.Fields.Count; i++)
+                        Field field = master.Fields[i];
+                        //do Information Gathering from fields
+                        for (int j = 0; j < field.companies.Count; j++)
                         {
-                            Field field = master.Fields[i];
-                            //do Information Gathering from fields
-                            for (int j = 0; j < field.companies.Count; j++)
-                            {
 
-                                field.companies[j].Data(tick);
-                            }
+                            field.companies[j].Data(tick * 10, false);
                         }
                     }
-                    //Thread.Sleep(2);
-
-
                 }
 
                 else

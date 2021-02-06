@@ -113,7 +113,7 @@ namespace App1
             this.InitializeComponent();
             Log = log;
 
-            cp.stockPrices = new ObservableCollection<StockPriceGraph>();
+            //cp.stockPrices = new ObservableCollection<StockPriceGraph>();
 
             axisside.Header = "value (in $)";
             axismain.Header = "Time (in years)";

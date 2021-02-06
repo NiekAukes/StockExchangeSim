@@ -8,11 +8,29 @@ namespace Eco
 {
     class MarketMakingStrategy : Trader.Strategy
     {
-        
-        //DON'T FORGET TO IMPLEMENT: float latestInsightResult
-        public override Trader.MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
+
+        public List<LiquidityMarketWatcher> MarketWatchers = new List<LiquidityMarketWatcher>();
+        public MarketMakingStrategy(Trader t)
         {
-            throw new NotImplementedException();
+            trader = t;
+        }
+
+        public override void Init()
+        {
+            foreach (Company cp in trader.InterestedCompanies)
+                MarketWatchers.Add(new LiquidityMarketWatcher(cp, trader));
+        }
+
+        public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
+        {
+            //TODO
+            Trader.MarketResults MR = new Trader.MarketResults();
+            for (int i = 0; i < MarketWatchers.Count; i++)
+            {
+                MarketWatchers[i].UpdateInsights();
+            }
+            trader.ActionTime -= 100;
+            return MR;
         }
     }
 }

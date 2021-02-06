@@ -21,6 +21,7 @@ namespace Eco
         public float Innovation = 0.5f;
         public float Scandals = 0.3f;
         public float ScandalSeverity = 1;
+        public readonly float baseChance = 99.0f / 31500000.0f;
 
         public float MarketShare = 1.1f;
         public float TotalCompetitiveness = 0;
@@ -43,14 +44,31 @@ namespace Eco
             fieldName = SelectRandomName();
 
             companyAmount = rn.Next(1, maxCompanyStartAmount);
+
+            StockPriceComparisonTool SPCT = new StockPriceComparisonTool();
             for (int i = 0; i < companyAmount; i++)
             {
                 Company cp = new Company(this);
                 cp.id = i;
-                cp.SetValue((float)rn.NextDouble() * 2000);
-                cp.stockprice = cp.Value / 100;
+                cp.SetValue((float)rn.NextDouble() * 200 * Master.MoneyScaler);
+                cp.stockprice = cp.Value * cp.StockPart;
+                cp.Competitiveness = (float)rn.NextDouble() * 100 + 50;
 
                 Master.inst.exchange.RegisterCompany(cp, 50);
+
+                //induce past stockprices
+                
+                float PMP = SPCT.StrategyOutcome(cp).ExpectedStockPrice;
+
+
+                for (int j = 0; j < 100; j++)
+                {
+                    StockPriceGraph sp = new StockPriceGraph((-100 + j) * 0.0001f, PMP + MathF.Sin(j - 1) * PMP * 0.01f,
+                        PMP + MathF.Sin(j) * PMP * 0.01f, PMP + (float)rn.NextDouble() * PMP * 0.1f,
+                        PMP - (float)rn.NextDouble() * PMP * 0.01f);
+                    cp.stockPrices1m.Add(sp);
+                    cp.stockViewModel.prices1m.Add(sp); 
+                }
                 //cp.BecomePublic();
 
                 companies.Add(cp);
@@ -94,19 +112,19 @@ namespace Eco
                     {
                         Company cp = companies[rn.Next(companies.Count)];
                         float highvalue = MathF.Pow((float)rn.NextDouble(), 2);
-                        cp.Competitiveness += highvalue * 0.1f * cp.Value;
+                        cp.Competitiveness += highvalue * 0.1f * cp.Value / Master.MoneyScaler;
 
                     }
                 }
             }
-
+            float scandalval = MathF.Sqrt(Scandals * 99 * MainPage.master.SecondsPerTick / 31500000);
             //calculate scandals
-            if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+            if (rn.NextDouble() < scandalval)
             {
-                if (rn.NextDouble() < Scandals * 9999 * MainPage.master.SecondsPerTick / 15 / 1450.461994)
+                if (rn.NextDouble() < scandalval)
                 {
                     scandaltick++;
-                    if (scandaltick > 9999)
+                    if (scandaltick > 99)
                     {
                         //impact is based on company value
                         //Company cp = companies[rn.Next(companies.Count)];
@@ -126,7 +144,7 @@ namespace Eco
                         }
 
                         float highvalue = MathF.Pow((float)rn.NextDouble() * 1, 2);
-                        cp.Competitiveness -= highvalue * 0.1f * ScandalSeverity * cp.Value;
+                        cp.Competitiveness -= highvalue * 0.1f * ScandalSeverity * cp.Value / Master.MoneyScaler;
                         scandaltick = 0;
                     }
                 }
@@ -136,15 +154,15 @@ namespace Eco
             {
                 Company newcp = new Company(this);
                 newcp.id = companyAmount++;
-                newcp.SetValue((float)rn.NextDouble() * 500);
+                newcp.SetValue((float)rn.NextDouble() * 50 * Master.MoneyScaler);
                 companies.Add(newcp);
                 startcompanies.Add(newcp);
             }
 
             //ordinary things VERVANGEN MET CONCURRENTIEPOSITIE => CHECK
-            float value = MathF.Pow((float)rn.NextDouble() - 0.5f, 3);
+            float value = MathF.Pow((float)rn.NextDouble() - 0.5f, 2);
             int select = rn.Next(0, companies.Count);
-            companies[select].Competitiveness += value * 0.001f * companies[select].Value;
+            companies[select].Competitiveness += value * 0.000001f * companies[select].Value / Master.MoneyScaler;
 
             TotalCompetitiveness = 0;
             TotalValue = 0;

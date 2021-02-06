@@ -35,16 +35,16 @@
                 <Button x:Name="Reset" Content="Reset" Click="Reset_Click" Style="{StaticResource buttonSimStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="3"
+                <TextBox Header="Fields: " LostFocus="FieldsAm_LostFocus" Text="1"
                          x:Name="FieldsAm" Style="{StaticResource textBoxSimStyle}"/>
-                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="10"
+                <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="20"
                          x:Name="TraderAm" Style="{StaticResource textBoxSimStyle}"/>
                 <TextBox Header="HFTraders: " LostFocus="FieldsAm_LostFocus" Text="1"
                           x:Name="HFTraderAm" Style="{StaticResource textBoxSimStyle}"/>
             </StackPanel>
             <Slider x:Name="slider" Header="Speed (years/second):" 
-                ValueChanged="slider_ValueChanged" Width="300" Height="50"
-                Minimum="0.1" Maximum="40" StepFrequency="0.001" FlowDirection="LeftToRight" Value="16"/>
+                ValueChanged="slider_ValueChanged" Width="300" Height="60"
+                Minimum="0.1" Maximum="4" StepFrequency="0.001" FlowDirection="LeftToRight" Value="1"/>
             <!--<ScrollViewer Margin="10,10,10,10" 
                   HorizontalScrollBarVisibility="Auto" 
                   VerticalScrollBarVisibility="Auto">

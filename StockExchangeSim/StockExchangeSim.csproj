@@ -192,12 +192,15 @@
     <Compile Include="Code\Master.cs" />
     <Compile Include="Code\MicroTimers.cs" />
     <Compile Include="Code\TableOfNames.cs" />
+    <Compile Include="Code\Trading\ExchangeHelper.cs" />
     <Compile Include="Code\Trading\MarketWatchers\BreakoutMarketWatcher.cs" />
+    <Compile Include="Code\Trading\MarketWatchers\ComparisonMarketWatcher.cs" />
     <Compile Include="Code\Trading\MarketWatchers\LiquidityMarketWatcher.cs" />
     <Compile Include="Code\Trading\Strategies\BreakoutStrategy.cs" />
     <Compile Include="Code\Trading\Exchange.cs" />
     <Compile Include="Code\Trading\GraphUtil.cs" />
     <Compile Include="Code\Trading\MarketWatcher.cs" />
+    <Compile Include="Code\Trading\Strategies\InvestorStrategy.cs" />
     <Compile Include="Code\Trading\Strategies\MarketMakingStrategy.cs" />
     <Compile Include="Code\Trading\Strategies\Strategy.cs" />
     <Compile Include="Code\Trading\Tools\StockPriceComparisonTool.cs" />

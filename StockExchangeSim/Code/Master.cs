@@ -99,17 +99,18 @@ namespace Eco
         public int TraderAmount;
         public int HFTAmount;
         //public float TPS = 2103840; //ticks per second. 1577880 = 20s per year
-        public float Year;
+        public double Year;
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
-        public ExchangeBroker exchange = new ExchangeBroker();
+        public ECNBroker exchange = new ECNBroker();
 
         public TableOfNames masterTable = new TableOfNames();
         public TraderNames MasterTraderNames = new TraderNames();
 
         public static float Conjucture { get; set; }
         public static float TotalShare = 0;
+        public static float MoneyScaler = 1000.0f;
 
         public Master(int fields, int traders, int hftraders)
         {
@@ -132,17 +133,24 @@ namespace Eco
             for (int i = 0; i < fields; i++)
             {
                 Field field = new Field(i);
+                field.Innovation = (float)rn.NextDouble() * 0.5f + 0.75f;
+                field.Scandals = (float)rn.NextDouble() * 0.5f + 0.75f;
+
                 Fields.Add(field);
                 TotalShare += 100;
             }
+            Traders.Add(new Trader(true));
+            Traders.Add(new Trader(false));
             for (int i = 0; i < traders; i++)
             {
                 Traders.Add(new Trader());
                 
             }
 
+
             thread = new System.Threading.Thread(Update);
             thread.Name = "Master Thread";
+            thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
         public bool active = false;
@@ -174,7 +182,7 @@ namespace Eco
                         TotalShare += Fields[j].MarketShare;
                     }
 
-                    Conjucture = (0.05f * MathF.Sin(MainPage.master.Year) + 1);
+                    Conjucture = (0.05f * MathF.Sin((float)MainPage.master.Year) + 1);
 
 
                     for (int j = 0; j < Fields.Count; j++)
@@ -194,13 +202,19 @@ namespace Eco
                         Traders[k] = Traders[n];
                         Traders[n] = value;
                     }
-
-                    for (int j = 0; j < TraderAmount; j++)
+                    if (ticks % 10 == 0)
                     {
-                        Traders[j].Update();
+                        for (int j = 0; j < TraderAmount; j++)
+                        {
+                            Traders[j].ActionTime += SecondsPerTick * 10;
+                            if (Traders[j].ActionTime > 10000)
+                            {
+                                
+                            }
+                        }
                     }
 
-                    Year += SecondsPerTick / (365.25f * 24 * 60 * 60);
+                    Year += SecondsPerTick / (365.25 * 24 * 60 * 60);
 
 
 

@@ -124,6 +124,11 @@ private async void OnLoaded(object sender, RoutedEventArgs e)
             {
                 Selected = selectedItem;
             }
+            if (Frame != null)
+            {
+                foreach (var item in Frame.BackStack.ToList())
+                    Frame.BackStack.Remove(item);
+            }
         }
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)

@@ -11,23 +11,42 @@ namespace Eco
         {
             Trader t = null;
 
-            List<Strategy> stratpool = null;
+            List<Strategy> multistratpool = null;
+            List<Strategy> monostratpool = null;
             public StrategyFactory(Trader trader)
             {
                 t = trader;
-                stratpool = new List<Strategy>()
+                multistratpool = new List<Strategy>()
                 {
                     new BreakoutStrategy(t),
                     new TrendStrategy(t),
+                    
+                };
+                monostratpool = new List<Strategy>()
+                {
+                    new MarketMakingStrategy(t),
+                    new InvestorStrategy(t),
                 };
             }
-            public static int StrategyAmount = 1;
-            public Strategy RandomStrategy()
+            public static int StrategyAmount = 2;
+            public Strategy RandomStrategy(bool multistrat)
             {
-                int choice = rn.Next(stratpool.Count);
-                Strategy ret = stratpool[choice];
-                stratpool.RemoveAt(choice);
-                return ret;
+
+                if (multistrat)
+                {
+                    int choice = rn.Next(multistratpool.Count);
+                    Strategy ret = multistratpool[choice];
+                    multistratpool.RemoveAt(choice);
+                    ret.Init();
+                    return ret;
+                }
+                else
+                {
+                    int choice = rn.Next(monostratpool.Count);
+                    Strategy ret = monostratpool[choice];
+                    ret.Init();
+                    return ret;
+                }
 
             }
         }
@@ -68,15 +87,19 @@ namespace Eco
         public abstract class Strategy
         {
             Random rn = new Random();
-            public abstract MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange);
-            
+            public Trader trader = null;
+            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange);
+            public abstract void Init();
         }
         [Obsolete]
         public class SimpleStrategy : Strategy
         {
-            
+            public override void Init()
+            {
+                throw new NotImplementedException();
+            }
 
-            public override MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
+            public override MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
             {
                 //float money = trader.money;
                 //Company cp = exchange.Companies[rn.Next(exchange.BidAskSpreads.Count - 1)]; //invest in this company

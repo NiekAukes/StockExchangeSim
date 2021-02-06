@@ -8,48 +8,67 @@ namespace Eco
 {
     class LiquidityMarketWatcher : MarketWatcher<MarketMakingStrategy>
     {
-        LiquidityTool LT = new LiquidityTool();
-        LiquidityToolData LTD = null;
-        float lastInsightTime = 0;
-        int lastdatapoint = 0;
+        int BufferTarget = 1;
+        float Spread = 0.01f;
+        float GeneralPrice = 2;
 
-        public LiquidityMarketWatcher(MarketMakingStrategy strat) : base(strat)
+        int LiquidityTarget = 50;
+
+        Holder Holder { get; set; }
+        StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
+
+        public LiquidityMarketWatcher(Company cp, Trader td)
         {
-
+            this.cp = cp;
+            Holder = new Holder(cp, td);
+            Holder.bidask.Bid = cp.stockprice;
+            Holder.bidask.Ask = cp.stockprice;
+            Master.inst.exchange.RegisterHolder(Holder);
+            GeneralPrice = cp.stockprice;
         }
-
         public override void RedoInsights()
         {
-            LTD = LT.StrategyOutcome(cp);
-            OnRedoneInsights(null);
-            lastInsightTime = Master.inst.Year;
-
-            UpdateTraderThoughts();
-
         }
 
         public override float UpdateInsights()
         {
-            //if (LTD == null)
-            //{
-            //    RedoInsights();
-            //}
-            //SynchronizedCollection<Liquidity> slq =
-            //    new SynchronizedCollection<Liquidity>(cp.BidAsk.liquidity1m.Skip(lastdatapoint));
-            //Liquidity liquidity = slq[0];
-            //for(int i = 1; i < slq.Count; i++)
-            //{
-            //    liquidity += slq[i];
-            //}
-            //lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
-            //LTD = null;
-            //return liquidity.Diff;
-            return 0;
-        }
+            
+            var lowestorder = cp.SellOrders.list.Count > 0 ? cp.SellOrders.list[0] : null;
+            var highestbidder = cp.BuyOrders.list.Count > 0 ? cp.BuyOrders.list[0] : null;
 
-        public override void UpdateTraderThoughts()
-        {
-            throw new NotImplementedException();
+            if (lowestorder == null || highestbidder == null)
+            {
+                //if there is no bid or ask yet, construct one
+                var data = SPCTool.StrategyOutcome(cp);
+                GeneralPrice = data.ExpectedStockPrice;
+            }
+            else
+            {
+                GeneralPrice = (lowestorder.LimitPrice + highestbidder.LimitPrice) / 2.0f;
+            }
+
+            Spread = 0.001f * cp.Value * cp.StockPart;
+            //GeneralPrice = cp.stockprice;
+            //int BufferAmps = Holder.Stocks.Count - BufferTarget;
+            //if (BufferAmps >= 0)
+            //{
+            //    //too many stocks, higher spread, while increasing price
+            //    Spread *= (0.00002f * BufferAmps + 1);
+            //    GeneralPrice *= (0.00002f * BufferAmps + 1);
+
+            //}
+            //else
+            //{
+            //    //too few stocks, lower spread, while decreasing price
+            //    Spread /= (0.00002f * -BufferAmps + 1);
+            //    GeneralPrice /= (0.00002f * -BufferAmps + 1);
+            //}
+
+
+
+            Holder.bidask.Ask = GeneralPrice -= Spread;
+            Holder.bidask.Bid = GeneralPrice += Spread;
+            return 0;
         }
     }
 }

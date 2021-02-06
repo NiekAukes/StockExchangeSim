@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Eco
 {
@@ -26,44 +27,98 @@ namespace Eco
     {
 
         public static Random rn = new Random(Master.Seed);
-
+        public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
-        public float Money = 100;
+        public float Money = 0.1f * Master.MoneyScaler;
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
+        public bool CatchUp = false;
+
+        public Thread TraderThread = null;
 
         public MarketResults latestResults;
             
 
         List<Strategy> Strategies = new List<Strategy>();
 
+        public Trader(bool isinvestor)
+        {
+            //stocks & init
+            Stocks = new List<Stock>();
+            InterestedCompanies = Master.inst.GetAllCompanies();
+            //while (InterestedCompanies.Count > 4)
+            //{
+            //    InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
+            //}
+            for (int i = 0; i < InterestedCompanies.Count; i++)
+            {
+                stocks.Add(new List<Stock>());
+            }
+
+            name = PickRandomName();
+            //strategies
+            if (isinvestor)
+                Strategies.Add(new InvestorStrategy(this));
+            else
+                Strategies.Add(new MarketMakingStrategy(this));
+            Strategies[0].Init();
+            
+
+
+            //loops and threads
+            TraderThread = new Thread(ThreadUpdate);
+            TraderThread.Name = name;
+            TraderThread.Start();
+        }
         public Trader()
         {
+            //stocks & init
             Stocks = new List<Stock>();
             InterestedCompanies = Master.inst.GetAllCompanies();
             while (InterestedCompanies.Count > 4)
             {
                 InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
             }
-            StrategyFactory stFact = new StrategyFactory(this);
-            while (Strategies.Count < 1) //pick strats till you have 2
+            for (int i = 0; i < InterestedCompanies.Count; i++)
             {
-                Strategies.Add(stFact.RandomStrategy());
+                stocks.Add(new List<Stock>());
             }
 
             name = PickRandomName();
+            //strategies
+            StrategyFactory stFact = new StrategyFactory(this);
+            bool multistrat = rn.NextDouble() > 0.3;
+            do //pick strats till you have 2
+            {
+                Strategies.Add(stFact.RandomStrategy(multistrat));
+            }
+            while (Strategies.Count < 2 && multistrat);
+
+
+            //loops and threads
+            TraderThread = new Thread(ThreadUpdate);
+            TraderThread.Name = name;
+            TraderThread.Start();
         }
         private string PickRandomName()
         {
             //search a random name in list of names
-            int rng = rn.Next(Master.inst.MasterTraderNames.traderNames.Count);
-            string ret = Master.inst.MasterTraderNames.traderNames[rng];
-            Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
-
+            string ret = "";
+            if (Master.inst.MasterTraderNames.traderNames.Count > 0)
+            {
+                int rng = rn.Next(Master.inst.MasterTraderNames.traderNames.Count);
+                ret = Master.inst.MasterTraderNames.traderNames[rng];
+                Master.inst.MasterTraderNames.traderNames.RemoveAt(rng);
+            }
+            else
+            {
+                ret = "Trader " + TraderCreated;
+            }
+            TraderCreated++;
             return ret;
         }
         public float money { get { return Money; } set { Money = value; } }
@@ -80,19 +135,31 @@ namespace Eco
             return name;
         }
 
+        public void ThreadUpdate()
+        {
+            while (Master.inst.alive)
+            {
+                if (Master.inst.active && !CatchUp)
+                    Update();
+                else
+                    Thread.Sleep(10);
+            }
+        }
+
         public virtual void Update()
         {
             //ActionTime += MainPage.master.SecondsPerTick; //accrued Time for actions
-            foreach (var stockArr in stocks)
-            {
-                for (int i = 0; i < stockArr.Count; i++)
-                {
-                    Money += stockArr[i].Collect();
-                }
-            }
+            //foreach (var stockArr in stocks)
+            //{
+            //    for (int i = 0; i < stockArr.Count; i++)
+            //    {
+            //        Money += stockArr[i].Collect();
+            //    }
+            //}
             if (ActionTime > 0)
             {
-                latestResults = new MarketResults();
+                //TraderThread.Priority = ThreadPriority.AboveNormal;
+                MarketResults Final = new MarketResults();
                 foreach (Strategy strat in Strategies)
                     latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
@@ -127,11 +194,32 @@ namespace Eco
                         for (int i = 0; i < tp.Item2 * 100; i++)
                         {
                             //buy stocks here
-                            Master.inst.exchange.BuyStock(tp.Item1, this);
+                            if (!Master.inst.exchange.BuyStock(tp.Item1, this))
+                            {
+                                if (Strategies[0] is InvestorStrategy)
+                                {
+                                    int index = InterestedCompanies.IndexOf(tp.Item1);
+                                    //if he is an investor
+                                    stocks[index]
+                                        .AddRange(tp.Item1.TradeStocks(1, this));
+
+                                    for (int j = 0; j < 5000; j++)
+                                    {
+                                        Master.inst.exchange.SellStock(stocks[index][0]);
+                                        stocks[index].RemoveAt(0);
+                                    }
+
+                                    break;
+                                }
+                            }
                         }
                     }
 
                 }
+            }
+            else
+            {
+                Thread.Sleep(1);
             }
 
 
@@ -159,6 +247,7 @@ namespace Eco
             }
         }
     }
+
     public class HFTrader : Trader
     {
 

@@ -22,7 +22,7 @@ namespace Eco
             //Search for Support and Resistance
             SRData = SRTool.StrategyOutcome(cp);
 
-            lastInsightTime = Master.inst.Year;
+            lastInsightTime = (float)Master.inst.Year;
 
             OnRedoneInsights(null);
 
@@ -37,8 +37,11 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            SynchronizedCollection<StockPriceGraph> NewPrices =
-                new SynchronizedCollection<StockPriceGraph>(cp.stockPrices1m.Skip(lastdatapoint));
+            List<StockPriceGraph> NewPrices;
+            lock (cp.stockPrices1m)
+            {
+                NewPrices = new List<StockPriceGraph>(cp.stockPrices1m.Skip(cp.stockPrices1m.Count - 20));
+            }
             //NewPrices.AddRange(cp.stockPrices.getrange); 
             //cp.stockPrices.CopyTo(NewPrices, lastdatapoint);
 
@@ -82,13 +85,31 @@ namespace Eco
                 }
 
             }
-            if (Master.inst.Year - lastInsightTime > 0.2)
+            if (Master.inst.Year - lastInsightTime > 0.2 / (365.25f * 24))
                 SRData = null;
             if ((potentialBreakoutDown) || (potentialBreakoutUp))
                 SRData = null;
 
 
-            lastdatapoint = cp.stockPrices1m.Count > 20 ? 20 : cp.stockPrices1m.Count;
+            lastdatapoint = cp.stockPrices1m.Count - (cp.stockPrices1m.Count > 20 ? 20 : 0);
+
+            if (ret == 0)
+            {
+                //fallback strategy
+                //if stocks fall, sell
+                //otherwise buy
+                int n = cp.stockPrices1m.Count - 10 < 800 ? cp.stockPrices1m.Count - 10 : 800;
+                if (cp.stockPrices1m[100].High > cp.stockPrices1m[n].High)
+                {
+                    //falling stock
+                    ret = 2.5f;
+                }
+                else
+                {
+                    //rising stock
+                    ret = 2.5f;
+                }
+            }
             return ret;
             //apply Support and Resistance to Breakouts
         }
