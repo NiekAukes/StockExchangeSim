@@ -321,7 +321,7 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private async void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
+        private void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
         {
 
             int val = 0;
