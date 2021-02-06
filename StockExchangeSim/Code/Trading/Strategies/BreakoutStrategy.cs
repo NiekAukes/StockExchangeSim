@@ -18,7 +18,7 @@ namespace Eco
             for (int i = 0; i < trader.InterestedCompanies.Count; i++)
             {
                 //add marketwatcher
-                MarketWatchers.Add(new BreakoutMarketWatcher(trader.InterestedCompanies[i]));
+                MarketWatchers.Add(new BreakoutMarketWatcher(this, trader.InterestedCompanies[i]));
 
                 //request stocks from companies
                 List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(

@@ -70,5 +70,10 @@ namespace Eco
             Holder.bidask.Bid = GeneralPrice += Spread;
             return 0;
         }
+
+        public override void UpdateTraderThoughts()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

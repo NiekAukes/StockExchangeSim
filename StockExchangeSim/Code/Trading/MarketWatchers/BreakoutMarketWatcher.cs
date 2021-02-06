@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+ 
 namespace Eco
 {
     public class BreakoutMarketWatcher : MarketWatcher<BreakoutStrategy>

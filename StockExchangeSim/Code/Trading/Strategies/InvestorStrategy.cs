@@ -25,7 +25,7 @@ namespace Eco
                 for (int i = 0; i < trader.InterestedCompanies.Count; i++)
                 {
                     //add marketwatchers and holders
-                    MarketWatchers.Add(new ComparisonMarketWatcher(trader.InterestedCompanies[i]));
+                    MarketWatchers.Add(new ComparisonMarketWatcher(this, trader.InterestedCompanies[i]));
                     Holder hd = new Holder(trader.InterestedCompanies[i], trader);
                     hd.bidask.Bid = 1000000000;
                     hd.bidask.Ask = 0;
