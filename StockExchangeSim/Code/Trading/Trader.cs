@@ -145,7 +145,6 @@ namespace Eco
                     Thread.Sleep(10);
             }
         }
-
         public virtual void Update()
         {
             //ActionTime += MainPage.master.SecondsPerTick; //accrued Time for actions
@@ -159,7 +158,7 @@ namespace Eco
             if (ActionTime > 0)
             {
                 //TraderThread.Priority = ThreadPriority.AboveNormal;
-                MarketResults Final = new MarketResults();
+                latestResults = new MarketResults();
                 foreach (Strategy strat in Strategies)
                     latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
