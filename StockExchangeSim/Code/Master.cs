@@ -112,8 +112,11 @@ namespace Eco
         public static float TotalShare = 0;
         public static float MoneyScaler = 1000.0f;
 
+        public bool active { get; set; }
+        public bool alive { get; set; }
         public Master(int fields, int traders, int hftraders)
         {
+            alive = true;
             inst = this;
             if (fCustomSeed)
             {
@@ -153,8 +156,6 @@ namespace Eco
             thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
-        public bool active = false;
-        public bool alive = true;
         public static long ticks = 0;
 
         public List<Company> GetAllCompanies()

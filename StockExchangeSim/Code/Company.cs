@@ -363,6 +363,10 @@ namespace Eco
                         Thread.Sleep(1);
                     }
                 }
+                else
+                {
+                    Thread.Sleep(10);
+                }
             } while (loop);
         }
 

@@ -63,6 +63,11 @@ namespace Eco
 
                 for (int j = 0; j < 100; j++)
                 {
+                    cp.stockViewModel.prices1m.Clear();
+                    cp.stockViewModel.prices10m.Clear();
+
+                    cp.stockPrices1m.Clear();
+
                     StockPriceGraph sp = new StockPriceGraph((-100 + j) * 0.0001f, PMP + MathF.Sin(j - 1) * PMP * 0.01f,
                         PMP + MathF.Sin(j) * PMP * 0.01f, PMP + (float)rn.NextDouble() * PMP * 0.1f,
                         PMP - (float)rn.NextDouble() * PMP * 0.01f);
