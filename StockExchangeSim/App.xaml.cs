@@ -20,7 +20,7 @@ namespace StockExchangeSim
         public App()
         {
             InitializeComponent();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("@31382e342e30KoD3p1P912k0YSjQOz9msZ6zEzZINCQMNUxYG5V37xk=");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzk1MjIxQDMxMzgyZTM0MmUzMGtWbHVCeFprR0hveTN1WkdidExjVmRrWVhFWGNkV3NuZ1dEOXZVMVFQbEE9");
 
             UnhandledException += OnAppUnhandledException;
             RequestedTheme = ApplicationTheme.Dark;
