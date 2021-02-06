@@ -1,6 +1,5 @@
 ﻿using Eco;
 using Syncfusion.UI.Xaml.Charts;
-
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
