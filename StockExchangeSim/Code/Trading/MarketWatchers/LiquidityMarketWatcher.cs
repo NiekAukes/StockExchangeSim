@@ -17,7 +17,7 @@ namespace Eco
         Holder Holder { get; set; }
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
 
-        public LiquidityMarketWatcher(Company cp, Trader td)
+        public LiquidityMarketWatcher(MarketMakingStrategy strat, Company cp, Trader td) : base(strat)
         {
             this.cp = cp;
             Holder = new Holder(cp, td);

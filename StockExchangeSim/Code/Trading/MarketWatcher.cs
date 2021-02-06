@@ -8,7 +8,7 @@ namespace Eco
         public enum DifferentmarketWatchers {
 
         }
-        public object strat { get; set; }
+        //public object strat { get; set; }
         public Company cp;
         public S Strategy;
         public float latestInsightResult;

@@ -9,11 +9,10 @@ namespace Eco
     //bid ask implementatie
     public class Holder
     {
-        public event Stocktraded
+        public event EventHandler StockTraded;
         public int MaxStockLimit = int.MaxValue;
         public Trader Owner { get; set; }
         public List<Stock> Stocks { get; set; }
-        //public SynchronizedCollection<Liquidity> liquidity1m = new SynchronizedCollection<Liquidity>();
         public BidAsk bidask { get; set; }
         public Holder(Company cp, Trader trader)
         {
@@ -24,6 +23,12 @@ namespace Eco
         public override string ToString()
         {
             return "owned by: " + Owner.ToString();
+        }
+
+        protected virtual void OnStockTraded(EventArgs e)
+        {
+            EventHandler handler = StockTraded;
+            handler?.Invoke(this, e);
         }
     }
 

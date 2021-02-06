@@ -11,7 +11,7 @@ namespace Eco
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
         public StockPriceComparisonToolData SPCData = null;
 
-        public ComparisonMarketWatcher(Company company)
+        public ComparisonMarketWatcher(InvestorStrategy strat, Company company) : base(strat)
         {
             cp = company;
         }
@@ -48,6 +48,11 @@ namespace Eco
             else if (ret < -5)
                 return -5;
             else return ret;
+        }
+
+        public override void UpdateTraderThoughts()
+        {
+            throw new NotImplementedException();
         }
     }
 }
