@@ -6,11 +6,25 @@ namespace Eco
     public class BreakoutStrategy : Trader.Strategy
     {
         public List<BreakoutMarketWatcher> MarketWatchers = new List<BreakoutMarketWatcher>();
-
+        
         public BreakoutStrategy(Trader t)
         {
-            foreach (Company cp in t.InterestedCompanies)
-                MarketWatchers.Add(new BreakoutMarketWatcher(cp));
+            trader = t;
+        }
+
+        public override void Init()
+        {
+
+            for (int i = 0; i < trader.InterestedCompanies.Count; i++)
+            {
+                //add marketwatcher
+                MarketWatchers.Add(new BreakoutMarketWatcher(trader.InterestedCompanies[i]));
+
+                //request stocks from companies
+                List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(
+                    0.1f * (float)Master.rn.NextDouble(), trader);
+                trader.stocks[i].AddRange(stocks);
+            }
         }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
@@ -21,12 +35,8 @@ namespace Eco
             {
                 MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].UpdateInsights()));
             }
-            //trader.ActionTime -= 100;
+            trader.ActionTime -= 100;
             return MR;
-        }
-        public override void Observe()
-        {
-            //Observe the market
         }
     }
 }

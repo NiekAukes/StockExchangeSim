@@ -110,6 +110,7 @@ namespace Eco
 
         public static float Conjucture { get; set; }
         public static float TotalShare = 0;
+        public static float MoneyScaler = 1000.0f;
 
         public Master(int fields, int traders, int hftraders)
         {
@@ -132,13 +133,19 @@ namespace Eco
             for (int i = 0; i < fields; i++)
             {
                 Field field = new Field(i);
+                field.Innovation = (float)rn.NextDouble() * 0.5f + 0.75f;
+                field.Scandals = (float)rn.NextDouble() * 0.5f + 0.75f;
+
                 Fields.Add(field);
                 TotalShare += 100;
             }
+            Traders.Add(new Trader(true));
+            Traders.Add(new Trader(false));
             for (int i = 0; i < traders; i++)
             {
                 Traders.Add(new Trader());
             }
+
 
             thread = new System.Threading.Thread(Update);
             thread.Name = "Master Thread";

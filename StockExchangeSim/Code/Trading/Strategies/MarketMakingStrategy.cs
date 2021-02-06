@@ -10,11 +10,15 @@ namespace Eco
     {
 
         public List<LiquidityMarketWatcher> MarketWatchers = new List<LiquidityMarketWatcher>();
-
         public MarketMakingStrategy(Trader t)
         {
-            foreach (Company cp in t.InterestedCompanies)
-                MarketWatchers.Add(new LiquidityMarketWatcher(cp, t));
+            trader = t;
+        }
+
+        public override void Init()
+        {
+            foreach (Company cp in trader.InterestedCompanies)
+                MarketWatchers.Add(new LiquidityMarketWatcher(cp, trader));
         }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
@@ -27,10 +31,6 @@ namespace Eco
             }
             trader.ActionTime -= 100;
             return MR;
-        }
-        public override void Observe()
-        {
-            throw new NotImplementedException();
         }
     }
 }

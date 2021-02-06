@@ -95,13 +95,13 @@ namespace StockExchangeSim.Views
             //    };
             //    series.ListenPropertyChange = true;
             //    chart.Series.Add(series);
-            //}
+            ////}
 
-            dataThread = new Thread(GatherData);
-            dataThread.Name = "dataThread";
-            dataThread.Priority = ThreadPriority.Highest;
+            //dataThread = new Thread(GatherData);
+            //dataThread.Name = "dataThread";
+            //dataThread.Priority = ThreadPriority.Highest;
 
-            dataThread.Start();
+            //dataThread.Start();
 
             return master;
         }
@@ -133,7 +133,6 @@ namespace StockExchangeSim.Views
         }
         public CompanyViewModel vm = new CompanyViewModel();
         public CompanyViewModel vm2 = new CompanyViewModel();
-        public static Thread dataThread = null;
         public MainPage()
         {
             InitializeComponent();
@@ -176,14 +175,14 @@ namespace StockExchangeSim.Views
 
 
             UpdateYear();
-            if (dataThread == null)
-            {
-                dataThread = new Thread(GatherData);
-                dataThread.Name = "dataThread";
-                dataThread.Priority = ThreadPriority.Highest;
+            //if (dataThread == null)
+            //{
+            //    dataThread = new Thread(GatherData);
+            //    dataThread.Name = "dataThread";
+            //    dataThread.Priority = ThreadPriority.Highest;
 
-                dataThread.Start();
-            }
+            //    dataThread.Start();
+            //}
 
 
         }
@@ -207,7 +206,7 @@ namespace StockExchangeSim.Views
                         for (int j = 0; j < field.companies.Count; j++)
                         {
 
-                            field.companies[j].Data(tick * 10);
+                            field.companies[j].Data(tick * 10, false);
                         }
                     }
                 }

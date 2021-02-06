@@ -9,6 +9,7 @@ namespace Eco
     //bid ask implementatie
     public class Holder
     {
+        public event Stocktraded
         public int MaxStockLimit = int.MaxValue;
         public Trader Owner { get; set; }
         public List<Stock> Stocks { get; set; }

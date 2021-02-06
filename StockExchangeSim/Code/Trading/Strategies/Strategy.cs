@@ -37,12 +37,14 @@ namespace Eco
                     int choice = rn.Next(multistratpool.Count);
                     Strategy ret = multistratpool[choice];
                     multistratpool.RemoveAt(choice);
+                    ret.Init();
                     return ret;
                 }
                 else
                 {
                     int choice = rn.Next(monostratpool.Count);
                     Strategy ret = monostratpool[choice];
+                    ret.Init();
                     return ret;
                 }
 
@@ -85,12 +87,14 @@ namespace Eco
         public abstract class Strategy
         {
             Random rn = new Random();
-            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
+            public Trader trader = null;
+            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange);
+            public abstract void Init();
         }
         [Obsolete]
         public class SimpleStrategy : Strategy
         {
-            public override void Observe()
+            public override void Init()
             {
                 throw new NotImplementedException();
             }

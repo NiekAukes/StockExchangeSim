@@ -9,7 +9,7 @@ namespace Eco
     public class ComparisonMarketWatcher : MarketWatcher<InvestorStrategy>
     {
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
-        StockPriceComparisonToolData SPCData = null;
+        public StockPriceComparisonToolData SPCData = null;
 
         public ComparisonMarketWatcher(Company company)
         {
@@ -42,8 +42,12 @@ namespace Eco
             // keer -2 om de effectieve range tussen -2 en 2 te maken
             ret = 2 * (SPCData.ExpectedStockPrice - cp.stockprice) / (cp.stockprice + SPCData.ExpectedStockPrice) ;
 
-            
-            return MathF.Round(ret) * 2.5f;
+            ret = MathF.Round(ret) * 2.5f;
+            if (ret > 5)
+                return 5;
+            else if (ret < -5)
+                return -5;
+            else return ret;
         }
     }
 }

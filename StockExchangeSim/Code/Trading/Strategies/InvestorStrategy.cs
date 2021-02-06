@@ -14,17 +14,30 @@ namespace Eco
 
         public InvestorStrategy(Trader t)
         {
-            t.money += 100000;
-            foreach (Company cp in t.InterestedCompanies)
-            {
-                MarketWatchers.Add(new ComparisonMarketWatcher(cp));
-                Holder hd = new Holder(cp, t);
-                hd.bidask.Bid = 1000000000;
-                hd.bidask.Ask = 0;
-                hd.MaxStockLimit = 0;
-                Master.inst.exchange.RegisterHolder(hd);
-                holders.Add(hd);
-            }
+            trader = t;
+        }
+
+        public override void Init()
+        {
+            trader.money += 100000;
+
+                //request stocks
+                for (int i = 0; i < trader.InterestedCompanies.Count; i++)
+                {
+                    //add marketwatchers and holders
+                    MarketWatchers.Add(new ComparisonMarketWatcher(trader.InterestedCompanies[i]));
+                    Holder hd = new Holder(trader.InterestedCompanies[i], trader);
+                    hd.bidask.Bid = 1000000000;
+                    hd.bidask.Ask = 0;
+                    hd.MaxStockLimit = 0;
+                    Master.inst.exchange.RegisterHolder(hd);
+                    holders.Add(hd);
+
+                    //request stocks from companies
+                    List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(
+                        (float)Master.rn.NextDouble(), trader);
+                    trader.stocks[i].AddRange(stocks);
+                }
         }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
@@ -42,18 +55,20 @@ namespace Eco
                 if (result.Item2 > 0)
                 {
                     //wants stocks
-                    if (result.Item1.percentageSold < 40)
+                    if (result.Item1.percentageSold < 10 && trader.money > 0)
                     {
                         //make a deal with company
                         float percentage = trader.money * (result.Item2 * 0.02f) / (result.Item1.Value);
-                        List<Stock> stocks = result.Item1.TradeStocks(percentage > 40 - result.Item1.percentageSold ? 40 - result.Item1.percentageSold : percentage, trader);
+                        List<Stock> stocks = result.Item1.TradeStocks(percentage > 10 - result.Item1.percentageSold ? 10 - result.Item1.percentageSold : percentage, trader);
                         trader.stocks[comp].AddRange(stocks);
+                        if (trader.money < 0)
+                            throw new Exception("Que mas?");
                     }
                     if (trader.stocks[comp].Count > 0)
                     {
                         //has stocks, do nothing
                         holders[comp].bidask.Bid = int.MaxValue;
-                        holders[comp].bidask.Ask = result.Item1.stockprice;
+                        holders[comp].bidask.Ask = MarketWatchers[comp].SPCData.ExpectedStockPrice;
                     }
                     else
                     {
@@ -61,7 +76,7 @@ namespace Eco
                         int stockamount = (int)(trader.money * (result.Item2 * 0.02) / (result.Item1.stockprice));
 
                         holders[comp].bidask.Bid = int.MaxValue;
-                        holders[comp].bidask.Ask = result.Item1.stockprice;
+                        holders[comp].bidask.Ask = MarketWatchers[comp].SPCData.ExpectedStockPrice;
 
                         holders[comp].MaxStockLimit = stockamount;
 
@@ -75,7 +90,7 @@ namespace Eco
                         //has stocks, sell them
                         int stockamount = 0;
 
-                        holders[comp].bidask.Bid = result.Item1.stockprice / 1.01f;
+                        holders[comp].bidask.Bid = MarketWatchers[comp].SPCData.ExpectedStockPrice;
                         holders[comp].bidask.Ask = int.MaxValue;
 
                         holders[comp].MaxStockLimit = stockamount;
@@ -89,7 +104,7 @@ namespace Eco
                 }
             }
 
-            trader.ActionTime -= (int)(100000 * Master.rn.NextDouble());
+            trader.ActionTime -= (int)(10000000 * Master.rn.NextDouble());
             return MR;
         }
     }

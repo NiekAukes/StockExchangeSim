@@ -82,6 +82,11 @@ namespace StockExchangeSim.Views
             {
                 Selected = selectedItem;
             }
+            if (Frame != null)
+            {
+                foreach (var item in Frame.BackStack.ToList())
+                    Frame.BackStack.Remove(item);
+            }
         }
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)

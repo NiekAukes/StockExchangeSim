@@ -29,7 +29,7 @@ namespace Eco
         public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
         public List<Company> InterestedCompanies = null;
-        public float Money = 100;
+        public float Money = 0.1f * Master.MoneyScaler;
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
@@ -41,6 +41,35 @@ namespace Eco
 
         List<Strategy> Strategies = new List<Strategy>();
 
+        public Trader(bool isinvestor)
+        {
+            //stocks & init
+            Stocks = new List<Stock>();
+            InterestedCompanies = Master.inst.GetAllCompanies();
+            //while (InterestedCompanies.Count > 4)
+            //{
+            //    InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
+            //}
+            for (int i = 0; i < InterestedCompanies.Count; i++)
+            {
+                stocks.Add(new List<Stock>());
+            }
+
+            name = PickRandomName();
+            //strategies
+            if (isinvestor)
+                Strategies.Add(new InvestorStrategy(this));
+            else
+                Strategies.Add(new MarketMakingStrategy(this));
+            Strategies[0].Init();
+            
+
+
+            //loops and threads
+            TraderThread = new Thread(ThreadUpdate);
+            TraderThread.Name = name;
+            TraderThread.Start();
+        }
         public Trader()
         {
             //stocks & init
@@ -54,6 +83,8 @@ namespace Eco
             {
                 stocks.Add(new List<Stock>());
             }
+
+            name = PickRandomName();
             //strategies
             StrategyFactory stFact = new StrategyFactory(this);
             bool multistrat = rn.NextDouble() > 0.3;
@@ -61,9 +92,8 @@ namespace Eco
             {
                 Strategies.Add(stFact.RandomStrategy(multistrat));
             }
-            while (Strategies.Count < 1 && multistrat);
+            while (Strategies.Count < 2 && multistrat);
 
-            name = PickRandomName();
 
             //loops and threads
             TraderThread = new Thread(ThreadUpdate);

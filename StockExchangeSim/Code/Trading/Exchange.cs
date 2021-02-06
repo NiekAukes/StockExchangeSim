@@ -15,11 +15,13 @@ namespace Eco
         public float SellPrice = 0;
         public float Percentage = 0;
         public float Collected = 0;
+        public bool isCompanystock = false;
         public Stock(Company cp, float percentage)
         {
             //create new stock from company
             company = cp;
             Percentage = percentage;
+            isCompanystock = true;
         }
 
         public Stock(Stock s, float percentage)
@@ -34,9 +36,10 @@ namespace Eco
         {
 
         }
-        public Stock SplitStock(float percentage)
+        public Stock SplitStock(float percentage, Trader buyer)
         {
             Stock ret = new Stock(this, percentage);
+            ret.Owner = buyer;
             return ret;
         }
         public void CombineStock(Stock stock)
@@ -50,15 +53,12 @@ namespace Eco
             }
             Percentage += stock.Percentage;
         }
-        public void Update(float totalProfit)
+        public void Update(double totalProfit)
         {
-            Collected += totalProfit * Percentage * 0.01f;
-        }
-        public float Collect()
-        {
-            float ret = Collected;
-            Collected = 0;
-            return ret;
+            if (isCompanystock)
+                company.dValue += totalProfit * Percentage * 0.01;
+            else
+                Owner.money += (float)totalProfit * Percentage * 0.01f;
         }
     }
     public class Liquidity
@@ -134,6 +134,10 @@ namespace Eco
                     }
                 }
             }
+            if (cheapest <= 1)
+            {
+                throw new Exception("that wasn't supposed to happen");
+            }
 
             if (cheapestholder >= 0)
             {
@@ -196,7 +200,7 @@ namespace Eco
                 int bestholder = -1;
                 for (int i = 0; i < holders.Count; i++)
                 {
-                    if (holders[i].bidask.cp == stock.company && holders[i].MaxStockLimit > holders[i].Stocks.Count)
+                    if (holders[i].bidask.cp == stock.company)
                     {
                         if (holders[i].bidask.Ask < best)
                         {
@@ -217,7 +221,8 @@ namespace Eco
                 stock.company.stockprice = best;
                 return;
             }
-
+            if (stock.company.BuyOrders.list.Count < 1)
+                return;
             Eco.BuyOrder order = stock.company.BuyOrders.list[0];
 
             order.Buyer.money -= order.LimitPrice;
@@ -231,7 +236,7 @@ namespace Eco
         {
             for (int i = 0; i < holders.Count; i++)
             {
-                if (holders[i].bidask.Ask > Limit && holders[i].MaxStockLimit > holders[i].Stocks.Count)
+                if (holders[i].bidask.Ask > Limit)
                 {
                     SellStock(stock);
                     return;
