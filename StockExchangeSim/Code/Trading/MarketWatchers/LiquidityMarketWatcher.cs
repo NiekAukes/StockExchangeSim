@@ -21,10 +21,13 @@ namespace Eco
         {
             this.cp = cp;
             Holder = new Holder(cp, td);
+            Holder.Stocks = new SynchronizedCollection<Stock>( new bool(), cp.TradeStocks((float)Master.rn.NextDouble() * 0.1f, td, true));
             Holder.bidask.Bid = cp.stockprice;
             Holder.bidask.Ask = cp.stockprice;
             Master.inst.exchange.RegisterHolder(Holder);
             GeneralPrice = cp.stockprice;
+
+
         }
         public override void RedoInsights()
         {

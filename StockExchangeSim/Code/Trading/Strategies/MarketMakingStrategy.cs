@@ -18,7 +18,10 @@ namespace Eco
         public override void Init()
         {
             foreach (Company cp in trader.InterestedCompanies)
+            {
                 MarketWatchers.Add(new LiquidityMarketWatcher(this, cp, trader));
+            }
+
         }
 
         public override Trader.MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)

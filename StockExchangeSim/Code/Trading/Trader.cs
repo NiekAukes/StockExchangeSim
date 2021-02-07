@@ -29,8 +29,8 @@ namespace Eco
         public static Random rn = new Random(Master.Seed);
         public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
-        public List<List<BuyOrder>> buyOrders = new List<List<BuyOrder>>();
-        public List<List<SellOrder>> sellOrders = new List<List<SellOrder>>();
+        public List<BuyOrder> buyOrders = new List<BuyOrder>();
+        public List<SellOrder> sellOrders = new List<SellOrder>();
         public List<Company> InterestedCompanies = null;
         double _money = 0.1f * Master.MoneyScaler;
         public float Money { get { return (float)_money; }
@@ -172,60 +172,55 @@ namespace Eco
 
                 foreach (var tp in latestResults.Results)
                 {
-                    if (tp.Item2 < 0 && !(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
+                    if (!(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
                     {
-                        //sell stocks, if any
-
-                        List<Stock> lsstocks = null;
                         int index = InterestedCompanies.IndexOf(tp.Item1);
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        try
+                        if (tp.Item2 < 0)
                         {
-                            lsstocks = stocks[index];
+                            //sell stocks, if any
+
+                            List<Stock> lsstocks = null;
+                            try
+                            {
+                                lsstocks = stocks[index];
 
 
-                            if (stocks[index].Count > 0)
-                            {
-                                //for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
-                                //{
-                                //    //sell stocks with float value or until all stocks are sold
-                                //    //Master.inst.exchange.SellStock(lsstocks[i]);
-                                    
-                                //}
-                                Master.inst.exchange.sellOrder(stocks[index], tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2, tp.Item2 * 100);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < tp.Item2 * 100; i++)
-                        {
-                            //buy stocks here
-                            if (!Master.inst.exchange.BuyStock(tp.Item1, this))
-                            {
-                                if (Strategies[0] is InvestorStrategy)
+                                if (stocks[index].Count > 0)
                                 {
-                                    int index = InterestedCompanies.IndexOf(tp.Item1);
-                                    //if he is an investor
-                                    stocks[index]
-                                        .AddRange(tp.Item1.TradeStocks(1, this));
+                                    //for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
+                                    //{
+                                    //    //sell stocks with float value or until all stocks are sold
+                                    //    //Master.inst.exchange.SellStock(lsstocks[i]);
 
-                                    for (int j = 0; j < 5000; j++)
-                                    {
-                                        Master.inst.exchange.SellStock(stocks[index][0]);
-                                        stocks[index].RemoveAt(0);
-                                    }
-
-                                    break;
+                                    //}
+                                    Master.inst.exchange.sellOrder(stocks[index],
+                                        tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
+                                        (int)((tp.Item2 * -100)));
                                 }
                             }
+                            catch (Exception e)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < tp.Item2 * 100; i++)
+                            {
+                                //buy stocks here
+                                if (buyOrders[index] != null)
+                                {
+                                    //remove buyorder
+                                    tp.Item1.BuyOrders.list.Remove(buyOrders[index]);
+                                }
+                                Master.inst.exchange.buyOrder(tp.Item1, this,
+                                    (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
+                                    (int)((tp.Item2 * 100)));
+
+                            }
                         }
                     }
-
                 }
             }
             else

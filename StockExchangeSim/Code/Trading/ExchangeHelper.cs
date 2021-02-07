@@ -12,13 +12,13 @@ namespace Eco
         public event EventHandler StockTraded;
         public int MaxStockLimit = int.MaxValue;
         public Trader Owner { get; set; }
-        public List<Stock> Stocks { get; set; }
+        public SynchronizedCollection<Stock> Stocks { get; set; }
         public BidAsk bidask { get; set; }
         public Holder(Company cp, Trader trader)
         {
             Owner = trader;
             bidask = new BidAsk(cp);
-            Stocks = new List<Stock>();
+            Stocks = new SynchronizedCollection<Stock>();
         }
         public override string ToString()
         {
@@ -69,14 +69,20 @@ namespace Eco
         public void AddSortedItem(T item, string PropertyName)
         {
             object property = item.GetType().GetProperty(PropertyName).GetValue(item, null);
-            for (int i = 0; i < list.Count; i++)
-            {
-                object comparison = list[i].GetType().GetProperty(PropertyName).GetValue(list[i], null);
-                if (Ascending ? (float)property > (float)comparison : (float)property < (float)comparison)
+            if (list.Count > 0) {
+                for (int i = 0; i < list.Count; i++)
                 {
-                    list.Insert(i, item);
+                    object comparison = list[i].GetType().GetProperty(PropertyName).GetValue(list[i], null);
+                    if (Ascending ? (float)property > (float)comparison : (float)property < (float)comparison)
+                    {
+                        list.Insert(i, item);
+                    }
+
                 }
-                    
+            }
+            else
+            {
+                list.Add(item);
             }
         }
         public SortedSyncCollection()

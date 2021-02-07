@@ -117,39 +117,40 @@ namespace Eco
         {
             if (cp.BidAsk == null)
                 return false;
-            if (cp.SellOrders.list.Count < 1)
-                return false;
+            
 
-            float cheapest = cp.SellOrders.list[0].LimitPrice;
+            float cheapest = cp.SellOrders.list.Count > 0 ? cp.SellOrders.list[0].LimitPrice : float.MaxValue;
             int cheapestholder = -1;
             for (int i = 0; i < holders.Count; i++)
             {
                 if (holders[i].bidask.cp == cp)
                 {
-                    if (holders[i].bidask.Bid < cheapest && holders[i].MaxStockLimit > holders[i].Stocks.Count)
+                    if (holders[i].bidask.Bid < cheapest &&
+                        holders[i].MaxStockLimit > holders[i].Stocks.Count &&
+                        holders[i].Stocks.Count > 1)
                     {
                         cheapest = holders[i].bidask.Bid;
                         cheapestholder = i;
                     }
                 }
             }
-            if (cheapest <= 1)
-            {
-                throw new Exception("that wasn't supposed to happen");
-            }
-
             if (cheapestholder >= 0)
             {
                 //buy from holder
                 holders[cheapestholder].Owner.money += cheapest;
                 buyer.money -= cheapest;
+
+                cp.stockprice = cheapest;
+
                 holders[cheapestholder].Stocks[0].Owner = buyer;
                 holders[cheapestholder].Stocks.RemoveAt(0);
 
                 cp.stockprice = cheapest;
                 return true;
             }
-            
+
+            if (cp.SellOrders.list.Count < 1)
+                return false;
             SellOrder SellStock = cp.SellOrders.list[0];
             if (SellStock.Amount < 1)
                 cp.SellOrders.list.RemoveAt(0);
@@ -158,10 +159,10 @@ namespace Eco
             SellStock.Stock[0].Owner.money += SellStock.LimitPrice;
             buyer.money -= SellStock.LimitPrice;
 
-           
+            cp.stockprice = SellStock.LimitPrice;
 
             SellStock.Stock[0].Owner = buyer;
-
+            buyer.AddStock(SellStock.Stock[0]);
             //remove stock from original owner and move to new owner
             SellStock.Stock.RemoveAt(0);
             return true;
@@ -180,11 +181,14 @@ namespace Eco
                     }
                 }
             }
-            if (cp.SellOrders.list[0].LimitPrice < Limit)
+            if (cp.SellOrders.list.Count > 0)
             {
-                //directly issue transaction
-                BuyStock(cp, buyer);
-                return null;
+                if (cp.SellOrders.list[0].LimitPrice < Limit)
+                {
+                    //directly issue transaction
+                    BuyStock(cp, buyer);
+                    return null;
+                }
             }
             BuyOrder ret = new BuyOrder(cp, buyer, Limit, amount);
             cp.BuyOrders.AddSortedItem(ret, "LimitPrice");
@@ -227,6 +231,8 @@ namespace Eco
 
             order.Buyer.money -= order.LimitPrice;
             stock.Owner.money += order.LimitPrice;
+
+            stock.company.stockprice = order.LimitPrice;
 
             //transfer ownership
             stock.Owner = order.Buyer;
