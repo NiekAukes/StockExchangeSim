@@ -29,10 +29,12 @@ namespace Eco
         public static Random rn = new Random(Master.Seed);
         public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
+        public List<List<BuyOrder>> buyOrders = new List<List<BuyOrder>>();
+        public List<List<SellOrder>> sellOrders = new List<List<SellOrder>>();
         public List<Company> InterestedCompanies = null;
         double _money = 0.1f * Master.MoneyScaler;
         public float Money { get { return (float)_money; }
-            set { _money = value >= 0 ? value : throw new Exception("Que mas?"); } }
+            set { _money = value; } }
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
@@ -150,6 +152,7 @@ namespace Eco
                     Thread.Sleep(10);
             }
         }
+        StockPriceComparisonTool SPCT = new StockPriceComparisonTool();
         public virtual void Update()
         {
             //ActionTime += MainPage.master.SecondsPerTick; //accrued Time for actions
@@ -169,11 +172,13 @@ namespace Eco
 
                 foreach (var tp in latestResults.Results)
                 {
-                    if (tp.Item2 < 0)
+                    if (tp.Item2 < 0 && !(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
                     {
                         //sell stocks, if any
+
                         List<Stock> lsstocks = null;
                         int index = InterestedCompanies.IndexOf(tp.Item1);
+                        StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
                         try
                         {
                             lsstocks = stocks[index];
@@ -181,11 +186,13 @@ namespace Eco
 
                             if (stocks[index].Count > 0)
                             {
-                                for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
-                                {
-                                    //sell stocks with float value or until all stocks are sold
-                                    Master.inst.exchange.SellStock(lsstocks[i]);
-                                }
+                                //for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
+                                //{
+                                //    //sell stocks with float value or until all stocks are sold
+                                //    //Master.inst.exchange.SellStock(lsstocks[i]);
+                                    
+                                //}
+                                Master.inst.exchange.sellOrder(stocks[index], tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2, tp.Item2 * 100);
                             }
                         }
                         catch (Exception e)
@@ -223,7 +230,8 @@ namespace Eco
             }
             else
             {
-                Thread.Sleep(1);
+                if (ActionTime < -10)
+                    Thread.Sleep(1);
             }
 
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Eco
 {
@@ -152,43 +151,44 @@ namespace Eco
             }
             
             SellOrder SellStock = cp.SellOrders.list[0];
-
-            cp.SellOrders.list.RemoveAt(0);
-            SellStock.Stock.Owner.money += SellStock.LimitPrice;
+            if (SellStock.Amount < 1)
+                cp.SellOrders.list.RemoveAt(0);
+            else
+                SellStock.Amount--;
+            SellStock.Stock[0].Owner.money += SellStock.LimitPrice;
             buyer.money -= SellStock.LimitPrice;
 
            
 
-            SellStock.Stock.Owner = buyer;
+            SellStock.Stock[0].Owner = buyer;
 
-            //cp.BidAsk.liquidity1m[cp.BidAsk.liquidity1m.Count - 1].BuyAmount++;
+            //remove stock from original owner and move to new owner
+            SellStock.Stock.RemoveAt(0);
             return true;
         }
 
-        public void BuyOrder(Company cp, Trader buyer, float Limit, int amount = 1)
+        public BuyOrder buyOrder(Company cp, Trader buyer, float Limit, int amount = 1)
         {
-            //bodge,
-#warning THIS IS A BODGE, PLEASE FIX!
-            for (int a = 0; a < amount; a++) {
-                for (int i = 0; i < holders.Count; i++)
+            for (int i = 0; i < holders.Count; i++)
+            {
+                if (holders[i].bidask.cp == cp && holders[i].MaxStockLimit > holders[i].Stocks.Count)
                 {
-                    if (holders[i].bidask.cp == cp && holders[i].MaxStockLimit > holders[i].Stocks.Count)
+                    if (holders[i].bidask.Bid < Limit)
                     {
-                        if (holders[i].bidask.Bid < Limit)
-                        {
-                            BuyStock(cp, buyer);
-                            return;
-                        }
+                        BuyStock(cp, buyer);
+                        return null;
                     }
                 }
-                if (cp.SellOrders.list[0].LimitPrice < Limit)
-                {
-                    //directly issue transaction
-                    BuyStock(cp, buyer);
-                    return;
-                }
-                cp.BuyOrders.AddSortedItem(new BuyOrder(cp, buyer, Limit), "LimitPrice");
             }
+            if (cp.SellOrders.list[0].LimitPrice < Limit)
+            {
+                //directly issue transaction
+                BuyStock(cp, buyer);
+                return null;
+            }
+            BuyOrder ret = new BuyOrder(cp, buyer, Limit, amount);
+            cp.BuyOrders.AddSortedItem(ret, "LimitPrice");
+            return ret;
         }
         public void SellStock(Stock stock)
         {
@@ -232,23 +232,31 @@ namespace Eco
             stock.Owner = order.Buyer;
         }
 
-        public void SellOrder(Stock stock, float Limit)
+        public SellOrder sellOrder(List<Stock> stocklist, Company cp, float Limit, int amount = 1)
         {
             for (int i = 0; i < holders.Count; i++)
             {
-                if (holders[i].bidask.Ask > Limit)
+                while(amount > 0)
                 {
-                    SellStock(stock);
-                    return;
+                    if (holders[i].bidask.Ask > Limit && holders[i].MaxStockLimit < holders[i].Stocks.Count)
+                    {
+                        SellStock(stocklist[0]);
+                        amount--;
+                        return null;
+                    }
+                    else
+                        break;
                 }
             }
-            if (stock.company.BuyOrders.list[0].LimitPrice > Limit)
+            if (cp.BuyOrders.list[0].LimitPrice > Limit)
             {
                 //directly issue transaction
-                SellStock(stock);
-                return;
+                SellStock(stocklist[0]);
+                return null;
             }
-            stock.company.SellOrders.AddSortedItem(new Eco.SellOrder(stock.company, stock, Limit), "LimitPrice");
+            SellOrder ret = new Eco.SellOrder(cp, stocklist, Limit);
+            cp.SellOrders.AddSortedItem(ret, "LimitPrice");
+            return ret;
         }
         public void RegisterCompany(Company cp, int partition)
         {

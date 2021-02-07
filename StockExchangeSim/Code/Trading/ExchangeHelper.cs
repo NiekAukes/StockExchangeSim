@@ -84,31 +84,53 @@ namespace Eco
             list = new SynchronizedCollection<T>();
         }
     }
-
+    public class StockTradedEventArgs : EventArgs
+    {
+        public Stock Stock { get; set; }
+    }
     public class SellOrder
     {
         public bool isPermanent { get; set; }
+        public event EventHandler StockTraded;
+        public int Amount { get; set; }
         public Company cp { get; set; }
-        public Stock Stock { get; set; }
+        public List<Stock> Stock { get; set; }
         public float LimitPrice { get; set; }
-        public SellOrder(Company cp, Stock stock, float limitPrice)
+        public SellOrder(Company cp, List<Stock> stock, float limitPrice, int amount = 1)
         {
             this.cp = cp ?? throw new ArgumentNullException(nameof(cp));
             Stock = stock ?? throw new ArgumentNullException(nameof(stock));
+            Amount = amount;
             LimitPrice = limitPrice;
+        }
+
+        public virtual void OnStockTraded(StockTradedEventArgs e)
+        {
+            EventHandler handler = StockTraded;
+            handler?.Invoke(this, e);
         }
     }
     public class BuyOrder
     {
         public bool isPermanent { get; set; }
+        public event EventHandler StockTraded;
+
+        public int Amount { get; set; }
         public Company cp { get; set; }
         public Trader Buyer { get; set; }
         public float LimitPrice { get; set; }
-        public BuyOrder(Company cp, Trader buyer, float limitPrice)
+        public BuyOrder(Company cp, Trader buyer, float limitPrice, int amount = 1)
         {
             this.cp = cp ?? throw new ArgumentNullException(nameof(cp));
             Buyer = buyer ?? throw new ArgumentNullException(nameof(buyer));
+            Amount = amount;
             LimitPrice = limitPrice;
+        }
+
+        public virtual void OnStockTraded(EventArgs e)
+        {
+            EventHandler handler = StockTraded;
+            handler?.Invoke(this, e);
         }
     }
 
