@@ -33,6 +33,7 @@ namespace Eco
         public List<Company> InterestedCompanies = null;
         double _money = 0.1f * Master.MoneyScaler;
         public float Money { get { return (float)_money; } set { _money = value; } }
+        public float money { get { return Money; } set { Money = value; } }
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
@@ -40,10 +41,14 @@ namespace Eco
         public string name = null;
         public bool CatchUp = false;
 
+        public string currentThought;
+
         public Thread TraderThread = null;
         public MarketResults latestResults;
 
         List<Strategy> Strategies = new List<Strategy>();
+        public List<Stock> Stocks { get; set; }
+
 
         public Trader(bool isinvestor)
         {
@@ -121,18 +126,10 @@ namespace Eco
             TraderCreated++;
             return ret;
         }
-        public float money { get { return Money; } set { Money = value; } }
-
-        public List<Stock> Stocks { get; set; }
 
         public void AddStock(Stock stock)
         {
             stocks[InterestedCompanies.IndexOf(stock.company)].Add(stock);
-        }
-
-        public override string ToString()
-        {
-            return name;
         }
 
         public void ThreadUpdate()
@@ -160,6 +157,7 @@ namespace Eco
             {
                 //TraderThread.Priority = ThreadPriority.AboveNormal;
                 latestResults = new MarketResults();
+                
                 foreach (Strategy strat in Strategies)
                     latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
@@ -178,7 +176,6 @@ namespace Eco
                             {
                                 lsstocks = stocks[index];
 
-
                                 if (stocks[index].Count > 0)
                                 {
                                     if (sellOrders[index] != null)
@@ -189,6 +186,8 @@ namespace Eco
                                     sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
                                         tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
                                         (int)((tp.Item2 * -100)));
+
+                                    currentThought = Thoughts.sell;
                                 }
                             }
                             catch (Exception e)
@@ -220,8 +219,6 @@ namespace Eco
                 if (ActionTime < -10)
                     Thread.Sleep(1);
             }
-
-
         }
 
         public void SellStock(Company cp, int amount)
@@ -244,6 +241,11 @@ namespace Eco
                     i--;
                 }
             }
+
+        }
+        public override string ToString()
+        {
+            return name;
         }
     }
 
@@ -251,4 +253,7 @@ namespace Eco
     {
 
     }
+
+
+    
 }
