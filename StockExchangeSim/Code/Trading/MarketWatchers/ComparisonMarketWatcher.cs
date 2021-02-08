@@ -50,9 +50,5 @@ namespace Eco
             else return ret;
         }
 
-        public override void UpdateTraderThoughts()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

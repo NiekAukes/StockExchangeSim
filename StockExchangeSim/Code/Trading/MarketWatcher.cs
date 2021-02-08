@@ -30,12 +30,6 @@ namespace Eco
         {
             //UpdateTraderThoughts();
         }
-         
-        public abstract void UpdateTraderThoughts();
-            //this must activate something in the traders that have the company of this marketwatcher on their InterestedCompanies list.
-            //check, for each trader, if one of the interested companies of that trader...
-            //matches with the market watcher's company, and update accordingly
-    }
     public abstract class MarketTool<ToolData>
     {
         Random rn = new Random();
