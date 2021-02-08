@@ -114,9 +114,5 @@ namespace Eco
             //apply Support and Resistance to Breakouts
         }
 
-        public override void UpdateTraderThoughts()
-        {
-            
-        }
     }
 }

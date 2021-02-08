@@ -25,7 +25,6 @@ namespace Eco
     }
     public partial class Trader : ITrader
     {
-
         public static Random rn = new Random(Master.Seed);
         public static int TraderCreated = 0;
         public List<List<Stock>> stocks = new List<List<Stock>>();
@@ -33,8 +32,7 @@ namespace Eco
         public List<SellOrder> sellOrders = new List<SellOrder>();
         public List<Company> InterestedCompanies = null;
         double _money = 0.1f * Master.MoneyScaler;
-        public float Money { get { return (float)_money; }
-            set { _money = value; } }
+        public float Money { get { return (float)_money; } set { _money = value; } }
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
         public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
@@ -43,9 +41,7 @@ namespace Eco
         public bool CatchUp = false;
 
         public Thread TraderThread = null;
-
         public MarketResults latestResults;
-            
 
         List<Strategy> Strategies = new List<Strategy>();
 
@@ -54,11 +50,8 @@ namespace Eco
             //stocks & init
             money = 0.1f * Master.MoneyScaler;
             Stocks = new List<Stock>();
+            
             InterestedCompanies = Master.inst.GetAllCompanies();
-            //while (InterestedCompanies.Count > 4)
-            //{
-            //    InterestedCompanies.RemoveAt(rn.Next(InterestedCompanies.Count));
-            //}
             for (int i = 0; i < InterestedCompanies.Count; i++)
             {
                 stocks.Add(new List<Stock>());
@@ -72,8 +65,6 @@ namespace Eco
                 Strategies.Add(new MarketMakingStrategy(this));
             Strategies[0].Init();
             
-
-
             //loops and threads
             TraderThread = new Thread(ThreadUpdate);
             TraderThread.Name = name;
@@ -81,7 +72,7 @@ namespace Eco
         }
         public Trader()
         {
-            //stocks & init
+            //stocks & initialisation
             money = 0.1f * Master.MoneyScaler;
 
             Stocks = new List<Stock>();
@@ -96,8 +87,8 @@ namespace Eco
                 buyOrders.Add(null);
                 sellOrders.Add(null);
             }
-
             name = PickRandomName();
+
             //strategies
             StrategyFactory stFact = new StrategyFactory(this);
             bool multistrat = rn.NextDouble() > 0.3;

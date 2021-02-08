@@ -74,16 +74,5 @@ namespace Eco
             return 0;
         }
 
-        public override void UpdateTraderThoughts()
-        {
-            //zolang de stock quote nog niet gehit is, handel shit
-            //als te weinig stocks gekocht worden, verlaag prijs. Anders verhoog prijs
-
-            //IMPLEMENTEER HET VOLGENDE:
-            //als er te weinig stocks worden verkocht, zet trader thought naar Thoughts.loweringAskPrice
-            //als er te weinig stocks worden gekocht, zet de trader thought naar 
-
-            throw new NotImplementedException();
-        }
     }
 }

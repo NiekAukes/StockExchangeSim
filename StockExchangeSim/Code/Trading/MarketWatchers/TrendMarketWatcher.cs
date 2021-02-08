@@ -29,7 +29,6 @@ namespace Eco
             lastInsightTime = (float)Master.inst.Year;
             OnRedoneInsights(null);
 
-            UpdateTraderThoughts();
 
         }
 
@@ -110,10 +109,5 @@ namespace Eco
             return ret;
         }
 
-        public override void UpdateTraderThoughts()
-        {
-            //IMPLEMENT
-            //throw new System.NotImplementedException();
-        }
     }
 }
