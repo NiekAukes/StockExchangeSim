@@ -167,7 +167,7 @@ namespace Eco
                     {
                         int index = InterestedCompanies.IndexOf(tp.Item1);
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        if (tp.Item2 < 0)
+                        if (tp.Item2 < -0.5)
                         {
                             //sell stocks, if any
 
@@ -195,11 +195,13 @@ namespace Eco
                                 System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                             }
                         }
-                        else
+                        else if(tp.Item2 > 0.5)
                         {
                             for (int i = 0; i < tp.Item2 * 100; i++)
                             {
                                 //buy stocks here
+                                currentThought = Thoughts.buy;
+
                                 if (buyOrders[index] != null)
                                 {
                                     //remove buyorder
@@ -209,6 +211,15 @@ namespace Eco
                                     (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
                                     (int)((tp.Item2 * 100)));
 
+                            }
+                        }
+                        else
+                        {
+                            currentThought = Thoughts.wait;
+
+                            if(ActionTime < -10)
+                            {
+                                Thread.Sleep(2);
                             }
                         }
                     }
@@ -230,7 +241,6 @@ namespace Eco
                 stocks[index].RemoveAt(0);
             }
         }
-
         public void UpdateHoldings()
         {
             for (int i = 0; i < Stocks.Count; i++)
@@ -241,7 +251,6 @@ namespace Eco
                     i--;
                 }
             }
-
         }
         public override string ToString()
         {
