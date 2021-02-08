@@ -190,13 +190,12 @@ namespace Eco
 
                                 if (stocks[index].Count > 0)
                                 {
-                                    //for (int i = 0; i < tp.Item2 * 100 && i < lsstocks.Count; i++)
-                                    //{
-                                    //    //sell stocks with float value or until all stocks are sold
-                                    //    //Master.inst.exchange.SellStock(lsstocks[i]);
-
-                                    //}
-                                    Master.inst.exchange.sellOrder(stocks[index],
+                                    if (sellOrders[index] != null)
+                                    {
+                                        //remove buyorder
+                                        tp.Item1.SellOrders.list.Remove(sellOrders[index]);
+                                    }
+                                    sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
                                         tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
                                         (int)((tp.Item2 * -100)));
                                 }
@@ -216,7 +215,7 @@ namespace Eco
                                     //remove buyorder
                                     tp.Item1.BuyOrders.list.Remove(buyOrders[index]);
                                 }
-                                Master.inst.exchange.buyOrder(tp.Item1, this,
+                                buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
                                     (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
                                     (int)((tp.Item2 * 100)));
 
