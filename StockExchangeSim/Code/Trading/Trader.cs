@@ -153,7 +153,7 @@ namespace Eco
             //        Money += stockArr[i].Collect();
             //    }
             //}
-            if (ActionTime > 0)
+            if (ActionTime > 0) //if the trader can function, get the marketresults and buy/sell/wait accordingly
             {
                 //TraderThread.Priority = ThreadPriority.AboveNormal;
                 latestResults = new MarketResults();
@@ -169,10 +169,8 @@ namespace Eco
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
                         if (tp.Item2 < -0.5)
                         {
-                            //sell stocks, if any
-
                             List<Stock> lsstocks = null;
-                            try
+                            try //to sell stocks
                             {
                                 lsstocks = stocks[index];
 
@@ -190,7 +188,7 @@ namespace Eco
                                     currentThought = Thoughts.sell;
                                 }
                             }
-                            catch (Exception e)
+                            catch (Exception e) //failed to look up stocks
                             {
                                 System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                             }
@@ -210,11 +208,11 @@ namespace Eco
                                 buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
                                     (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
                                     (int)((tp.Item2 * 100)));
-
                             }
                         }
                         else
                         {
+                            //wait a lil'
                             currentThought = Thoughts.wait;
 
                             if(ActionTime < -10)
@@ -241,7 +239,7 @@ namespace Eco
                 stocks[index].RemoveAt(0);
             }
         }
-        public void UpdateHoldings()
+        /*public void UpdateHoldings()
         {
             for (int i = 0; i < Stocks.Count; i++)
             {
@@ -251,7 +249,7 @@ namespace Eco
                     i--;
                 }
             }
-        }
+        }*/
         public override string ToString()
         {
             return name;
