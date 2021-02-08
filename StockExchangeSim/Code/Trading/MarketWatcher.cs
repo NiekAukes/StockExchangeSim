@@ -5,7 +5,8 @@ namespace Eco
 {
     public abstract class MarketWatcher<S>
     {
-        public enum DifferentmarketWatchers {
+        public enum DifferentmarketWatchers
+        {
 
         }
         //public object strat { get; set; }
@@ -20,21 +21,23 @@ namespace Eco
             EventHandler handler = RedoneInsights;
             handler?.Invoke(this, e);
         }
-        public MarketWatcher(S strat){
+        public MarketWatcher(S strat)
+        {
             Strategy = strat;
         }
 
-        
+
         public abstract float UpdateInsights();
         public virtual void RedoInsights()
         {
             //UpdateTraderThoughts();
         }
-    public abstract class MarketTool<ToolData>
-    {
-        Random rn = new Random();
-        public static int MinimumPriceCount = 50;
-        public abstract ToolData StrategyOutcome(Company cp);
-    }
+        public abstract class MarketTool<ToolData>
+        {
+            Random rn = new Random();
+            public static int MinimumPriceCount = 50;
+            public abstract ToolData StrategyOutcome(Company cp);
+        }
 
+    }
 }
