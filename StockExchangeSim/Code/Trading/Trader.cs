@@ -241,6 +241,11 @@ namespace Eco
                     i--;
                 }
             }
+
+        }
+        public override string ToString()
+        {
+            return name;
         }
     }
 
@@ -250,8 +255,5 @@ namespace Eco
     }
 
 
-    public override string ToString()
-    {
-        return name;
-    }
+    
 }
