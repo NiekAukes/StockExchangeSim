@@ -93,6 +93,8 @@ namespace Eco
             for (int i = 0; i < InterestedCompanies.Count; i++)
             {
                 stocks.Add(new List<Stock>());
+                buyOrders.Add(null);
+                sellOrders.Add(null);
             }
 
             name = PickRandomName();
