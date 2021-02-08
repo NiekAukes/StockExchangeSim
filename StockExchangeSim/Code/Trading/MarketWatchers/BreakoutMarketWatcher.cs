@@ -26,8 +26,6 @@ namespace Eco
 
             OnRedoneInsights(null);
 
-            UpdateTraderThoughts();
-
         }
         int LastRememberUp = 0, LastRememberDown = 0;
         bool LastPotentialBreakoutUp = false, LastPotentialBreakoutDown = false;
