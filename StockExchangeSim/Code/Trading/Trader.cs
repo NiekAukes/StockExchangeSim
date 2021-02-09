@@ -153,7 +153,7 @@ namespace Eco
             //        Money += stockArr[i].Collect();
             //    }
             //}
-            if (ActionTime > 0)
+            if (ActionTime > 0) //if the trader can function, get the marketresults and buy/sell/wait accordingly
             {
                 //TraderThread.Priority = ThreadPriority.AboveNormal;
                 latestResults = new MarketResults();
@@ -167,7 +167,7 @@ namespace Eco
                     {
                         int index = InterestedCompanies.IndexOf(tp.Item1);
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        if (tp.Item2 < 0)
+                        if (tp.Item2 < -0.5)
                         {
                             //sell stocks, if any
 
@@ -202,17 +202,19 @@ namespace Eco
                                     currentThought = Thoughts.sell;
                                 }
                             }
-                            catch (Exception e)
+                            catch (Exception e) //failed to look up stocks
                             {
                                 System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                             }
                         }
-                        else
+                        else if(tp.Item2 > 0.5)
                         {
                             //1000 shouldn't be an arbitrary number
                             if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
                             {
                                 //buy stocks here
+                                currentThought = Thoughts.buy;
+
                                 if (buyOrders[index] != null)
                                 {
 
@@ -257,8 +259,7 @@ namespace Eco
                 stocks[index].RemoveAt(0);
             }
         }
-
-        public void UpdateHoldings()
+        /*public void UpdateHoldings()
         {
             for (int i = 0; i < Stocks.Count; i++)
             {
@@ -268,8 +269,7 @@ namespace Eco
                     i--;
                 }
             }
-
-        }
+        }*/
         public override string ToString()
         {
             return name;
