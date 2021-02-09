@@ -59,10 +59,12 @@ namespace StockExchangeSim.Views
             //load the selected trader into the contentpage, if no trader is selected, load the first trader.
             selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
             companyThoughtSelector.Items.Clear();
+
             foreach (Company comp in selectedTrader.InterestedCompanies) {
                 companyThoughtSelector.Items.Add(comp.name);
             }
-            companyThoughtSelector.SelectedIndex = 0; // so that a company is selected in the choose menu
+
+            companyThoughtSelector.SelectedIndex = rnd.Next(0,selectedTrader.InterestedCompanies.Count); // so that a company is selected in the choose menu
 
             traderName.Text = selectedTrader.name;
             currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
@@ -94,16 +96,18 @@ namespace StockExchangeSim.Views
         }
         public void ChangeTraderThought()
         {
-            if (companyThoughtSelector.SelectedIndex == -1) {
+            if (companyThoughtSelector.SelectedIndex == -1)
+            {
                 int rand = rnd.Next(0, 3);
-                switch(rand){
+                switch (rand)
+                {
                     case 0:
                         currThought.Text = Thoughts.idk;
                         break;
-                       case 1:
+                    case 1:
                         currThought.Text = Thoughts.hold;
                         break;
-                       case 2:
+                    case 2:
                         currThought.Text = Thoughts.wait;
                         break;
                 }
@@ -111,54 +115,7 @@ namespace StockExchangeSim.Views
             else
             {
                 Company selectedComp = selectedTrader.InterestedCompanies[companyThoughtSelector.SelectedIndex];
-                if (selectedTrader.latestResults != null)
-                {
-                    for (int i = 0; i < selectedTrader.latestResults.Results.Count; i++)
-                    {
-                        if (selectedTrader.latestResults.Results[i].Item1 == selectedComp)
-                        {
-                            //formulate thought based on market results
-                            float MarketOutcome = selectedTrader.latestResults.Results[i].Item2;
-                            //Bij de breakout is een breakout -5 of +5, dus de float schommelt daartussen.
-                            if (MarketOutcome <= -1)
-                            {
-                                //sell thought
-                                //inefficientie is leuk
-                                currThought.Text = Thoughts.sell;
-                                if (MarketOutcome <= -4.5)
-                                {
-                                    //despise thought
-                                    currThought.Text = Thoughts.hate;
-
-                                }
-                            }
-                            else if (MarketOutcome >= 1)
-                            {
-                                //buy thought
-                                currThought.Text = Thoughts.buy;
-                            }
-                            else
-                            {
-                                int rand = rnd.Next(0, 3);
-                                //doubt thought
-                                switch (rand)
-                                {
-                                    case 0:
-                                        currThought.Text = Thoughts.idk;
-                                        break;
-                                    case 1:
-                                        currThought.Text = Thoughts.hold;
-                                        break;
-                                    case 2:
-                                        currThought.Text = Thoughts.wait;
-                                        break;
-                                }
-                            }
-
-                            break;
-                        }
-                    }
-                }
+                currThought.Text = selectedTrader.currentThought;
             }
         }
 
