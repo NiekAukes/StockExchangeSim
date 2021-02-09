@@ -60,21 +60,21 @@ namespace StockExchangeSim.Views
 
             //load the selected trader into the contentpage, if no trader is selected, load the first trader.
             selectedTrader = selectedindex != -1 ? traders[selectedindex] : traders[0];
-            companyThoughtSelector.Items.Clear();
 
+            companyThoughtSelector.Items.Clear();
             foreach (Company comp in selectedTrader.InterestedCompanies) {
                 companyThoughtSelector.Items.Add(comp.name);
             }
-
             companyThoughtSelector.SelectedIndex = rnd.Next(0,selectedTrader.InterestedCompanies.Count); // so that a company is selected in the choose menu
 
             traderName.Text = selectedTrader.name;
+            //the currThought will be initialized in the ChangeTraderThought. This is a placeholder
             currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
 
             currStockPrice.Text = "Stock prices: ";
             for (int i = 0; i < selectedTrader.InterestedCompanies.Count; i++)
             {
-                currStockPrice.Text += selectedTrader.InterestedCompanies[i].BidAsk.Bid + " ";
+                currStockPrice.Text += "€ "+ selectedTrader.InterestedCompanies[i].BidAsk.Bid + ", ";
             }
 
             //load prices of stocks of interested companies of trader into graph

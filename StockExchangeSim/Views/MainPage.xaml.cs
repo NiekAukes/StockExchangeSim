@@ -74,16 +74,16 @@ namespace StockExchangeSim.Views
             }
         }
 
-        private int field = 1, trader = 20, hftrader = 1;
+        private int field = 1, trader = 20, hftrader = 5;
 
         public Master CreateMaster()
         {
             if (master != null)
             {
                 master.alive = false;
+                //REMOVE ALL REFERENCES TO A PREVIOUS MASTER
             }
-
-            master = new Master(field, trader, 1);
+            master = new Master(field, trader, hftrader);
             SetSliderValue();
             RedoLines();
             //for (int i = 0; i < master.Fields[0].companies.Count; i++)
@@ -101,7 +101,6 @@ namespace StockExchangeSim.Views
             //dataThread = new Thread(GatherData);
             //dataThread.Name = "dataThread";
             //dataThread.Priority = ThreadPriority.Highest;
-
             //dataThread.Start();
 
             return master;
@@ -119,6 +118,7 @@ namespace StockExchangeSim.Views
                 Close = "Close"
             };
             candleSeries.ListenPropertyChange = true;
+            candleSeries.Interior = default;
             //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
             chart.Series.Add(candleSeries);
 
