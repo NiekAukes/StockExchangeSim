@@ -1,6 +1,8 @@
 ﻿using Eco;
 using Syncfusion.UI.Xaml.Charts;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -98,25 +100,36 @@ namespace StockExchangeSim.Views
         {
             if (companyThoughtSelector.SelectedIndex == -1)
             {
-                int rand = rnd.Next(0, 3);
-                switch (rand)
-                {
-                    case 0:
-                        currThought.Text = Thoughts.idk;
-                        break;
-                    case 1:
-                        currThought.Text = Thoughts.hold;
-                        break;
-                    case 2:
-                        currThought.Text = Thoughts.wait;
-                        break;
-                }
+                currThought.Text = ChooseRandomThought();
             }
             else
             {
-                Company selectedComp = selectedTrader.InterestedCompanies[companyThoughtSelector.SelectedIndex];
-                currThought.Text = selectedTrader.currentThought;
+                //Company selectedComp = selectedTrader.InterestedCompanies[companyThoughtSelector.SelectedIndex];
+                try
+                { currThought.Text = selectedTrader.currentThought; }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception caught: "+e);
+                    Debug.WriteLine("Continuing by choosing random thought.");
+
+                    currThought.Text = ChooseRandomThought();
+                }
             }
+        }
+        string ChooseRandomThought()
+        {
+            string txt = null;
+            int rand = rnd.Next(0, 2);
+                switch (rand)
+                {
+                    case 0:
+                        txt = Thoughts.idk;
+                        break;
+                    case 1:
+                        txt = Thoughts.hold;
+                        break;
+                }
+            return txt;
         }
 
         //REPLACE WITH LOAD TRADER GRAPHS
