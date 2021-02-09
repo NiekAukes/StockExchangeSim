@@ -171,22 +171,34 @@ namespace Eco
                         {
                             //sell stocks, if any
 
-                            List<Stock> lsstocks = null;
                             try
                             {
-                                lsstocks = stocks[index];
-
+#warning this needs some tweaking
                                 if (stocks[index].Count > 0)
                                 {
                                     if (sellOrders[index] != null)
                                     {
-                                        //remove buyorder
-                                        tp.Item1.SellOrders.list.Remove(sellOrders[index]);
-                                    }
-                                    sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
-                                        tp.Item1, (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
-                                        (int)((tp.Item2 * -100)));
 
+                                        if (sellOrders[index].Amount < 1)
+                                        {
+                                            //create new buyorder
+                                            sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
+                                                tp.Item1, (tp.Item1.stockprice / 1.002f),
+                                                (int)((tp.Item2 * -100)));
+                                        }
+                                        else
+                                        {
+                                            //edit buyorder
+                                            sellOrders[index].LimitPrice = (tp.Item1.stockprice / 1.002f) / 2;
+                                            sellOrders[index].Amount = (int)((tp.Item2 * 100)) - stocks[index].Count;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
+                                        tp.Item1, (tp.Item1.stockprice / 1.002f),
+                                        (int)((tp.Item2 * -100)));
+                                    }
                                     currentThought = Thoughts.sell;
                                 }
                             }
@@ -197,18 +209,33 @@ namespace Eco
                         }
                         else
                         {
-                            for (int i = 0; i < tp.Item2 * 100; i++)
+                            //1000 shouldn't be an arbitrary number
+                            if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
                             {
                                 //buy stocks here
                                 if (buyOrders[index] != null)
                                 {
-                                    //remove buyorder
-                                    tp.Item1.BuyOrders.list.Remove(buyOrders[index]);
-                                }
-                                buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
-                                    (tp.Item1.stockprice + SPCTD.ExpectedStockPrice) / 2,
-                                    (int)((tp.Item2 * 100)));
 
+                                    if (buyOrders[index].Amount < 1)
+                                    {
+                                        //create new buyorder
+                                        buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
+                                            (tp.Item1.stockprice * 1.002f),
+                                            (int)((tp.Item2 * 100)));
+                                    }
+                                    else
+                                    {
+                                        //edit buyorder
+                                        buyOrders[index].LimitPrice = tp.Item1.stockprice * 1.002f;
+                                        buyOrders[index].Amount = (int)((tp.Item2 * 100)) - stocks[index].Count;
+                                    }
+                                }
+                                else
+                                {
+                                    buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
+                                        (tp.Item1.stockprice * 1.002f),
+                                        (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                }
                             }
                         }
                     }

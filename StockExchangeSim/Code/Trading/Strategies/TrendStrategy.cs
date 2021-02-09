@@ -33,9 +33,9 @@ namespace Eco
                 MarketWatchers.Add(new TrendMarketWatcher(this, trader.InterestedCompanies[i]));
 
                 //request stocks from companies
-                List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(
-                    0.1f * (float)Master.rn.NextDouble(), trader, true);
-                trader.stocks[i].AddRange(stocks);
+            //    List<Stock> stocks = trader.InterestedCompanies[i].TradeStocks(
+            //        0.01f * (float)Master.rn.NextDouble(), trader, true);
+            //    trader.stocks[i].AddRange(stocks);
             }
         }
     }

@@ -56,8 +56,8 @@ namespace Eco
         public float percentageSold { get { return 100 - CompanyStock.Percentage; } }
         public List<Stock> Stocks { get; set; }
 
-        public SortedSyncCollection<BuyOrder> BuyOrders { get; set; }
-        public SortedSyncCollection<SellOrder> SellOrders { get; set; }
+        public SynchronizedCollection<BuyOrder> BuyOrders { get; set; }
+        public SynchronizedCollection<SellOrder> SellOrders { get; set; }
         public BidAsk BidAsk;
         public double dValue = 50;
         public float Value { get { return (float)dValue; } set { dValue = (double)value; } }
@@ -87,9 +87,8 @@ namespace Eco
             CompanyStock = CreateStock(100);
             field = f;
 
-            BuyOrders = new SortedSyncCollection<BuyOrder>();
-            SellOrders = new SortedSyncCollection<SellOrder>();
-            SellOrders.Ascending = true;
+            BuyOrders = new SynchronizedCollection<BuyOrder>();
+            SellOrders = new SynchronizedCollection<SellOrder>();
 
             open = Value;
             name = initName();

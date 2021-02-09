@@ -35,9 +35,12 @@ namespace Eco
 
         public override float UpdateInsights()
         {
-            
-            var lowestorder = cp.SellOrders.list.Count > 0 ? cp.SellOrders.list[0] : null;
-            var highestbidder = cp.BuyOrders.list.Count > 0 ? cp.BuyOrders.list[0] : null;
+            SellOrder lowestorder = null;
+            BuyOrder highestbidder = null;
+#warning this is a bodge too!
+            //kijk naar vraag en aanbod
+            //kijk naar hoogste aanbod en laagste vraag
+
 
             if (lowestorder == null || highestbidder == null)
             {

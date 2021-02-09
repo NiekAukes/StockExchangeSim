@@ -66,23 +66,40 @@ namespace Eco
     {
         public bool Ascending = true;
         public SynchronizedCollection<T> list { get; set; }
+        public void RemoveItem (T item)
+        {
+            lock(list.SyncRoot)
+            {
+                list.Remove(item);
+            }
+        }
         public void AddSortedItem(T item, string PropertyName)
         {
-            object property = item.GetType().GetProperty(PropertyName).GetValue(item, null);
-            if (list.Count > 0) {
-                for (int i = 0; i < list.Count; i++)
+            lock (list.SyncRoot)
+            {
+                object property = item.GetType().GetProperty(PropertyName).GetValue(item, null);
+                if (list.Count > 0)
                 {
-                    object comparison = list[i].GetType().GetProperty(PropertyName).GetValue(list[i], null);
-                    if (Ascending ? (float)property > (float)comparison : (float)property < (float)comparison)
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        list.Insert(i, item);
+                        if (list.Count > i)
+                        {
+                            object comparison = list[i].GetType().GetProperty(PropertyName).GetValue(list[i], null);
+                            if (Ascending ? (float)property > (float)comparison : (float)property < (float)comparison)
+                            {
+                                list.Insert(i, item);
+                            }
+
+                        }
+                        else
+                            list.Add(item);
                     }
 
                 }
-            }
-            else
-            {
-                list.Add(item);
+                else
+                {
+                    list.Add(item);
+                }
             }
         }
         public SortedSyncCollection()
