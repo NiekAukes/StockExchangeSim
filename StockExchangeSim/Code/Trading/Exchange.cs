@@ -7,7 +7,7 @@ namespace Eco
 
     public class Stock
     {
-        public IStockOwner Owner;
+        public Trader Owner;
         public Company company = null;
         public float value { get { return company.Value * Percentage / 100; } }
         public float tradevalue { get { return company.stockprice * Percentage; } }
@@ -45,10 +45,7 @@ namespace Eco
         {
             if (company != stock.company)
             {
-#if DEBUG
                 throw new Exception("Stock didn't have same company");
-#endif
-                return;
             }
             Percentage += stock.Percentage;
         }
@@ -159,6 +156,7 @@ namespace Eco
 
                         holders[cheapestholder].Stocks[0].Owner = buyer;
                         holders[cheapestholder].Stocks.RemoveAt(0);
+                        holders[cheapestholder].OnStockTraded(null);
                     }
                 }
                 cp.stockprice = cheapest;
@@ -256,8 +254,12 @@ namespace Eco
                 //sell to holder
                 holders[bestholder].Owner.money -= best;
                 stock.Owner.money += best;
+                stock.Owner.stocks[stock.Owner.InterestedCompanies.IndexOf(cp)].Remove(stock);
                 stock.Owner = holders[bestholder].Owner;
                 holders[bestholder].Stocks.Add(stock);
+
+                holders[bestholder].OnStockTraded(null);
+
 
                 stock.company.stockprice = best;
                 return;

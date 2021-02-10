@@ -261,7 +261,7 @@ namespace Eco
                     }
 
                     //check high and low
-                    if (tick % (2 * checkModifier) == 0)
+                    if ((tick % checkModifier) == 0)
                     {
                         if (BidAsk != null)
                         {
@@ -283,7 +283,7 @@ namespace Eco
 
 
                             //register datapoint
-                            if (tick % (10 * checkModifier) == 0)
+                            if (tick % (5 * checkModifier) == 0)
                             {
                                 StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
                                 ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
@@ -314,7 +314,7 @@ namespace Eco
                                 if (currentprice < low5m)
                                     low5m = currentprice;
 
-                                if (tick % (50 * checkModifier) == 0)
+                                if (tick % (20 * checkModifier) == 0)
                                 {
 
                                     StockPriceGraph sp5m = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
@@ -376,7 +376,7 @@ namespace Eco
         private Stock CreateStock(float percentage)
         {
             Stock ret = new Stock(this, percentage);
-            ret.Owner = this;
+            ret.Owner = null;
             return ret;
         }
 
@@ -385,7 +385,7 @@ namespace Eco
         {
             for (int i = 0; i < Stocks.Count; i++)
             {
-                if (Stocks[i].Owner != this)
+                if (Stocks[i].Owner != null)
                 {
                     Stocks.RemoveAt(i);
                     i--;
@@ -396,7 +396,7 @@ namespace Eco
         public void AddStock(Stock stock)
         {
             Stocks.Add(stock);
-            stock.Owner = this;
+            stock.Owner = null;
         }
 
     }

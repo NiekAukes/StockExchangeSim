@@ -106,6 +106,11 @@ namespace Eco
                 }
             }
 
+            if (ret == 0)
+            {
+                //backup strategy for trader
+                return BackupStrat();
+            }
             return ret;
         }
 

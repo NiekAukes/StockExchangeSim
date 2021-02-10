@@ -93,20 +93,8 @@ namespace Eco
 
             if (ret == 0)
             {
-                //fallback strategy
-                //if stocks fall, sell
-                //otherwise buy
-                int n = cp.stockPrices1m.Count - 10 < 800 ? cp.stockPrices1m.Count - 10 : 800;
-                if (cp.stockPrices1m[10].High > cp.stockPrices1m[n].High)
-                {
-                    //falling stock
-                    ret = 2.5f;
-                }
-                else
-                {
-                    //rising stock
-                    ret = 2.5f;
-                }
+                //backup strategy for trader
+                return BackupStrat();
             }
             return ret;
             //apply Support and Resistance to Breakouts

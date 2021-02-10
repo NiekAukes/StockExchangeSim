@@ -95,13 +95,14 @@ namespace Eco
             name = PickRandomName();
 
             //strategies
+#warning should be replaced with less random strats
             StrategyFactory stFact = new StrategyFactory(this);
             bool multistrat = rn.NextDouble() > 0.3;
             do //pick strats till you have 2
             {
                 Strategies.Add(stFact.RandomStrategy(multistrat));
             }
-            while (Strategies.Count < 2 && multistrat);
+            while (Strategies.Count < 1 && multistrat);
 
 
             //loops and threads

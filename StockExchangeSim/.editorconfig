@@ -9,3 +9,9 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# CS0169: The field 'Company.high30m' is never used
+dotnet_diagnostic.CS0169.severity = suggestion
+
+# CS0414: The field 'BreakoutMarketWatcher.LastRememberUp' is assigned but its value is never used
+dotnet_diagnostic.CS0414.severity = suggestion

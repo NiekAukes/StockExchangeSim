@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace Eco
         float Spread = 0.01f;
         float GeneralPrice = 2;
 
-        int LiquidityTarget = 50;
+        int LiquidityTarget = 500;
+        float liquidity = 0;
 
         Holder Holder { get; set; }
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
@@ -27,22 +29,72 @@ namespace Eco
             Master.inst.exchange.RegisterHolder(Holder);
             GeneralPrice = cp.stockprice;
 
-
+            Holder.StockTraded += Holder_StockTraded;
         }
+
+        private void Holder_StockTraded(object sender, EventArgs e)
+        {
+            liquidity += (LiquidityTarget / Master.inst.Traders.Count) * Master.inst.SecondsPerTick;
+        }
+
         public override void RedoInsights()
         {
         }
 
         public override float UpdateInsights()
         {
-            SellOrder lowestorder = null;
-            BuyOrder highestbidder = null;
-#warning this is a bodge too!
+            int buyorders = 0, sellorders = 0;
+            BuyOrder lowestbidder = null;
+            SellOrder highestorder = null;
+            
+            #warning this is a bodge too!
+            #region Price Discovery
             //kijk naar vraag en aanbod
+            for (int i = 0; i < cp.BuyOrders.Count; i++)
+            {
+                try
+                {
+                    buyorders += cp.BuyOrders[i].Amount;
+                    if (i != 0)
+                    {
+                        if (cp.BuyOrders[i].LimitPrice > lowestbidder.LimitPrice)
+                        {
+                            lowestbidder = cp.BuyOrders[i];
+                        }
+                    }
+                    else
+                        lowestbidder = cp.BuyOrders[i];
+                }
+                catch(Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+            for (int i = 0; i < cp.SellOrders.Count; i++)
+            {
+                try
+                {
+                    buyorders += cp.SellOrders[i].Amount;
+                    if (i != 0)
+                    {
+                        if (cp.SellOrders[i].LimitPrice > highestorder.LimitPrice)
+                        {
+                            highestorder = cp.SellOrders[i];
+                        }
+                    }
+                    else
+                        highestorder = cp.SellOrders[i];
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+            #endregion
             //kijk naar hoogste aanbod en laagste vraag
 
 
-            if (lowestorder == null || highestbidder == null)
+            if (highestorder == null || lowestbidder == null)
             {
                 //if there is no bid or ask yet, construct one
                 var data = SPCTool.StrategyOutcome(cp);
@@ -50,30 +102,17 @@ namespace Eco
             }
             else
             {
-                GeneralPrice = (lowestorder.LimitPrice + highestbidder.LimitPrice) / 2.0f;
+                GeneralPrice = (highestorder.LimitPrice + lowestbidder.LimitPrice) / 2.0f;
             }
 
             Spread = 0.001f * cp.Value * cp.StockPart;
-            //GeneralPrice = cp.stockprice;
-            //int BufferAmps = Holder.Stocks.Count - BufferTarget;
-            //if (BufferAmps >= 0)
-            //{
-            //    //too many stocks, higher spread, while increasing price
-            //    Spread *= (0.00002f * BufferAmps + 1);
-            //    GeneralPrice *= (0.00002f * BufferAmps + 1);
-
-            //}
-            //else
-            //{
-            //    //too few stocks, lower spread, while decreasing price
-            //    Spread /= (0.00002f * -BufferAmps + 1);
-            //    GeneralPrice /= (0.00002f * -BufferAmps + 1);
-            //}
-
-
 
             Holder.bidask.Ask = GeneralPrice -= Spread;
             Holder.bidask.Bid = GeneralPrice += Spread;
+
+            if (Master.rn.NextDouble() < 0.05)
+                Debug.WriteLine(Strategy.trader.name + ", liquidity: " + liquidity);
+            liquidity = 0;
             return 0;
         }
 

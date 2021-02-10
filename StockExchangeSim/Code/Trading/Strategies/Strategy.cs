@@ -90,6 +90,7 @@ namespace Eco
             public Trader trader = null;
             public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange);
             public abstract void Init();
+            
         }
         [Obsolete]
         public class SimpleStrategy : Strategy
