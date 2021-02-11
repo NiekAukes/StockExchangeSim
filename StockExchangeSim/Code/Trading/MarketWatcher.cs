@@ -51,7 +51,7 @@ namespace Eco
             //this might actually already be implemented
 
             //trader needs to see small trends => competitive position
-            ret += MathF.Log(cp.CompetitivePosition) * 2;
+            ret += MathF.Log(cp.CompetitivePosition) * 4;
 
             return ret;
         }

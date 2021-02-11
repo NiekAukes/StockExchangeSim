@@ -34,7 +34,7 @@ namespace Eco
 
         private void Holder_StockTraded(object sender, EventArgs e)
         {
-            liquidity += 500 * (LiquidityTarget / Master.inst.Traders.Count) * (1/Master.inst.SecondsPerTick);
+            liquidity += (1 / Master.inst.Traders.Count) * (1/Master.inst.SecondsPerTick);
         }
 
         public override void RedoInsights()
@@ -106,18 +106,18 @@ namespace Eco
             }
             else
             {
-                GeneralPrice = (0.8f * highestorder.LimitPrice + 0.2f * lowestbidder.LimitPrice) / 2.0f;
-                float demandflow = buyorders - sellorders;
+                GeneralPrice = (highestorder.LimitPrice);
+                float demandsurplus = buyorders - sellorders;
 
                 double DemandElasticity =((totalbuyvalue / buyorders) - highestorder.LimitPrice) /
                     (buyorders / 2.0);
                 double SupplyElasticity = ((totalsellvalue / sellorders) - lowestbidder.LimitPrice) /
                     (sellorders / 2.0);
 
-                if (demandflow > (30 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50 || highestorder.LimitPrice < 1.2 * GeneralPrice))
+                if (demandsurplus > (30 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50))
                 {
                     //there needs to be more stocks
-                    List<Stock> stocks = cp.TradeStocks(demandflow / 100, Strategy.trader);
+                    List<Stock> stocks = cp.TradeStocks(demandsurplus / 100, Strategy.trader);
                     lock (Holder.Stocks.SyncRoot)
                     {
                         foreach (Stock st in stocks)
@@ -127,24 +127,58 @@ namespace Eco
                     }
 
                     //decrease price
-                    GeneralPrice += (float)(1 / DemandElasticity) * 2.5f * MathF.Log(demandflow);
+                    GeneralPrice += (float)(1 / DemandElasticity) * 2.5f * MathF.Log(demandsurplus);
                 }
-                else if (demandflow > (10 * Master.inst.TraderAmount))
+                else if (demandsurplus > (10 * Master.inst.TraderAmount))
                 {
                     //significantly increase prices
+                    GeneralPrice += (float)(-DemandElasticity) * 1.5f * MathF.Log(demandsurplus);
 
                 }
-                else if (demandflow > 0)
+                else if (demandsurplus > 0)
                 {
                     //price can be slightly increased
-                    GeneralPrice += (float)(1 / -DemandElasticity) * 0.5f * MathF.Log(demandflow);
+                    GeneralPrice += (float)(-DemandElasticity) * 0.5f * MathF.Log(demandsurplus);
 
                 }
                 else
                 {
                     //price should be decreased
-                    GeneralPrice += (float)(1 / -SupplyElasticity) * 0.5f * MathF.Log(demandflow);
+                    GeneralPrice += (float)(-SupplyElasticity) * 0.5f * MathF.Log(demandsurplus);
 
+                }
+
+                float Liquiditysurplus = liquidity - LiquidityTarget;
+                if (Liquiditysurplus > 0)
+                {
+                    //too much stocks traded, look at demand
+                    if (demandsurplus > 0)
+                    {
+                        //increase price
+                        GeneralPrice *= 1.002f;
+                    }
+                    else
+                    {
+                        //lower price
+                        GeneralPrice /= 1.002f;
+
+                    }
+                }
+                else
+                {
+                    //too few stocks traded, look at demand
+                    if (demandsurplus > 0)
+                    {
+                        //lower price
+                        GeneralPrice /= 1.02f;
+
+                    }
+                    else
+                    {
+                        //increase price
+                        GeneralPrice *= 1.02f;
+
+                    }
                 }
 
             }
