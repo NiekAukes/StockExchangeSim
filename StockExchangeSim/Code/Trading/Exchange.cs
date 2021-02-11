@@ -116,9 +116,16 @@ namespace Eco
             float cheapest = float.MaxValue;
             for (int i = 0; i < cp.SellOrders.Count; i++)
             {
-                if (cp.SellOrders[i].LimitPrice < cheapest)
+                try
                 {
-                    cheapest = cp.SellOrders[i].LimitPrice;
+                    if (cp.SellOrders[i].LimitPrice < cheapest)
+                    {
+                        cheapest = cp.SellOrders[i].LimitPrice;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
                 }
             }
             return cheapest;
