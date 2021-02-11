@@ -36,7 +36,7 @@ namespace Eco
         public float money { get { return Money; } set { Money = value; } }
         public float BaseActionTimeRequired = 20 + (float)rn.NextDouble() * 20; //in seconds
         public float ActivityTime = 0;
-        public float ActionTime = (float)rn.NextDouble() * 240; //in seconds
+        public double ActionTime = rn.NextDouble() * 240; //in seconds
         public float skill = 1;
         public string name = null;
         public bool CatchUp = false;
@@ -162,13 +162,14 @@ namespace Eco
                 foreach (Strategy strat in Strategies)
                     latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
 
-                foreach (var tp in latestResults.Results)
+                for(int a = 0; a < latestResults.Results.Count; a++)
                 {
+                    var tp = latestResults.Results[a];
                     if (!(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
                     {
                         int index = InterestedCompanies.IndexOf(tp.Item1);
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        if (tp.Item2 < -0.5)
+                        if (tp.Item2 < -0.1)
                         {
                             //sell stocks, if any
 
@@ -177,29 +178,8 @@ namespace Eco
 #warning this needs some tweaking
                                 if (stocks[index].Count > 0)
                                 {
-                                    if (sellOrders[index] != null)
-                                    {
-
-                                        if (sellOrders[index].Amount < 1)
-                                        {
-                                            //create new buyorder
-                                            sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
-                                                tp.Item1, (tp.Item1.stockprice / 1.002f),
-                                                (int)((tp.Item2 * -100)));
-                                        }
-                                        else
-                                        {
-                                            //edit buyorder
-                                            sellOrders[index].LimitPrice = (tp.Item1.stockprice / 1.002f) / 2;
-                                            sellOrders[index].Amount = (int)((tp.Item2 * 100)) - stocks[index].Count;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
-                                        tp.Item1, (tp.Item1.stockprice / 1.002f),
-                                        (int)((tp.Item2 * -100)));
-                                    }
+                                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                                    BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
                                     currentThought = Thoughts.sell;
                                 }
                             }
@@ -208,37 +188,15 @@ namespace Eco
                                 System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
                             }
                         }
-                        else if(tp.Item2 > 0.5)
+                        else if(tp.Item2 > 0.1)
                         {
                             //1000 shouldn't be an arbitrary number
                             if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
                             {
                                 //buy stocks here
                                 currentThought = Thoughts.buy;
-
-                                if (buyOrders[index] != null)
-                                {
-
-                                    if (buyOrders[index].Amount < 1)
-                                    {
-                                        //create new buyorder
-                                        buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
-                                            (tp.Item1.stockprice * 1.002f),
-                                            (int)((tp.Item2 * 100)));
-                                    }
-                                    else
-                                    {
-                                        //edit buyorder
-                                        buyOrders[index].LimitPrice = tp.Item1.stockprice * 1.002f;
-                                        buyOrders[index].Amount = (int)((tp.Item2 * 100)) - stocks[index].Count;
-                                    }
-                                }
-                                else
-                                {
-                                    buyOrders[index] = Master.inst.exchange.buyOrder(tp.Item1, this,
-                                        (tp.Item1.stockprice * 1.002f),
-                                        (int)((tp.Item2 * 100)) - stocks[index].Count);
-                                }
+                                BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
                             }
                         }
                     }
@@ -258,6 +216,57 @@ namespace Eco
             {
                 Master.inst.exchange.SellStock(stocks[index][0]);
                 stocks[index].RemoveAt(0);
+            }
+        }
+        public void SellOrder(Company cp, float limit, int amount)
+        {
+            int index = InterestedCompanies.IndexOf(cp);
+            if (sellOrders[index] != null)
+            {
+
+                if (sellOrders[index].Amount < 1)
+                {
+                    //create new buyorder
+                    sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
+                        cp, limit, amount);
+                }
+                else
+                {
+                    //edit buyorder
+                    sellOrders[index].LimitPrice = limit;
+                    sellOrders[index].Amount = amount;
+                }
+            }
+            else
+            {
+                sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
+                        cp, limit, amount);
+            }
+        }
+        public void BuyOrder(Company cp, float limit, int amount)
+        {
+            int index = InterestedCompanies.IndexOf(cp);
+            if (buyOrders[index] != null)
+            {
+
+                if (buyOrders[index].Amount < 1)
+                {
+                    //create new buyorder
+                    buyOrders[index] = Master.inst.exchange.buyOrder(cp, this, limit, amount);
+                }
+                else
+                {
+                    //edit buyorder
+                    buyOrders[index].LimitPrice = limit;
+                    buyOrders[index].Amount = amount;
+
+                    //reevaluate order
+                    Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
+                }
+            }
+            else
+            {
+                buyOrders[index] = Master.inst.exchange.buyOrder(cp, this, limit, amount);
             }
         }
         /*public void UpdateHoldings()

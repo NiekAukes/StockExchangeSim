@@ -231,34 +231,34 @@ namespace Eco
             {
                 if (Master.inst.active)
                 {
-                    if (tick % checkModifier == 0)
-                    {
-                        LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
-                        LastDecemValue = Value;
+                    //if (tick % checkModifier == 0)
+                    //{
+                    //    LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
+                    //    LastDecemValue = Value;
 
-                        if (tick % (10 * checkModifier) == 0)
-                        {
-                            LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
-                            LastCentumValue = Value;
+                    //    if (tick % (10 * checkModifier) == 0)
+                    //    {
+                    //        LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
+                    //        LastCentumValue = Value;
 
-                            if (tick % (100 * checkModifier) == 0)
-                            {
-                                LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
-                                LastMilleValue = Value;
+                    //        if (tick % (100 * checkModifier) == 0)
+                    //        {
+                    //            LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
+                    //            LastMilleValue = Value;
 
-                                if (tick % (1000 * checkModifier) == 0)
-                                {
-                                    LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
-                                    LastDeceMilleValue = Value;
-                                }
-                                if (tick % (10000 * checkModifier) == 0)
-                                {
-                                    LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
-                                    LastCentuMilleValue = Value;
-                                }
-                            }
-                        }
-                    }
+                    //            if (tick % (1000 * checkModifier) == 0)
+                    //            {
+                    //                LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
+                    //                LastDeceMilleValue = Value;
+                    //            }
+                    //            if (tick % (10000 * checkModifier) == 0)
+                    //            {
+                    //                LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
+                    //                LastCentuMilleValue = Value;
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     //check high and low
                     if ((tick % checkModifier) == 0)
@@ -267,11 +267,14 @@ namespace Eco
                         {
 
                             float currentprice = Master.inst.exchange.GetCheapestHolderBid(this);
-
-                            if (stockprice < currentprice)
+                            float cheapestseller = Master.inst.exchange.GetCheapestSeller(this);
+                            if (cheapestseller > currentprice)
                                 currentprice = stockprice;
                             else
+                            {
+                                currentprice = cheapestseller;
                                 stockprice = currentprice;
+                            }
 
 
 

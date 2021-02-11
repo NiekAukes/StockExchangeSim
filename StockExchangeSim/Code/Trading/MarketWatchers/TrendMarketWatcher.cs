@@ -38,10 +38,10 @@ namespace Eco
             //there is a price update
 
             //get the new prices
-            IEnumerable<StockPriceGraph> NewPrices;
+            List<StockPriceGraph> NewPrices;
             lock (cp.stockPrices1m)
             {
-                NewPrices = cp.stockPrices1m.Skip(lastdatapoint).ToList();
+                NewPrices = cp.stockPrices1m.Skip(cp.stockPrices1m.Count - 100).ToList();
             }
             if (TData == null)
                 RedoInsights();
@@ -101,7 +101,8 @@ namespace Eco
                     {
                         //redo insights
                         TData = null;
-                        return ret;
+                        ret = 0;
+                        break;
                     }
                 }
             }

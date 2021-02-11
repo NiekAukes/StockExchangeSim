@@ -34,7 +34,7 @@ namespace Eco
 
         private void Holder_StockTraded(object sender, EventArgs e)
         {
-            liquidity += (LiquidityTarget / Master.inst.Traders.Count) * Master.inst.SecondsPerTick;
+            liquidity += 500 * (LiquidityTarget / Master.inst.Traders.Count) * (1/Master.inst.SecondsPerTick);
         }
 
         public override void RedoInsights()
@@ -44,6 +44,7 @@ namespace Eco
         public override float UpdateInsights()
         {
             int buyorders = 0, sellorders = 0;
+            double totalbuyvalue = 0, totalsellvalue = 0;
             BuyOrder lowestbidder = null;
             SellOrder highestorder = null;
             
@@ -55,6 +56,7 @@ namespace Eco
                 try
                 {
                     buyorders += cp.BuyOrders[i].Amount;
+                    totalbuyvalue += (double)cp.BuyOrders[i].LimitPrice * cp.BuyOrders[i].Amount;
                     if (i != 0)
                     {
                         if (cp.BuyOrders[i].LimitPrice > lowestbidder.LimitPrice)
@@ -74,7 +76,9 @@ namespace Eco
             {
                 try
                 {
-                    buyorders += cp.SellOrders[i].Amount;
+                    sellorders += cp.SellOrders[i].Amount;
+                    totalsellvalue += (double)cp.SellOrders[i].LimitPrice * cp.SellOrders[i].Amount;
+
                     if (i != 0)
                     {
                         if (cp.SellOrders[i].LimitPrice > highestorder.LimitPrice)
@@ -102,10 +106,50 @@ namespace Eco
             }
             else
             {
-                GeneralPrice = (highestorder.LimitPrice + lowestbidder.LimitPrice) / 2.0f;
+                GeneralPrice = (0.8f * highestorder.LimitPrice + 0.2f * lowestbidder.LimitPrice) / 2.0f;
+                float demandflow = buyorders - sellorders;
+
+                double DemandElasticity =((totalbuyvalue / buyorders) - highestorder.LimitPrice) /
+                    (buyorders / 2.0);
+                double SupplyElasticity = ((totalsellvalue / sellorders) - lowestbidder.LimitPrice) /
+                    (sellorders / 2.0);
+
+                if (demandflow > (30 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50 || highestorder.LimitPrice < 1.2 * GeneralPrice))
+                {
+                    //there needs to be more stocks
+                    List<Stock> stocks = cp.TradeStocks(demandflow / 100, Strategy.trader);
+                    lock (Holder.Stocks.SyncRoot)
+                    {
+                        foreach (Stock st in stocks)
+                        {
+                            Holder.Stocks.Add(st);
+                        }
+                    }
+
+                    //decrease price
+                    GeneralPrice += (float)(1 / DemandElasticity) * 2.5f * MathF.Log(demandflow);
+                }
+                else if (demandflow > (10 * Master.inst.TraderAmount))
+                {
+                    //significantly increase prices
+
+                }
+                else if (demandflow > 0)
+                {
+                    //price can be slightly increased
+                    GeneralPrice += (float)(1 / -DemandElasticity) * 0.5f * MathF.Log(demandflow);
+
+                }
+                else
+                {
+                    //price should be decreased
+                    GeneralPrice += (float)(1 / -SupplyElasticity) * 0.5f * MathF.Log(demandflow);
+
+                }
+
             }
 
-            Spread = 0.001f * cp.Value * cp.StockPart;
+            Spread = 0.01f * cp.Value * cp.StockPart;
 
             Holder.bidask.Ask = GeneralPrice -= Spread;
             Holder.bidask.Bid = GeneralPrice += Spread;

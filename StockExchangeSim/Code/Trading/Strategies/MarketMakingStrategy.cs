@@ -32,7 +32,7 @@ namespace Eco
             {
                 MarketWatchers[i].UpdateInsights();
             }
-            trader.ActionTime -= 100;
+            trader.ActionTime -= 60;
             return MR;
         }
     }
