@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Eco
 {
@@ -30,6 +31,7 @@ namespace Eco
         int startamount;
         public List<Company> companies = new List<Company>();
         List<Company> startcompanies = null;
+        Thread thread = null;
 
 
 
@@ -80,9 +82,32 @@ namespace Eco
             startcompanies = new List<Company>(companies);
             startamount = companyAmount;
 
-
+            thread = new Thread(DataGather);
+            thread.Priority = ThreadPriority.Highest;
+            thread.Start();
         }
         int scandaltick = 0;
+
+        public void DataGather()
+        {
+            long tick = 0;
+            
+            while (Master.inst.alive)
+            {
+                if (Master.inst.active)
+                {
+                    foreach (var cp in companies)
+                    {
+                        cp.Data(tick, false);
+                    }
+                    tick++;
+                }
+                else
+                {
+                    Thread.Sleep(5);
+                }
+            }
+        }
 
         public void Update()
         {

@@ -129,24 +129,24 @@ namespace Eco
                     //decrease price
                     GeneralPrice += (float)(1 / DemandElasticity) * 2.5f * MathF.Log(demandsurplus);
                 }
-                else if (demandsurplus > (10 * Master.inst.TraderAmount))
-                {
-                    //significantly increase prices
-                    GeneralPrice += (float)(-DemandElasticity) * 1.5f * MathF.Log(demandsurplus);
+                //else if (demandsurplus > (10 * Master.inst.TraderAmount))
+                //{
+                //    //significantly increase prices
+                //    GeneralPrice += (float)(-DemandElasticity) * 1.5f * MathF.Log(demandsurplus);
 
-                }
-                else if (demandsurplus > 0)
-                {
-                    //price can be slightly increased
-                    GeneralPrice += (float)(-DemandElasticity) * 0.5f * MathF.Log(demandsurplus);
+                //}
+                //else if (demandsurplus > 0)
+                //{
+                //    //price can be slightly increased
+                //    GeneralPrice += (float)(-DemandElasticity) * 0.5f * MathF.Log(demandsurplus);
 
-                }
-                else
-                {
-                    //price should be decreased
-                    GeneralPrice += (float)(-SupplyElasticity) * 0.5f * MathF.Log(demandsurplus);
+                //}
+                //else
+                //{
+                //    //price should be decreased
+                //    GeneralPrice += (float)(-SupplyElasticity) * 0.5f * MathF.Log(demandsurplus);
 
-                }
+                //}
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
                 if (Liquiditysurplus > 0)
@@ -155,12 +155,12 @@ namespace Eco
                     if (demandsurplus > 0)
                     {
                         //increase price
-                        GeneralPrice *= 1.002f;
+                        GeneralPrice *= 1.05f;
                     }
                     else
                     {
                         //lower price
-                        GeneralPrice /= 1.002f;
+                        GeneralPrice /= 1.05f;
 
                     }
                 }
@@ -170,13 +170,13 @@ namespace Eco
                     if (demandsurplus > 0)
                     {
                         //lower price
-                        GeneralPrice /= 1.02f;
+                        GeneralPrice /= 1.05f;
 
                     }
                     else
                     {
                         //increase price
-                        GeneralPrice *= 1.02f;
+                        GeneralPrice *= 1.05f;
 
                     }
                 }

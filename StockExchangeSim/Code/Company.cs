@@ -94,10 +94,10 @@ namespace Eco
             name = initName();
 
             //init datathreads
-            dataThread = new Thread(threadstart);
-            dataThread.Name = "thread." + name;
-            dataThread.Priority = ThreadPriority.Highest;
-            dataThread.Start();
+            //dataThread = new Thread(threadstart);
+            //dataThread.Name = "thread." + name;
+            //dataThread.Priority = ThreadPriority.Highest;
+            //dataThread.Start();
 
             
         }
@@ -221,10 +221,6 @@ namespace Eco
         float open10m, close10m, high10m, low10m;
         float open30m, close30m, high30m, low30m;
         int checkModifier = 1;
-        public void threadstart()
-        {
-            Data(0, true);
-        }
         public void Data(long tick, bool loop)
         {
             do
@@ -269,7 +265,7 @@ namespace Eco
                             float currentprice = Master.inst.exchange.GetCheapestHolderBid(this);
                             float cheapestseller = Master.inst.exchange.GetCheapestSeller(this);
                             if (cheapestseller > currentprice)
-                                currentprice = stockprice;
+                                stockprice = currentprice;
                             else
                             {
                                 currentprice = cheapestseller;
