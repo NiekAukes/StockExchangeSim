@@ -155,12 +155,12 @@ namespace Eco
                     if (demandsurplus > 0)
                     {
                         //increase price
-                        GeneralPrice *= 1.002f;
+                        GeneralPrice *= 1.02f;
                     }
                     else
                     {
                         //lower price
-                        GeneralPrice /= 1.002f;
+                        GeneralPrice /= 1.02f;
 
                     }
                 }
