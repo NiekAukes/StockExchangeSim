@@ -197,11 +197,22 @@ namespace Eco
 
                 lock (SellStock.Stock)
                 {
-                    if (SellStock.Amount < 0 || SellStock.Stock.Count < 1)
-                        return false; //transaction failed
-                    SellStock.Amount--;
-                    if (SellStock.Amount < 1)
+                    if (SellStock.Stock.Count < 1)
+                    {
                         cp.SellOrders.Remove(SellStock);
+                        return false; //transaction failed
+                    }
+                        SellStock.Amount--;
+                    if (SellStock.Amount < 1)
+                    {
+                        cp.SellOrders.Remove(SellStock);
+                        if (SellStock.Amount < 0)
+                        {
+                            //abort
+                            return false;
+                        }
+                    }
+                    
 
                     
                     SellStock.Stock[0].Owner.money += SellStock.LimitPrice;
@@ -231,8 +242,21 @@ namespace Eco
                 {
                     if (holders[i].bidask.Bid < Limit)
                     {
-                        BuyStock(cp, buyer);
-                        return null;
+                        while (amount > 0)
+                        {
+                            if (holders[i].MaxStockLimit > holders[i].Stocks.Count &&
+                                holders[i].Stocks.Count > 1)
+                            {
+                                BuyStock(cp, buyer);
+                                amount--;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        if (amount < 1)
+                            return null;
                     }
                 }
             }
@@ -382,7 +406,7 @@ namespace Eco
             {
                 try
                 {
-                    if (cp.SellOrders[i].LimitPrice < cheapest)
+                    if (cp.SellOrders[i].LimitPrice < cheapest && cp.SellOrders[i].Stock.Count > 0)
                     {
                         cheapest = cp.SellOrders[i].LimitPrice;
                         SellStock = cp.SellOrders[i];
