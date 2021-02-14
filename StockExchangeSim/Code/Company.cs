@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading;
 using Windows.UI.Core;
 
@@ -94,13 +95,19 @@ namespace Eco
             name = initName();
 
             //init datathreads
-            //dataThread = new Thread(threadstart);
-            //dataThread.Name = "thread." + name;
-            //dataThread.Priority = ThreadPriority.Highest;
-            //dataThread.Start();
+            dataThread = new Thread(threadstart);
+            dataThread.Name = "thread." + name;
+            dataThread.Priority = ThreadPriority.AboveNormal;
+            dataThread.Start();
 
-            
+
         }
+
+        void threadstart()
+        {
+            Data(0, true);
+        }
+
         public string initName()
         {
             //search a random name in list of names
@@ -223,149 +230,126 @@ namespace Eco
         int checkModifier = 1;
         public void Data(long tick, bool loop)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             do
             {
                 if (Master.inst.active)
                 {
-                    //if (tick % checkModifier == 0)
-                    //{
-                    //    LastDecemGain = -(LastDecemValue - Value) / LastDecemValue;
-                    //    LastDecemValue = Value;
-
-                    //    if (tick % (10 * checkModifier) == 0)
-                    //    {
-                    //        LastCentumGain = -(LastCentumValue - Value) / LastCentumValue;
-                    //        LastCentumValue = Value;
-
-                    //        if (tick % (100 * checkModifier) == 0)
-                    //        {
-                    //            LastMilleGain = -(LastMilleValue - Value) / LastMilleValue;
-                    //            LastMilleValue = Value;
-
-                    //            if (tick % (1000 * checkModifier) == 0)
-                    //            {
-                    //                LastDeceMilleGain = -(LastDeceMilleValue - Value) / LastDeceMilleValue;
-                    //                LastDeceMilleValue = Value;
-                    //            }
-                    //            if (tick % (10000 * checkModifier) == 0)
-                    //            {
-                    //                LastCentuMilleGain = -(LastCentuMilleValue - Value) / LastCentuMilleValue;
-                    //                LastCentuMilleValue = Value;
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
-                    //check high and low
-                    if ((tick % checkModifier) == 0)
+                    if (sw.ElapsedMilliseconds > 1)
                     {
-                        if (BidAsk != null)
+                        //check high and low
+                        sw.Restart();
+                        if ((tick % checkModifier) == 0)
                         {
-
-                            float currentprice = Master.inst.exchange.GetCheapestHolderBid(this);
-                            float cheapestseller = Master.inst.exchange.GetCheapestSeller(this);
-                            if (cheapestseller > currentprice)
-                                stockprice = currentprice;
-                            else
+                            if (BidAsk != null)
                             {
-                                currentprice = cheapestseller;
-                                stockprice = currentprice;
-                            }
 
-
-
-                            if (currentprice > high)
-                                high = currentprice;
-                            if (currentprice < low)
-                                low = currentprice;
-
-
-
-                            //register datapoint
-                            if (tick % (5 * checkModifier) == 0)
-                            {
-                                StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
-                                ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
-                                lock (stockPrices1m)
+                                float currentprice = Master.inst.exchange.GetCheapestHolderBid(this);
+                                float cheapestseller = Master.inst.exchange.GetCheapestSeller(this);
+                                if (cheapestseller > currentprice)
+                                    stockprice = currentprice;
+                                else
                                 {
-                                    if (stockPrices1m.Count > 10000)
-                                    {
-                                        stockPrices1m.RemoveAt(0);
-                                    }
-
-                                    stockPrices1m.Add(sp);
-                                    lock (values)
-                                    {
-
-                                        values.Add(vg);
-                                    }
-                                }
-                                //if (BidAsk.liquidity1m.Count > 1000)
-                                //{
-                                //    BidAsk.liquidity1m.RemoveAt(0);
-                                //}
-
-                                //BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
-
-                                //create new highlow
-                                if (currentprice > high5m)
-                                    high5m = currentprice;
-                                if (currentprice < low5m)
-                                    low5m = currentprice;
-
-                                if (tick % (20 * checkModifier) == 0)
-                                {
-
-                                    StockPriceGraph sp5m = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
-                                    lock (stockPrices5m)
-                                    {
-                                        stockPrices5m.Add(sp5m);
-                                        if (stockPrices5m.Count > 10000)
-                                        {
-                                            stockPrices5m.RemoveAt(0);
-                                        }
-                                    }
+                                    currentprice = cheapestseller;
+                                    stockprice = currentprice;
                                 }
 
-                                if (tick % (80 * checkModifier) == 0)
-                                {
-                                    //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
 
-                                    var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                                    {
-
-                                        stockViewModel.prices1m.Add(sp);
-                                        ValueviewModel.values.Add(vg);
-
-                                        if (stockViewModel.prices1m.Count > 100)
-                                        {
-                                            stockViewModel.prices1m.RemoveAt(0);
-                                        }
-                                        string str = MainPage.inst.Name;
-
-                                    });
-
-
-
+                                if (currentprice > high)
                                     high = currentprice;
+                                if (currentprice < low)
                                     low = currentprice;
-                                    open = currentprice;
+
+
+
+                                //register datapoint
+                                if (tick % (5 * checkModifier) == 0)
+                                {
+                                    StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
+                                    ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
+                                    lock (stockPrices1m)
+                                    {
+                                        if (stockPrices1m.Count > 10000)
+                                        {
+                                            stockPrices1m.RemoveAt(0);
+                                        }
+
+                                        stockPrices1m.Add(sp);
+                                        lock (values)
+                                        {
+
+                                            values.Add(vg);
+                                        }
+                                    }
+                                    //if (BidAsk.liquidity1m.Count > 1000)
+                                    //{
+                                    //    BidAsk.liquidity1m.RemoveAt(0);
+                                    //}
+
+                                    //BidAsk.liquidity1m.Add(new Liquidity(Master.inst.Year) { SellAmount = 0, BuyAmount = 0 });
+
+                                    //create new highlow
+                                    if (currentprice > high5m)
+                                        high5m = currentprice;
+                                    if (currentprice < low5m)
+                                        low5m = currentprice;
+
+                                    if (tick % (20 * checkModifier) == 0)
+                                    {
+
+                                        StockPriceGraph sp5m = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
+                                        lock (stockPrices5m)
+                                        {
+                                            stockPrices5m.Add(sp5m);
+                                            if (stockPrices5m.Count > 10000)
+                                            {
+                                                stockPrices5m.RemoveAt(0);
+                                            }
+                                        }
+                                    }
+
+                                    if (tick % (80 * checkModifier) == 0)
+                                    {
+                                        //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
+
+
+                                        var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                                        {
+
+                                            stockViewModel.prices1m.Add(sp);
+                                            ValueviewModel.values.Add(vg);
+
+                                            if (stockViewModel.prices1m.Count > 100)
+                                            {
+                                                stockViewModel.prices1m.RemoveAt(0);
+                                            }
+                                            string str = MainPage.inst.Name;
+
+                                        });
+
+
+
+                                        high = currentprice;
+                                        low = currentprice;
+                                        open = currentprice;
+                                    }
                                 }
+
                             }
 
                         }
-
-                    }
-                    if (loop)
-                    {
-                        tick++;
-                        Thread.Sleep(1);
+                        if (loop)
+                        {
+                            tick++;
+                            //Thread.Sleep(1);
+                        }
                     }
                 }
                 else
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(5);
                 }
             } while (loop);
         }
