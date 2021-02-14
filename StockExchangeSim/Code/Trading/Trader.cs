@@ -169,7 +169,32 @@ namespace Eco
                     {
                         int index = InterestedCompanies.IndexOf(tp.Item1);
                         StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        if (tp.Item2 < -0.1)
+                        if (tp.Item2 > -0.1 && tp.Item2 < 0.1)
+                        {
+                            //uncertain
+                            if (rn.NextDouble() > 5 * tp.Item2 + 0.5f) //replace with skill later
+                            {
+                                //buy
+                                if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
+                                {
+                                    //buy stocks here
+                                    currentThought = Thoughts.buy;
+                                    BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                    //SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
+                                }
+                            }
+                            else
+                            {
+                                //sell
+                                if (stocks[index].Count > 0)
+                                {
+                                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                    currentThought = Thoughts.sell;
+                                }
+                            }
+                        }
+                        else if (tp.Item2 < -0.1)
                         {
                             //sell stocks, if any
 
@@ -179,7 +204,7 @@ namespace Eco
                                 if (stocks[index].Count > 0)
                                 {
                                     SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
-                                    BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
                                     currentThought = Thoughts.sell;
                                 }
                             }
@@ -195,8 +220,8 @@ namespace Eco
                             {
                                 //buy stocks here
                                 currentThought = Thoughts.buy;
-                                BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
-                                SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
+                                BuyOrder(tp.Item1, tp.Item1.stockprice * 1.02f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                                //SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
                             }
                         }
                     }
@@ -261,7 +286,8 @@ namespace Eco
                     buyOrders[index].Amount = amount;
 
                     //reevaluate order
-                    Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
+                    if (rn.NextDouble() > 0.7)
+                        Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
                 }
             }
             else
