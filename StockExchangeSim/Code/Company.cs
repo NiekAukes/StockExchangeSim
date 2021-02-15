@@ -97,7 +97,7 @@ namespace Eco
             //init datathreads
             dataThread = new Thread(threadstart);
             dataThread.Name = "thread." + name;
-            dataThread.Priority = ThreadPriority.AboveNormal;
+            dataThread.Priority = ThreadPriority.BelowNormal;
             dataThread.Start();
 
 
@@ -228,19 +228,22 @@ namespace Eco
         float open10m, close10m, high10m, low10m;
         float open30m, close30m, high30m, low30m;
         int checkModifier = 1;
+        System.DateTime oldTime;
         public void Data(long tick, bool loop)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            
+            
             do
             {
                 if (Master.inst.active)
                 {
-                    if (sw.ElapsedMilliseconds > 1)
+                    if (true)
                     {
                         //check high and low
-                        sw.Restart();
-                        if ((tick % checkModifier) == 0)
+                        //sw.Restart();
+                        if ((tick % checkModifier) == 0 && oldTime.Millisecond != System.DateTime.Now.Millisecond)
                         {
                             if (BidAsk != null)
                             {
@@ -310,7 +313,7 @@ namespace Eco
                                         }
                                     }
 
-                                    if (tick % (80 * checkModifier) == 0)
+                                    if (tick % (80000 * checkModifier) == 0)
                                     {
                                         //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
@@ -321,7 +324,7 @@ namespace Eco
                                             stockViewModel.prices1m.Add(sp);
                                             ValueviewModel.values.Add(vg);
 
-                                            if (stockViewModel.prices1m.Count > 100)
+                                            if (stockViewModel.prices1m.Count > 1000)
                                             {
                                                 stockViewModel.prices1m.RemoveAt(0);
                                             }
@@ -339,6 +342,10 @@ namespace Eco
 
                             }
 
+                        }
+                        else
+                        {
+                            //yes
                         }
                         if (loop)
                         {

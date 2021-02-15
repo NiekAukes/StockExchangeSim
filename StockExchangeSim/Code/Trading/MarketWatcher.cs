@@ -39,12 +39,12 @@ namespace Eco
             if (cp.Value * cp.StockPart > cp.stockprice)
             {
                 //stock is generally underpriced
-                ret += 1;
+                ret += (cp.Value * cp.StockPart) / cp.stockprice;
             }
             else
             {
                 //stock is overpriced
-                ret -= 1;
+                ret -= cp.stockprice / (cp.Value * cp.StockPart);
             }
 
             //trader needs to see risk and reward => input vs expected output

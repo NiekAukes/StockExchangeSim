@@ -103,7 +103,7 @@ namespace Eco
             {
                 if (holders[i].bidask.cp == cp)
                 {
-                    if (holders[i].bidask.Bid < cheapest && holders[i].Stocks.Count > 1)
+                    if (holders[i].bidask.Bid < cheapest && holders[i].Stocks.Count < holders[i].MaxStockLimit)
                     {
                         cheapest = holders[i].bidask.Bid;
                     }

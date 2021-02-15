@@ -122,57 +122,39 @@ namespace Eco
                     }
                 }
             }
-                //else if (demandsurplus > (10 * Master.inst.TraderAmount))
-                //{
-                //    //significantly increase prices
-                //    GeneralPrice += (float)(-DemandElasticity) * 1.5f * MathF.Log(demandsurplus);
-
-                //}
-                //else if (demandsurplus > 0)
-                //{
-                //    //price can be slightly increased
-                //    GeneralPrice += (float)(-DemandElasticity) * 0.5f * MathF.Log(demandsurplus);
-
-                //}
-                //else
-                //{
-                //    //price should be decreased
-                //    GeneralPrice += (float)(-SupplyElasticity) * 0.5f * MathF.Log(demandsurplus);
-
-                //}
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
-                if (Liquiditysurplus > 0)
+            if (Liquiditysurplus > 0)
+            {
+                //too much stocks traded, look at demand
+                if (demandsurplus > 0)
                 {
-                    //too much stocks traded, look at demand
-                    if (demandsurplus > 0)
-                    {
-                        //increase price
-                        GeneralPrice *= 1.05f;
-                    }
-                    else
-                    {
-                        //lower price
-                        GeneralPrice /= 1.05f;
+                    //increase price
+                    GeneralPrice *= 1.05f;
+                }
+                else
+                {
+                    //lower price
+                    GeneralPrice /= 1.05f;
+                }
+            }
+            else
+            {
+                //too few stocks traded, look at demand
+                if (demandsurplus > 0)
+                {
+                    //lower price
+                    GeneralPrice /= 1.05f;
 
                 }
                 else
                 {
-                    //too few stocks traded, look at demand
-                    if (demandsurplus > 0)
-                    {
-                        //lower price
-                        GeneralPrice /= 1.05f;
+                    //increase price
+                    GeneralPrice *= 1.05f;
 
-                    }
-                    else
-                    {
-                        //increase price
-                        GeneralPrice *= 1.05f;
-
-                    }
                 }
             }
+            
 
 
 
@@ -183,7 +165,7 @@ namespace Eco
 
             if (Master.rn.NextDouble() < 0.05)
                 Debug.WriteLine(Strategy.trader.name + ", liquidity: " + liquidity);
-            liquidity = 0;
+            liquidity -= LiquidityTarget;
             return 0;
         }
 
