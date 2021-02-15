@@ -13,7 +13,7 @@ namespace Eco
         float Spread = 0.01f;
         float GeneralPrice = 2;
 
-        int LiquidityTarget = 500;
+        int LiquidityTarget = 50;
         float liquidity = 0;
 
         Holder Holder { get; set; }
@@ -124,33 +124,34 @@ namespace Eco
             }
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
+            float pricemodifier = 1.02f; 
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand
-                if (demandsurplus > 0)
+                if (demandsurplus >= 0)
                 {
                     //increase price
-                    GeneralPrice *= 1.05f;
+                    GeneralPrice *= pricemodifier;
                 }
                 else
                 {
                     //lower price
-                    GeneralPrice /= 1.05f;
+                    GeneralPrice /= pricemodifier;
                 }
             }
             else
             {
                 //too few stocks traded, look at demand
-                if (demandsurplus > 0)
+                if (demandsurplus >= 0)
                 {
                     //lower price
-                    GeneralPrice /= 1.05f;
+                    GeneralPrice /= pricemodifier;
 
                 }
                 else
                 {
                     //increase price
-                    GeneralPrice *= 1.05f;
+                    GeneralPrice *= pricemodifier;
 
                 }
             }
@@ -165,7 +166,10 @@ namespace Eco
 
             if (Master.rn.NextDouble() < 0.05)
                 Debug.WriteLine(Strategy.trader.name + ", liquidity: " + liquidity);
-            liquidity -= LiquidityTarget;
+            //liquidity -= LiquidityTarget;
+            liquidity /= 1.05f;
+            if (liquidity < 1)
+                liquidity = 1;
             return 0;
         }
 

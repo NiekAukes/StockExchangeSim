@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Eco
 {
@@ -58,7 +57,7 @@ namespace Eco
                 Master.inst.exchange.RegisterCompany(cp, 50);
 
                 //induce past stockprices
-                
+
                 float PMP = SPCT.StrategyOutcome(cp).ExpectedStockPrice;
 
                 cp.stockViewModel.prices1m.Clear();
@@ -66,14 +65,14 @@ namespace Eco
 
                 cp.stockPrices1m.Clear();
 
-                for (int j = 0; j < 100; j++)
-                {
-                    StockPriceGraph sp = new StockPriceGraph((-100 + j) * 0.0001f, PMP + MathF.Sin(j - 1) * PMP * 0.01f,
-                        PMP + MathF.Sin(j) * PMP * 0.01f, PMP + (float)rn.NextDouble() * PMP * 0.1f,
-                        PMP - (float)rn.NextDouble() * PMP * 0.01f);
-                    cp.stockPrices1m.Add(sp);
-                    cp.stockViewModel.prices1m.Add(sp); 
-                }
+                //for (int j = 0; j < 100; j++)
+                //{
+                //    StockPriceGraph sp = new StockPriceGraph((-100 + j) * 0.0001f, PMP + MathF.Sin(j - 1) * PMP * 0.01f,
+                //        PMP + MathF.Sin(j) * PMP * 0.01f, PMP + (float)rn.NextDouble() * PMP * 0.1f,
+                //        PMP - (float)rn.NextDouble() * PMP * 0.01f);
+                //    cp.stockPrices1m.Add(sp);
+                //    cp.stockViewModel.prices1m.Add(sp); 
+                //}
                 //cp.BecomePublic();
 
                 companies.Add(cp);
@@ -81,7 +80,7 @@ namespace Eco
             startcompanies = new List<Company>(companies);
             startamount = companyAmount;
 
-            
+
         }
         int scandaltick = 0;
 
@@ -263,7 +262,7 @@ namespace Eco
                         }
 
                         displaay +=
-                            ": " + Math.Floor(startcompanies[i].LastDeceMilleValue) +
+                            ": " + Math.Floor(startcompanies[i].Value) +
                             ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
@@ -274,7 +273,7 @@ namespace Eco
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
 
                         displaay += "\n" + startcompanies[i].name +
-                            ": " + Math.Floor(startcompanies[i].LastMilleValue) +
+                            ": " + Math.Floor(startcompanies[i].Value) +
                             ",\t\t gain: " + lastgainstr +
                             ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }
@@ -284,7 +283,7 @@ namespace Eco
                         double lastgain = Math.Floor(startcompanies[i].LastCentumGain * 1000 * 1000 * 100) / 1000;
                         string lastgainstr = lastgain < 0.1 ? (lastgain * 1000).ToString() + " µ%" : (lastgain).ToString() + " m%";
                         displaay += "\n" + startcompanies[i].name +
-                        ": " + Math.Floor(startcompanies[i].LastCentumValue) +
+                        ": " + Math.Floor(startcompanies[i].Value) +
                         ",\t\t gain: " + lastgainstr + ",\t price: " + Math.Floor(startcompanies[i].stockprice * 100) / 100 +
                         ",\t age: " + Math.Floor(startcompanies[i].age) + " days";
                     }

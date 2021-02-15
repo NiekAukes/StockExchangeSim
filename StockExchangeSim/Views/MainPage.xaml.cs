@@ -108,20 +108,31 @@ namespace StockExchangeSim.Views
         public void RedoLines()
         {
             chart.Series.Clear();
-            FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
+            //FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
+            //{
+            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
+            //    XBindingPath = "Year",
+            //    High = "High",
+            //    Low = "Low",
+            //    Open = "Open",
+            //    Close = "Close"
+            //};
+            //candleSeries.ListenPropertyChange = true;
+            //candleSeries.Interior = default;
+            ////candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
+            //chart.Series.Add(candleSeries);
+
+            FastLineBitmapSeries fastLineSeries = new FastLineBitmapSeries()
             {
                 ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
                 XBindingPath = "Year",
-                High = "High",
-                Low = "Low",
-                Open = "Open",
-                Close = "Close"
+                YBindingPath = "Close"
             };
-            candleSeries.ListenPropertyChange = true;
-            candleSeries.Interior = default;
-            //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
-            chart.Series.Add(candleSeries);
 
+            fastLineSeries.ListenPropertyChange = true;
+            fastLineSeries.Interior = default;
+
+            chart.Series.Add(fastLineSeries);
 
         }
         string _display;
@@ -139,6 +150,7 @@ namespace StockExchangeSim.Views
         public CompanyViewModel vm2 = new CompanyViewModel();
         public MainPage()
         {
+            Thread.CurrentThread.Priority = ThreadPriority.Highest;
             InitializeComponent();
             inst = this;
             if (master == null)

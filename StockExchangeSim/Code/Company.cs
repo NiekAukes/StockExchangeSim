@@ -243,7 +243,7 @@ namespace Eco
                     {
                         //check high and low
                         //sw.Restart();
-                        if ((tick % checkModifier) == 0 && oldTime.Millisecond != System.DateTime.Now.Millisecond)
+                        if ((tick % checkModifier) == 0)
                         {
                             if (BidAsk != null)
                             {
