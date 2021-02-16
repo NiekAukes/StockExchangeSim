@@ -129,7 +129,7 @@ namespace StockExchangeSim.Views
                 return;
             }
             ErrorCustomLiqBox.Text = "Input is not an int!";
-            customLiquidityTargetVal.BorderBrush = new SolidColorBrush(Color.FromArgb(225, 0, 0, 255));
+            customLiquidityTargetVal.BorderBrush = new SolidColorBrush(Color.FromArgb(225, 225, 0, 0));
         }
     
     }
