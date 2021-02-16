@@ -82,6 +82,8 @@ namespace Eco
     }
     public class Master
     {
+        public static bool fCustomLiquidityTarget = false;
+        public static Int32 CustomLiqTarget = 0;
         public static bool fCustomSeed = false;
         public static Master inst = null;
         public static bool fAsyncFields = false;

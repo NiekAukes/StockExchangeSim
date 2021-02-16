@@ -8,8 +8,8 @@ namespace Eco
 {
     class MarketMakingStrategy : Trader.Strategy
     {
-        public int ActionTimeDeduction = 1;
-        public bool isHighfrequency = true;
+        public int ActionTimeDeduction = 60;
+        public bool isHighfrequency = true; //does nothing atm
         public List<LiquidityMarketWatcher> MarketWatchers = new List<LiquidityMarketWatcher>();
         public MarketMakingStrategy(Trader t)
         {
