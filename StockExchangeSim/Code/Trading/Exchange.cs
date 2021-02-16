@@ -199,7 +199,6 @@ namespace Eco
                 {
                     if (SellStock.Stock.Count < 1)
                     {
-                        cp.SellOrders.Remove(SellStock);
                         return false; //transaction failed
                     }
                         SellStock.Amount--;
@@ -379,7 +378,10 @@ namespace Eco
                 return null;
             }
             SellOrder ret = new Eco.SellOrder(cp, stocklist, Limit);
-            cp.SellOrders.Add(ret);
+            lock (cp.SellOrders.SyncRoot)
+            {
+                cp.SellOrders.Add(ret);
+            }
             return ret;
         }
 

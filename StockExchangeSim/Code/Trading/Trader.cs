@@ -181,19 +181,16 @@ namespace Eco
         {
             try
             {
-                if (stocks[index].Count > 0)
+                //remove buyorder, if any
+                if (buyOrders[index] != null)
                 {
-                    //remove buyorder, if any
-                    if (buyOrders[index] != null)
-                    {
-                        tp.Item1.BuyOrders.Remove(buyOrders[index]);
-                        buyOrders[index] = null;
-                    }
-
-                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
-                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
-                    currentThought = Thoughts.sell;
+                    tp.Item1.BuyOrders.Remove(buyOrders[index]);
+                    buyOrders[index] = null;
                 }
+
+                SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                currentThought = Thoughts.sell;
             }
             catch (Exception e) //failed to look up stocks
             {
@@ -285,15 +282,15 @@ namespace Eco
             if (sellOrders[index] != null)
             {
 
-                if (sellOrders[index].Amount < 1)
+                if (sellOrders[index].Amount < 1 || !cp.SellOrders.Contains(sellOrders[index]))
                 {
-                    //create new buyorder
+                    //create new sellorder
                     sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
                         cp, limit, amount);
                 }
                 else
                 {
-                    //edit buyorder
+                    //edit sellorder
                     sellOrders[index].LimitPrice = limit;
                     sellOrders[index].Amount = amount;
                 }
