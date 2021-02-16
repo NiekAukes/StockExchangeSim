@@ -396,7 +396,7 @@ namespace Eco
                         while (order.Amount > 0)
                         {
                             if (holders[i].MaxStockLimit > holders[i].Stocks.Count &&
-                                holders[i].Stocks.Count > 1)
+                                holders[i].Stocks.Count > 0)
                             {
                                 BuyStock(cp, order.Buyer);
                             }
