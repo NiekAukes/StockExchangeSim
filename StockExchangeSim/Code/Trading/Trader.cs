@@ -183,6 +183,13 @@ namespace Eco
             {
                 if (stocks[index].Count > 0)
                 {
+                    //remove buyorder, if any
+                    if (buyOrders[index] != null)
+                    {
+                        tp.Item1.BuyOrders.Remove(buyOrders[index]);
+                        buyOrders[index] = null;
+                    }
+
                     SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
                     //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
                     currentThought = Thoughts.sell;
@@ -199,6 +206,14 @@ namespace Eco
             if ((int)((tp.Item2 * 100)) - stocks[index].Count > 0)
             {
                 //buy stocks here
+                //remove sellorder, if any
+                if (sellOrders[index] != null)
+                {
+                    tp.Item1.SellOrders.Remove(sellOrders[index]);
+                    sellOrders[index] = null;
+                }
+
+
                 currentThought = Thoughts.buy;
                 BuyOrder(tp.Item1, tp.Item1.stockprice * 1.02f, (int)((tp.Item2 * 100)) - stocks[index].Count);
                 //SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
