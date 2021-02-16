@@ -68,14 +68,12 @@ namespace StockExchangeSim.Views
             companyThoughtSelector.SelectedIndex = rnd.Next(0,selectedTrader.InterestedCompanies.Count); // so that a company is selected in the choose menu
 
             traderName.Text = selectedTrader.name;
+
             //the currThought will be initialized in the ChangeTraderThought. This is a placeholder
             currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
 
-            currStockPrice.Text = "Stock prices: ";
-            for (int i = 0; i < selectedTrader.InterestedCompanies.Count; i++)
-            {
-                currStockPrice.Text += "€ "+ selectedTrader.InterestedCompanies[i].BidAsk.Bid + ", ";
-            }
+            traderValue.Text = "Trader value: " + selectedTrader.Money;
+            
 
             //load prices of stocks of interested companies of trader into graph
             List<Company> interestedComp = selectedTrader.InterestedCompanies;
