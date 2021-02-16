@@ -124,7 +124,7 @@ namespace Eco
             }
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
-            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus / 50)) / 20 + 1; 
+            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ? Liquiditysurplus : LiquidityTarget)) / 20 + 1; 
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand

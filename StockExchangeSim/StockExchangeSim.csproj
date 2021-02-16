@@ -210,6 +210,7 @@
     <Compile Include="Code\Trading\MarketWatchers\TrendMarketWatcher.cs" />
     <Compile Include="Code\Trading\Strategies\TrendStrategy.cs" />
     <Compile Include="Code\Trading\Tools\TrendTool.cs" />
+    <Compile Include="Code\Trading\Traderpool.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />

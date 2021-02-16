@@ -70,10 +70,10 @@ namespace Eco
                 Strategies.Add(new MarketMakingStrategy(this));
             Strategies[0].Init();
             
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+            ////loops and threads
+            //TraderThread = new Thread(ThreadUpdate);
+            //TraderThread.Name = name;
+            //TraderThread.Start();
         }
         public Trader()
         {
@@ -105,10 +105,10 @@ namespace Eco
             while (Strategies.Count < 1 && multistrat);
 
 
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+        //    //loops and threads
+        //    TraderThread = new Thread(ThreadUpdate);
+        //    TraderThread.Name = name;
+        //    TraderThread.Start();
         }
         private string PickRandomName()
         {
@@ -228,18 +228,18 @@ namespace Eco
                 {
                     int index = InterestedCompanies.IndexOf(tp.Item1);
                     //StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                    if (tp.Item2 > -0.1 && tp.Item2 < 0.1)
+                    if (tp.Item2 > -0.5 && tp.Item2 < 0.5)
                     {
                         //uncertain
                         UncertainDecision(tp, index);
                     }
-                    else if (tp.Item2 < -0.1)
+                    else if (tp.Item2 < -0.5)
                     {
                         //sell stocks, if any
                         SellDecision(tp, index);
 
                     }
-                    else if (tp.Item2 > 0.1)
+                    else if (tp.Item2 > 0.5)
                     {
                         //1000 shouldn't be an arbitrary number
                         BuyDesicion(tp, index);

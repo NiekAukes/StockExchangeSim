@@ -393,7 +393,19 @@ namespace Eco
                 {
                     if (holders[i].bidask.Bid < Limit)
                     {
-                        BuyStock(cp, order.Buyer);
+                        while (order.Amount > 0)
+                        {
+                            if (holders[i].MaxStockLimit > holders[i].Stocks.Count &&
+                                holders[i].Stocks.Count > 1)
+                            {
+                                BuyStock(cp, order.Buyer);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        //BuyStock(cp, order.Buyer);
                         return;
                     }
                 }
