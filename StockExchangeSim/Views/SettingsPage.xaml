@@ -28,7 +28,7 @@
         <Image Source="/Assets/croppedDarkModeLogo.png" Grid.Row="0" Grid.Column="1" Grid.RowSpan="100"
         Height="100" Width="auto" Margin="40,0,20,40" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         <StackPanel
-            x:Name="ContentArea" Grid.RowSpan="3" Grid.ColumnSpan=" 2">
+            x:Name="ContentArea" Grid.RowSpan="3" Grid.ColumnSpan="2">
             <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
                 <TextBlock x:Uid="Settings_Theme" />
@@ -75,12 +75,13 @@
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <CheckBox x:Name="CustomSeed" Click="CustomSeed_Click" Margin="0,0,0,0" Width="15" Content="Custom seed"/>
                 <TextBlock Grid.Column="1" Text="Seed:" Height="auto" VerticalAlignment="Center" Margin="75,0,10,0" Padding="0,0,0,5"/>
-                <TextBox Grid.Column="1" x:Name="Seed"  Width="210"  LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
+                <TextBox BorderThickness="2" Grid.Column="1" x:Name="Seed"  Width="210"  LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                 <CheckBox x:Name="ChkbxLiqTarg" Click="ChkbxLiqTarg_Click" Margin="0,0,0,0" Width="auto" Content="Custom Liquidity target"/>
                 <TextBlock Text="Custom liquidity target: " Height="auto" VerticalAlignment="Center" Margin="20,0,10,0" Padding="0,0,0,5"/>
-                <TextBox x:Name="customLiquidityTargetVal" Text="" Width="100" LostFocus="customLiquidityTargetVal_LostFocus" IsEnabled="{x:Bind (x:Boolean)ChkbxLiqTarg.IsChecked, Mode=OneWay}"/>
+                <TextBox BorderThickness="2" x:Name="customLiquidityTargetVal" Text="0" Width="100" LostFocus="customLiquidityTargetVal_LostFocus" IsEnabled="{x:Bind (x:Boolean)ChkbxLiqTarg.IsChecked, Mode=OneWay}"/>
+                <TextBlock x:Name="ErrorCustomLiqBox" Text="" Height="auto" VerticalAlignment="Center" Margin="10,0,10,0" Padding="0,0,0,5"/>
             </StackPanel>
 
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />

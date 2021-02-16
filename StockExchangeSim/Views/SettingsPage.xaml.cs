@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace StockExchangeSim.Views
@@ -118,19 +120,17 @@ namespace StockExchangeSim.Views
         private void ChkbxLiqTarg_Click(object sender, RoutedEventArgs e) => Master.fCustomLiquidityTarget = ChkbxLiqTarg.IsChecked.Value;
         private async void customLiquidityTargetVal_LostFocus(object sender, RoutedEventArgs e)
         {
-            Int32 liqtarg = 0;
-            try
+            int liqtarg = 0;
+            if (Int32.TryParse(customLiquidityTargetVal.Text, out liqtarg))
             {
-                liqtarg = Int32.Parse(customLiquidityTargetVal.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageDialog messageDialog = new MessageDialog("Invalid seed");
-                messageDialog.Commands.Add(new UICommand("Close"));
-                await messageDialog.ShowAsync();
+                Master.CustomLiqTarget = liqtarg;
+                ErrorCustomLiqBox.Text = "";
+                customLiquidityTargetVal.BorderBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
                 return;
             }
-            Master.CustomSeed = liqtarg;
+            ErrorCustomLiqBox.Text = "Input is not an int!";
+            customLiquidityTargetVal.BorderBrush = new SolidColorBrush(Color.FromArgb(225, 0, 0, 255));
         }
+    
     }
 }
