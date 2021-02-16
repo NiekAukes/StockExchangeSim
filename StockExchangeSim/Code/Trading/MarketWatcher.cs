@@ -34,7 +34,7 @@ namespace Eco
         }
         protected float BackupStrat()
         {
-            float ret = 0;
+            float ret = (float)Master.rn.NextDouble() - 0.5f;
             //trader needs to see if stock is under or overvalued => value to price
             if (cp.Value * cp.StockPart > cp.stockprice)
             {

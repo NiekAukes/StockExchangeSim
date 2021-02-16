@@ -98,7 +98,7 @@ namespace Eco
             dataThread = new Thread(threadstart);
             dataThread.Name = "thread." + name;
             dataThread.Priority = ThreadPriority.BelowNormal;
-            dataThread.Start();
+            //dataThread.Start();
 
 
         }
@@ -284,6 +284,10 @@ namespace Eco
                                         {
 
                                             values.Add(vg);
+                                            if (values.Count > 10000)
+                                            {
+                                                values.RemoveAt(0);
+                                            }
                                         }
                                     }
                                     //if (BidAsk.liquidity1m.Count > 1000)
@@ -313,7 +317,7 @@ namespace Eco
                                         }
                                     }
 
-                                    if (tick % (80000 * checkModifier) == 0)
+                                    if (tick % (8000 * checkModifier) == 0)
                                     {
                                         //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 

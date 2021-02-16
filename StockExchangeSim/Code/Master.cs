@@ -189,6 +189,10 @@ namespace Eco
                     for (int j = 0; j < Fields.Count; j++)
                     {
                         Fields[j].Update();
+                        for (int k = 0; k < Fields[j].companies.Count; k++)
+                        {
+                            Fields[j].companies[k].Data(ticks, false);
+                        }
                     }
 
 

@@ -34,7 +34,7 @@ namespace Eco
 
         private void Holder_StockTraded(object sender, EventArgs e)
         {
-            liquidity += (1.0f / Master.inst.Traders.Count) * (1.0f / Master.inst.SecondsPerTick);
+            liquidity += (1.0f / Master.inst.Traders.Count) * (60.0f/Strategy.ActionTimeDeduction) * (1.0f / Master.inst.SecondsPerTick);
         }
 
         public override void RedoInsights()
@@ -124,7 +124,7 @@ namespace Eco
             }
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
-            float pricemodifier = 1.02f; 
+            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus / 50)) / 20 + 1; 
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand
@@ -166,9 +166,9 @@ namespace Eco
 
             if (Master.rn.NextDouble() < 0.05)
                 Debug.WriteLine(Strategy.trader.name + ", liquidity: " + liquidity);
-            //liquidity -= LiquidityTarget;
-            liquidity /= 1.05f;
-            if (liquidity < 1)
+            //liquidity /= (1.5f/Strategy.ActionTimeDeduction);
+            ////liquidity /= 1.5f;
+            //if (liquidity < 1)
                 liquidity = 1;
             return 0;
         }
