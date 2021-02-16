@@ -72,7 +72,7 @@ namespace StockExchangeSim.Views
             //the currThought will be initialized in the ChangeTraderThought. This is a placeholder
             currThought.Text = "NOT IMPLEMENTED YET: implement Trader.Thought";
 
-            traderValue.Text = "Trader value: " + selectedTrader.Money;
+            traderValue.Text = "Trader money: " + selectedTrader.Money;
             
 
             //load prices of stocks of interested companies of trader into graph

@@ -125,7 +125,7 @@ namespace StockExchangeSim.Views
             {
                 Master.CustomLiqTarget = liqtarg;
                 ErrorCustomLiqBox.Text = "";
-                customLiquidityTargetVal.BorderBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                customLiquidityTargetVal.BorderBrush = default;  //new SolidColorBrush(Color.FromArgb(255,255,255,255));
                 return;
             }
             ErrorCustomLiqBox.Text = "Input is not an int!";
