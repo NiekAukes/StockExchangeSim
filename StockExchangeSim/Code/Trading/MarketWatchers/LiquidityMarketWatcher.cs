@@ -142,7 +142,7 @@ namespace Eco
                 float Liquiditysurplus = avgliq - LiquidityTarget;
             float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ?
                 Liquiditysurplus * Strategy.ActionTimeDeduction / 100.0f :
-                LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) * Strategy.ActionTimeDeduction / 500 + 1; 
+                LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) * Strategy.ActionTimeDeduction / 300 + 1; 
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand
