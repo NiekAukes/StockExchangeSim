@@ -196,7 +196,7 @@ namespace Eco
 
         void BuyDesicion(Tuple<Company, float> tp, int index)
         {
-            if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
+            if ((int)((tp.Item2 * 100)) - stocks[index].Count > 0)
             {
                 //buy stocks here
                 currentThought = Thoughts.buy;
