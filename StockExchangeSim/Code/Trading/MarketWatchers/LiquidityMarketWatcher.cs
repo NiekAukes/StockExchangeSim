@@ -15,6 +15,7 @@ namespace Eco
 
         int LiquidityTarget = 50;
         float liquidity = 0;
+        public List<float> averageliquidity = new List<float>();
 
         Holder Holder { get; set; }
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
@@ -48,68 +49,77 @@ namespace Eco
             BuyOrder highestbuyorder = null;
             SellOrder lowestsellorder = null;
 
-#warning this is a bodge too!
-            #region Price Discovery
-            //kijk naar vraag en aanbod
-            for (int i = 0; i < cp.BuyOrders.Count; i++)
+            if (averageliquidity.Count > 240/Strategy.ActionTimeDeduction)
             {
-                try
-                {
-                    buyorders += cp.BuyOrders[i].Amount;
-                    totalbuyvalue += (double)cp.BuyOrders[i].LimitPrice * cp.BuyOrders[i].Amount;
-                    if (i != 0)
-                    {
-                        if (cp.BuyOrders[i].LimitPrice > highestbuyorder.LimitPrice)
-                        {
-                            highestbuyorder = cp.BuyOrders[i];
-                        }
-                    }
-                    else
-                        highestbuyorder = cp.BuyOrders[i];
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e.Message);
-                }
+                //remove first element
+                averageliquidity.RemoveAt(0);
             }
-            for (int i = 0; i < cp.SellOrders.Count; i++)
-            {
-                try
-                {
-                    sellorders += cp.SellOrders[i].Amount;
-                    totalsellvalue += (double)cp.SellOrders[i].LimitPrice * cp.SellOrders[i].Amount;
+            averageliquidity.Add(liquidity);
+//#warning this is a bodge too!
+//            #region Price Discovery
+//            //kijk naar vraag en aanbod
+//            for (int i = 0; i < cp.BuyOrders.Count; i++)
+//            {
+//                try
+//                {
+//                    buyorders += cp.BuyOrders[i].Amount;
+//                    totalbuyvalue += (double)cp.BuyOrders[i].LimitPrice * cp.BuyOrders[i].Amount;
+//                    if (i != 0)
+//                    {
+//                        if (cp.BuyOrders[i].LimitPrice > highestbuyorder.LimitPrice)
+//                        {
+//                            highestbuyorder = cp.BuyOrders[i];
+//                        }
+//                    }
+//                    else
+//                        highestbuyorder = cp.BuyOrders[i];
+//                }
+//                catch (Exception e)
+//                {
+//                    Debug.WriteLine(e.Message);
+//                }
+//            }
+//            for (int i = 0; i < cp.SellOrders.Count; i++)
+//            {
+//                try
+//                {
+//                    sellorders += cp.SellOrders[i].Amount;
+//                    totalsellvalue += (double)cp.SellOrders[i].LimitPrice * cp.SellOrders[i].Amount;
 
-                    if (i != 0)
-                    {
-                        if (cp.SellOrders[i].LimitPrice > lowestsellorder.LimitPrice)
-                        {
-                            lowestsellorder = cp.SellOrders[i];
-                        }
-                    }
-                    else
-                        lowestsellorder = cp.SellOrders[i];
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e.Message);
-                }
-            }
-            #endregion
+//                    if (i != 0)
+//                    {
+//                        if (cp.SellOrders[i].LimitPrice > lowestsellorder.LimitPrice)
+//                        {
+//                            lowestsellorder = cp.SellOrders[i];
+//                        }
+//                    }
+//                    else
+//                        lowestsellorder = cp.SellOrders[i];
+//                }
+//                catch (Exception e)
+//                {
+//                    Debug.WriteLine(e.Message);
+//                }
+//            }
+//            #endregion
             //kijk naar hoogste aanbod en laagste vraag
 
 
-            if (highestbuyorder == null)
-            {
-                //if there is no bid or ask yet, construct one
-                var data = SPCTool.StrategyOutcome(cp);
-                GeneralPrice = data.ExpectedStockPrice;
-            }
-            else
-            {
-                GeneralPrice = (highestbuyorder.LimitPrice);
-            }
+            //if (highestbuyorder == null)
+            //{
+            //    //if there is no bid or ask yet, construct one
+            //    var data = SPCTool.StrategyOutcome(cp);
+            //    GeneralPrice = data.ExpectedStockPrice;
+            //}
+            //else
+            //{
+            //    GeneralPrice = (highestbuyorder.LimitPrice);
+            //}
             GeneralPrice = Holder.bidask.Bid - Spread;
             float demandsurplus = buyorders - sellorders;
+
+            float avgliq = averageliquidity.Average();
+
             if (demandsurplus > (10 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50))
             {
                 //there needs to be more stocks
@@ -123,7 +133,7 @@ namespace Eco
                 }
             }
 
-                float Liquiditysurplus = liquidity - LiquidityTarget;
+                float Liquiditysurplus = avgliq - LiquidityTarget;
             float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ? Liquiditysurplus : LiquidityTarget)) / 20 + 1; 
             if (Liquiditysurplus > 0)
             {
