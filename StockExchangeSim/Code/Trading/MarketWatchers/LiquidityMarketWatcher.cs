@@ -13,7 +13,9 @@ namespace Eco
         float Spread = 0.01f;
         float GeneralPrice = 2;
 
-        int LiquidityTarget = 300;
+        //LIQUIDITY TARGET
+        int LiquidityTarget = Master.fCustomLiquidityTarget ? Master.CustomLiqTarget : 189 ;
+
         float liquidity = 0;
         public List<float> averageliquidity = new List<float>();
 

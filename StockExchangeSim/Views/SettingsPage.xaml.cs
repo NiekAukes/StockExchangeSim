@@ -114,5 +114,23 @@ namespace StockExchangeSim.Views
         private void asyncCompaniesFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncCompanies = asyncCompaniesFlag.IsChecked.Value;
 
         private void asyncFieldFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
+
+        private void ChkbxLiqTarg_Click(object sender, RoutedEventArgs e) => Master.fCustomLiquidityTarget = ChkbxLiqTarg.IsChecked.Value;
+        private async void customLiquidityTargetVal_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Int32 liqtarg = 0;
+            try
+            {
+                liqtarg = Int32.Parse(customLiquidityTargetVal.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageDialog messageDialog = new MessageDialog("Invalid seed");
+                messageDialog.Commands.Add(new UICommand("Close"));
+                await messageDialog.ShowAsync();
+                return;
+            }
+            Master.CustomSeed = liqtarg;
+        }
     }
 }
