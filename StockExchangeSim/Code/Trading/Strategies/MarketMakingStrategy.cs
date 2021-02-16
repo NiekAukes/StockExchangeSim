@@ -8,7 +8,7 @@ namespace Eco
 {
     class MarketMakingStrategy : Trader.Strategy
     {
-
+        public int ActionTimeDeduction = 60;
         public List<LiquidityMarketWatcher> MarketWatchers = new List<LiquidityMarketWatcher>();
         public MarketMakingStrategy(Trader t)
         {
@@ -32,7 +32,7 @@ namespace Eco
             {
                 MarketWatchers[i].UpdateInsights();
             }
-            trader.ActionTime -= 60;
+            trader.ActionTime -= ActionTimeDeduction;
             return MR;
         }
     }

@@ -103,7 +103,7 @@ namespace Eco
             {
                 if (holders[i].bidask.cp == cp)
                 {
-                    if (holders[i].bidask.Bid < cheapest && holders[i].Stocks.Count > 1)
+                    if (holders[i].bidask.Bid < cheapest && holders[i].Stocks.Count < holders[i].MaxStockLimit)
                     {
                         cheapest = holders[i].bidask.Bid;
                     }
@@ -137,6 +137,7 @@ namespace Eco
 
             float cheapest = float.MaxValue;
             SellOrder SellStock = null;
+            int cheapestholder = -1;
             try
             {
 
@@ -149,7 +150,6 @@ namespace Eco
                     }
                 }
 
-                int cheapestholder = -1;
                 for (int i = 0; i < holders.Count; i++)
                 {
                     if (holders[i].bidask.cp == cp)
@@ -163,51 +163,74 @@ namespace Eco
                         }
                     }
                 }
-                if (cheapestholder >= 0)
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine("something went wrong in checking; ");
+                return false;
+            }
+            if (cheapestholder >= 0)
+            {
+                //buy from holder
+                lock (holders[cheapestholder].Stocks)
                 {
-                    //buy from holder
-                    lock (holders[cheapestholder].Stocks)
+                    if (holders[cheapestholder].Stocks.Count > 0)
                     {
-                        if (holders[cheapestholder].Stocks.Count > 0)
-                        {
-                            holders[cheapestholder].Owner.money += cheapest;
-                            buyer.money -= cheapest;
+                        holders[cheapestholder].Owner.money += cheapest;
+                        buyer.money -= cheapest;
 
-                            //cp.stockprice = cheapest;
+                        //cp.stockprice = cheapest;
 
-                            holders[cheapestholder].Stocks[0].Owner = buyer;
-                            holders[cheapestholder].Stocks.RemoveAt(0);
-                            holders[cheapestholder].OnStockTraded(null);
-                        }
+                        holders[cheapestholder].Stocks[0].Owner = buyer;
+                        holders[cheapestholder].Stocks.RemoveAt(0);
+                        holders[cheapestholder].OnStockTraded(null);
                     }
-                    cp.stockprice = cheapest;
-                    return true;
                 }
+                return true;
+            }
 
+            try
+            {
                 if (SellStock == null)
                     return false;
 
+                lock (SellStock.Stock)
+                {
+                    if (SellStock.Stock.Count < 1)
+                    {
+                        cp.SellOrders.Remove(SellStock);
+                        return false; //transaction failed
+                    }
+                        SellStock.Amount--;
+                    if (SellStock.Amount < 1)
+                    {
+                        cp.SellOrders.Remove(SellStock);
+                        if (SellStock.Amount < 0)
+                        {
+                            //abort
+                            return false;
+                        }
+                    }
+                    
 
-                SellStock.Amount--;
-                if (SellStock.Amount < 1)
-                    cp.SellOrders.Remove(SellStock);
+                    
+                    SellStock.Stock[0].Owner.money += SellStock.LimitPrice;
 
-                SellStock.Stock[0].Owner.money += SellStock.LimitPrice;
+                    buyer.money -= SellStock.LimitPrice;
+
+                    cp.stockprice = SellStock.LimitPrice;
+
+                    SellStock.Stock[0].Owner = buyer;
+                    buyer.AddStock(SellStock.Stock[0]);
+                    //remove stock from original owner and move to new owner
+                    SellStock.Stock.RemoveAt(0);
+                }
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
-                return false;
+                Debug.WriteLine("another thing went wrong in transaction");
             }
-
-            buyer.money -= SellStock.LimitPrice;
-
-            cp.stockprice = SellStock.LimitPrice;
-
-            SellStock.Stock[0].Owner = buyer;
-            buyer.AddStock(SellStock.Stock[0]);
-            //remove stock from original owner and move to new owner
-            SellStock.Stock.RemoveAt(0);
             return true;
         }
 
@@ -219,8 +242,21 @@ namespace Eco
                 {
                     if (holders[i].bidask.Bid < Limit)
                     {
-                        BuyStock(cp, buyer);
-                        return null;
+                        while (amount > 0)
+                        {
+                            if (holders[i].MaxStockLimit > holders[i].Stocks.Count &&
+                                holders[i].Stocks.Count > 1)
+                            {
+                                BuyStock(cp, buyer);
+                                amount--;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        if (amount < 1)
+                            return null;
                     }
                 }
             }
@@ -228,7 +264,9 @@ namespace Eco
             float cheapest = float.MaxValue;
             SellOrder SellStock = null;
 
-                for (int i = 0; i < cp.SellOrders.Count; i++)
+            for (int i = 0; i < cp.SellOrders.Count; i++)
+            {
+                try
                 {
                     if (cp.SellOrders[i].LimitPrice < cheapest)
                     {
@@ -236,6 +274,11 @@ namespace Eco
                         SellStock = cp.SellOrders[i];
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
             if (cheapest < Limit)
             {
                 //directly issue transaction
@@ -350,7 +393,19 @@ namespace Eco
                 {
                     if (holders[i].bidask.Bid < Limit)
                     {
-                        BuyStock(cp, order.Buyer);
+                        while (order.Amount > 0)
+                        {
+                            if (holders[i].MaxStockLimit > holders[i].Stocks.Count &&
+                                holders[i].Stocks.Count > 1)
+                            {
+                                BuyStock(cp, order.Buyer);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        //BuyStock(cp, order.Buyer);
                         return;
                     }
                 }
@@ -361,10 +416,17 @@ namespace Eco
 
             for (int i = 0; i < cp.SellOrders.Count; i++)
             {
-                if (cp.SellOrders[i].LimitPrice < cheapest)
+                try
                 {
-                    cheapest = cp.SellOrders[i].LimitPrice;
-                    SellStock = cp.SellOrders[i];
+                    if (cp.SellOrders[i].LimitPrice < cheapest && cp.SellOrders[i].Stock.Count > 0)
+                    {
+                        cheapest = cp.SellOrders[i].LimitPrice;
+                        SellStock = cp.SellOrders[i];
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
                 }
             }
             if (cheapest < Limit)

@@ -1,6 +1,7 @@
 ﻿using StockExchangeSim.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Eco
@@ -103,6 +104,7 @@ namespace Eco
         //list for fields and traders
         public List<Field> Fields = new List<Field>();
         public List<Trader> Traders = new List<Trader>();
+        public List<Traderpool> TraderPools = new List<Traderpool>();
         public ECNBroker exchange = new ECNBroker();
 
         public TableOfNames masterTable = new TableOfNames();
@@ -142,14 +144,27 @@ namespace Eco
                 Fields.Add(field);
                 TotalShare += 100;
             }
+            int threadcount = 20;
+            for (int i = 0; i < threadcount; i++)
+            {
+                TraderPools.Add(new Traderpool());
+            }
             Traders.Add(new Trader(true));
+            TraderPools[0].traders.Add(Traders[0]);
             Traders.Add(new Trader(false));
+            TraderPools[1].traders.Add(Traders[1]);
+
             for (int i = 0; i < traders; i++)
             {
-                Traders.Add(new Trader());
-                
+                Trader td = new Trader();
+                Traders.Add(td);
+                TraderPools[(i + 2) % threadcount].traders.Add(td);
             }
 
+            for (int i = 0; i < threadcount; i++)
+            {
+                TraderPools[i].StartThread();
+            }
 
             thread = new System.Threading.Thread(Update);
             thread.Name = "Master Thread";
@@ -189,6 +204,10 @@ namespace Eco
                     for (int j = 0; j < Fields.Count; j++)
                     {
                         Fields[j].Update();
+                        for (int k = 0; k < Fields[j].companies.Count; k++)
+                        {
+                            Fields[j].companies[k].Data(ticks, false);
+                        }
                     }
 
 

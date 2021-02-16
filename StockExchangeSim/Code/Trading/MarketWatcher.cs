@@ -34,24 +34,24 @@ namespace Eco
         }
         protected float BackupStrat()
         {
-            float ret = 0;
+            float ret = (float)Master.rn.NextDouble() - 0.5f;
             //trader needs to see if stock is under or overvalued => value to price
             if (cp.Value * cp.StockPart > cp.stockprice)
             {
                 //stock is generally underpriced
-                ret += 1;
+                ret += (cp.Value * cp.StockPart) / cp.stockprice;
             }
             else
             {
                 //stock is overpriced
-                ret -= 1;
+                ret -= cp.stockprice / (cp.Value * cp.StockPart);
             }
 
             //trader needs to see risk and reward => input vs expected output
             //this might actually already be implemented
 
             //trader needs to see small trends => competitive position
-            ret += MathF.Log(cp.CompetitivePosition) * 2;
+            ret += MathF.Log(cp.CompetitivePosition) * 4;
 
             return ret;
         }

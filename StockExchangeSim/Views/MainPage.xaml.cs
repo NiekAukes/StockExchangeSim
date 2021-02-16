@@ -119,9 +119,28 @@ namespace StockExchangeSim.Views
             };
             candleSeries.ListenPropertyChange = true;
             candleSeries.Interior = default;
-            //candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
+
+            candleSeries.Trendlines.Add(new Trendline()
+            {
+                Label = "Trend",
+                Type = TrendlineType.Polynomial,
+                PolynomialOrder = 5
+            });
+
+
             chart.Series.Add(candleSeries);
 
+            //FastLineBitmapSeries fastLineSeries = new FastLineBitmapSeries()
+            //{
+            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
+            //    XBindingPath = "Year",
+            //    YBindingPath = "Close"
+            //};
+
+            //fastLineSeries.ListenPropertyChange = true;
+            //fastLineSeries.Interior = default;
+
+            //chart.Series.Add(fastLineSeries);
 
         }
         string _display;
@@ -139,6 +158,7 @@ namespace StockExchangeSim.Views
         public CompanyViewModel vm2 = new CompanyViewModel();
         public MainPage()
         {
+            Thread.CurrentThread.Priority = ThreadPriority.Highest;
             InitializeComponent();
             inst = this;
             if (master == null)

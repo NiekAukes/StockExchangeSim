@@ -70,10 +70,10 @@ namespace Eco
                 Strategies.Add(new MarketMakingStrategy(this));
             Strategies[0].Init();
             
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+            ////loops and threads
+            //TraderThread = new Thread(ThreadUpdate);
+            //TraderThread.Name = name;
+            //TraderThread.Start();
         }
         public Trader()
         {
@@ -105,10 +105,10 @@ namespace Eco
             while (Strategies.Count < 1 && multistrat);
 
 
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+        //    //loops and threads
+        //    TraderThread = new Thread(ThreadUpdate);
+        //    TraderThread.Name = name;
+        //    TraderThread.Start();
         }
         private string PickRandomName()
         {
@@ -144,6 +144,109 @@ namespace Eco
             }
         }
         StockPriceComparisonTool SPCT = new StockPriceComparisonTool();
+        void GetMarketResults()
+        {
+            latestResults = new MarketResults();
+            foreach (Strategy strat in Strategies)
+                latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
+
+        }
+
+        void UncertainDecision(Tuple<Company, float> tp, int index)
+        {
+            if (rn.NextDouble() > 5 * tp.Item2 + 0.5f) //replace with skill later
+            {
+                //buy
+                if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
+                {
+                    //buy stocks here
+                    currentThought = Thoughts.buy;
+                    BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                    //SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
+                }
+            }
+            else
+            {
+                //sell
+                if (stocks[index].Count > 0)
+                {
+                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                    currentThought = Thoughts.sell;
+                }
+            }
+        }
+
+        void SellDecision(Tuple<Company, float> tp, int index)
+        {
+            try
+            {
+                if (stocks[index].Count > 0)
+                {
+                    //remove buyorder, if any
+                    if (buyOrders[index] != null)
+                    {
+                        tp.Item1.BuyOrders.Remove(buyOrders[index]);
+                        buyOrders[index] = null;
+                    }
+
+                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                    currentThought = Thoughts.sell;
+                }
+            }
+            catch (Exception e) //failed to look up stocks
+            {
+                System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
+            }
+        }
+
+        void BuyDesicion(Tuple<Company, float> tp, int index)
+        {
+            if ((int)((tp.Item2 * 100)) - stocks[index].Count > 0)
+            {
+                //buy stocks here
+                //remove sellorder, if any
+                if (sellOrders[index] != null)
+                {
+                    tp.Item1.SellOrders.Remove(sellOrders[index]);
+                    sellOrders[index] = null;
+                }
+
+
+                currentThought = Thoughts.buy;
+                BuyOrder(tp.Item1, tp.Item1.stockprice * 1.02f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                //SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
+            }
+        }
+        void DoAction()
+        {
+            for (int a = 0; a < latestResults.Results.Count; a++)
+            {
+                var tp = latestResults.Results[a];
+                if (!(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
+                {
+                    int index = InterestedCompanies.IndexOf(tp.Item1);
+                    //StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
+                    if (tp.Item2 > -0.5 && tp.Item2 < 0.5)
+                    {
+                        //uncertain
+                        UncertainDecision(tp, index);
+                    }
+                    else if (tp.Item2 < -0.5)
+                    {
+                        //sell stocks, if any
+                        SellDecision(tp, index);
+
+                    }
+                    else if (tp.Item2 > 0.5)
+                    {
+                        //1000 shouldn't be an arbitrary number
+                        BuyDesicion(tp, index);
+                    }
+                }
+            }
+        }
         public virtual void Update()
         {
             //ActionTime += MainPage.master.SecondsPerTick; //accrued Time for actions
@@ -157,55 +260,13 @@ namespace Eco
             if (ActionTime > 0) //if the trader can function, get the marketresults and buy/sell/wait accordingly
             {
                 //TraderThread.Priority = ThreadPriority.AboveNormal;
-                latestResults = new MarketResults();
+                GetMarketResults();
+                DoAction();
                 
-                foreach (Strategy strat in Strategies)
-                    latestResults = latestResults + strat.StrategyOutcome(this, Master.inst.exchange);
-
-                for(int a = 0; a < latestResults.Results.Count; a++)
-                {
-                    var tp = latestResults.Results[a];
-                    if (!(Strategies[0] is InvestorStrategy || Strategies[0] is MarketMakingStrategy))
-                    {
-                        int index = InterestedCompanies.IndexOf(tp.Item1);
-                        StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                        if (tp.Item2 < -0.1)
-                        {
-                            //sell stocks, if any
-
-                            try
-                            {
-#warning this needs some tweaking
-                                if (stocks[index].Count > 0)
-                                {
-                                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
-                                    BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
-                                    currentThought = Thoughts.sell;
-                                }
-                            }
-                            catch (Exception e) //failed to look up stocks
-                            {
-                                System.Diagnostics.Debug.WriteLine("Internal Non-Fatal Error: " + e.Message);
-                            }
-                        }
-                        else if(tp.Item2 > 0.1)
-                        {
-                            //1000 shouldn't be an arbitrary number
-                            if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
-                            {
-                                //buy stocks here
-                                currentThought = Thoughts.buy;
-                                BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
-                                SellOrder(tp.Item1, tp.Item1.stockprice * MathF.Pow(1.2f, tp.Item2), stocks[index].Count);
-                            }
-                        }
-                    }
-                }
             }
             else
             {
-                if (ActionTime < -10)
-                    Thread.Sleep(1);
+                Thread.Sleep(1);
             }
         }
 
@@ -261,7 +322,8 @@ namespace Eco
                     buyOrders[index].Amount = amount;
 
                     //reevaluate order
-                    Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
+                    if (rn.NextDouble() > 0.7)
+                        Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
                 }
             }
             else

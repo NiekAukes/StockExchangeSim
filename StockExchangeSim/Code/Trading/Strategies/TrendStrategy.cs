@@ -22,6 +22,7 @@ namespace Eco
                 MarketWatchers[i].latestInsightResult = MarketWatchers[i].UpdateInsights();
                 MR.Results.Add(new Tuple<Company, float>(MarketWatchers[i].cp, MarketWatchers[i].latestInsightResult));
             }
+            trader.ActionTime -= 200 * Master.rn.NextDouble();
             return MR;
         }
 
