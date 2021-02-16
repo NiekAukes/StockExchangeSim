@@ -199,7 +199,6 @@ namespace Eco
                 {
                     if (SellStock.Stock.Count < 1)
                     {
-                        cp.SellOrders.Remove(SellStock);
                         return false; //transaction failed
                     }
                         SellStock.Amount--;
