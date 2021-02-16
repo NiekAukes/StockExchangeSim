@@ -31,6 +31,11 @@ namespace Eco
             GeneralPrice = cp.stockprice;
 
             Holder.StockTraded += Holder_StockTraded;
+
+            for (int i = 0; i < liqcount / Strategy.ActionTimeDeduction; i++ )
+            {
+                averageliquidity.Add(0);
+            }
         }
 
         private void Holder_StockTraded(object sender, EventArgs e)
@@ -42,6 +47,7 @@ namespace Eco
         {
         }
 
+        int liqcount = 2400;
         public override float UpdateInsights()
         {
             int buyorders = 0, sellorders = 0;
@@ -49,7 +55,7 @@ namespace Eco
             BuyOrder highestbuyorder = null;
             SellOrder lowestsellorder = null;
 
-            if (averageliquidity.Count > 240/Strategy.ActionTimeDeduction)
+            if (averageliquidity.Count > liqcount/Strategy.ActionTimeDeduction)
             {
                 //remove first element
                 averageliquidity.RemoveAt(0);
@@ -134,7 +140,9 @@ namespace Eco
             }
 
                 float Liquiditysurplus = avgliq - LiquidityTarget;
-            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ? Liquiditysurplus : LiquidityTarget)) / 20 + 1; 
+            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ?
+                Liquiditysurplus * Strategy.ActionTimeDeduction / 100.0f :
+                LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) / 20 + 1; 
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand
@@ -179,7 +187,7 @@ namespace Eco
             //liquidity /= (1.5f/Strategy.ActionTimeDeduction);
             ////liquidity /= 1.5f;
             //if (liquidity < 1)
-                liquidity = 1;
+                liquidity = 0;
             return 0;
         }
 
