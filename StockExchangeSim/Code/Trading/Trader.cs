@@ -70,10 +70,10 @@ namespace Eco
                 Strategies.Add(new MarketMakingStrategy(this));
             Strategies[0].Init();
             
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+            ////loops and threads
+            //TraderThread = new Thread(ThreadUpdate);
+            //TraderThread.Name = name;
+            //TraderThread.Start();
         }
         public Trader()
         {
@@ -105,10 +105,10 @@ namespace Eco
             while (Strategies.Count < 1 && multistrat);
 
 
-            //loops and threads
-            TraderThread = new Thread(ThreadUpdate);
-            TraderThread.Name = name;
-            TraderThread.Start();
+        //    //loops and threads
+        //    TraderThread = new Thread(ThreadUpdate);
+        //    TraderThread.Name = name;
+        //    TraderThread.Start();
         }
         private string PickRandomName()
         {
@@ -181,19 +181,16 @@ namespace Eco
         {
             try
             {
-                if (stocks[index].Count > 0)
+                //remove buyorder, if any
+                if (buyOrders[index] != null)
                 {
-                    //remove buyorder, if any
-                    if (buyOrders[index] != null)
-                    {
-                        tp.Item1.BuyOrders.Remove(buyOrders[index]);
-                        buyOrders[index] = null;
-                    }
-
-                    SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
-                    //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
-                    currentThought = Thoughts.sell;
+                    tp.Item1.BuyOrders.Remove(buyOrders[index]);
+                    buyOrders[index] = null;
                 }
+
+                SellOrder(tp.Item1, (tp.Item1.stockprice / 1.002f), (int)((tp.Item2 * -100)));
+                //BuyOrder(tp.Item1, tp.Item1.stockprice * 1.002f, (int)((tp.Item2 * 100)) - stocks[index].Count);
+                currentThought = Thoughts.sell;
             }
             catch (Exception e) //failed to look up stocks
             {
@@ -203,7 +200,7 @@ namespace Eco
 
         void BuyDesicion(Tuple<Company, float> tp, int index)
         {
-            if ((int)((tp.Item2 * 1000)) - stocks[index].Count > 0)
+            if ((int)((tp.Item2 * 100)) - stocks[index].Count > 0)
             {
                 //buy stocks here
                 //remove sellorder, if any
@@ -228,18 +225,18 @@ namespace Eco
                 {
                     int index = InterestedCompanies.IndexOf(tp.Item1);
                     //StockPriceComparisonToolData SPCTD = SPCT.StrategyOutcome(tp.Item1);
-                    if (tp.Item2 > -0.1 && tp.Item2 < 0.1)
+                    if (tp.Item2 > -0.5 && tp.Item2 < 0.5)
                     {
                         //uncertain
                         UncertainDecision(tp, index);
                     }
-                    else if (tp.Item2 < -0.1)
+                    else if (tp.Item2 < -0.5)
                     {
                         //sell stocks, if any
                         SellDecision(tp, index);
 
                     }
-                    else if (tp.Item2 > 0.1)
+                    else if (tp.Item2 > 0.5)
                     {
                         //1000 shouldn't be an arbitrary number
                         BuyDesicion(tp, index);
@@ -285,15 +282,15 @@ namespace Eco
             if (sellOrders[index] != null)
             {
 
-                if (sellOrders[index].Amount < 1)
+                if (sellOrders[index].Amount < 1 || !cp.SellOrders.Contains(sellOrders[index]))
                 {
-                    //create new buyorder
+                    //create new sellorder
                     sellOrders[index] = Master.inst.exchange.sellOrder(stocks[index],
                         cp, limit, amount);
                 }
                 else
                 {
-                    //edit buyorder
+                    //edit sellorder
                     sellOrders[index].LimitPrice = limit;
                     sellOrders[index].Amount = amount;
                 }

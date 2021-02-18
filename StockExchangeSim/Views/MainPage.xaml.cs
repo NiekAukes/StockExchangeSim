@@ -108,32 +108,42 @@ namespace StockExchangeSim.Views
         public void RedoLines()
         {
             chart.Series.Clear();
-            //FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
-            //{
-            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
-            //    XBindingPath = "Year",
-            //    High = "High",
-            //    Low = "Low",
-            //    Open = "Open",
-            //    Close = "Close"
-            //};
-            //candleSeries.ListenPropertyChange = true;
-            //candleSeries.Interior = default;
-            ////candleSeries.Trendlines.Add(new Trendline() { Label = "Trend", Stroke = new SolidColorBrush(Colors.Aqua), Type = TrendlineType.Linear });
-            //chart.Series.Add(candleSeries);
-
-            FastLineBitmapSeries fastLineSeries = new FastLineBitmapSeries()
+            FastCandleBitmapSeries candleSeries = new FastCandleBitmapSeries()
             {
                 ItemsSource = master.Fields[0].companies[0].stockViewModel.prices1m,
                 XBindingPath = "Year",
-                YBindingPath = "Close"
+                High = "High",
+                Low = "Low",
+                Open = "Open",
+                Close = "Close"
+            };
+            candleSeries.ListenPropertyChange = true;
+            candleSeries.Interior = default;
+
+            candleSeries.Trendlines.Add(new Trendline()
+            {
+                Label = "Trend",
+                Type = TrendlineType.Polynomial,
+                PolynomialOrder = 5
+            });
+
+            chart.Series.Add(candleSeries);
+
+            compValChart.Series.Clear();
+            FastLineBitmapSeries fastLineSeries = new FastLineBitmapSeries()
+            {
+                ItemsSource = master.Fields[0].companies[0].ValueviewModel.values,
+                XBindingPath = "Year",
+                YBindingPath = "Value"
             };
 
             fastLineSeries.ListenPropertyChange = true;
             fastLineSeries.Interior = default;
 
-            chart.Series.Add(fastLineSeries);
+            compValChart.Series.Add(fastLineSeries);
 
+            compvaluelabel.Text = "Value of company: " + master.Fields[0].companies[0].name;
+            stockpricelabel.Text = "Stock prices of company: " + master.Fields[0].companies[0].name;
         }
         string _display;
         public string display
@@ -164,43 +174,10 @@ namespace StockExchangeSim.Views
             axismain.Header = "Time (years)";
 
 
-            //LineSeries series1 = new LineSeries()
-            //{
-            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
-            //    XBindingPath = "Year",
-            //    YBindingPath = "Close"
-            //};
-            //CandleSeries candle = new CandleSeries()
-            //{
-            //    ItemsSource = master.Fields[0].companies[0].stockViewModel.prices,
-            //    XBindingPath = "Year",
-            //    High = "High",
-            //    Low = "Low",
-            //    Open = "Open",
-            //    Close = "Close"
-            //};
-            //SplineSeries spline = new SplineSeries()
-            //{
-            //    ItemsSource = vm2.Data,
-            //    XBindingPath = "Year",
-            //    YBindingPath = "Value"
-            //};
-            //candle.ListenPropertyChange = true;
-
             DataContext = this;
 
 
             UpdateYear();
-            //if (dataThread == null)
-            //{
-            //    dataThread = new Thread(GatherData);
-            //    dataThread.Name = "dataThread";
-            //    dataThread.Priority = ThreadPriority.Highest;
-
-            //    dataThread.Start();
-            //}
-
-
         }
 
         ~MainPage()
@@ -267,13 +244,6 @@ namespace StockExchangeSim.Views
         {
             if (master != null)
             {
-                /*if (messageDialog == null)
-                {
-                    messageDialog = new MessageDialog((slider.Value).ToString());
-                    messageDialog.Commands.Add(new UICommand("Close"));
-                    await messageDialog.ShowAsync();
-                    //messageDialog = null;
-                }*/
                 double f = slider.Value;
                 master.SetSecondsPerTick((float)(f * f * 0.01f));
             }
@@ -322,7 +292,6 @@ namespace StockExchangeSim.Views
             else
                 ShowInvalidInputMessageBox();
         }
-
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             if(!badInput)
