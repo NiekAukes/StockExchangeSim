@@ -125,38 +125,22 @@ namespace Eco
 
                 float Liquiditysurplus = liquidity - LiquidityTarget;
             float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus / 50)) / 20 + 1; 
-            if (Liquiditysurplus > 0)
-            {
-                //too much stocks traded, look at demand
-                if (demandsurplus >= 0)
-                {
-                    //increase price
-                    GeneralPrice *= pricemodifier;
-                }
-                else
-                {
-                    //lower price
-                    GeneralPrice /= pricemodifier;
-                }
-            }
-            else
+            if (Liquiditysurplus < 0)
             {
                 //too few stocks traded, look at demand
                 if (demandsurplus >= 0)
                 {
-                    //lower price
+                    //decrease price
                     GeneralPrice /= pricemodifier;
-
                 }
                 else
                 {
                     //increase price
                     GeneralPrice *= pricemodifier;
-
                 }
             }
             
-
+            //another method 
 
 
             Spread = 0.01f * cp.Value * cp.StockPart;
