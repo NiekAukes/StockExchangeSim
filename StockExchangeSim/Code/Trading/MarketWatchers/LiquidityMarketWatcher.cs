@@ -16,7 +16,7 @@ namespace Eco
         //LIQUIDITY TARGET
         int LiquidityTarget = Master.fCustomLiquidityTarget ? Master.CustomLiqTarget : 189 ;
 
-        float liquidity = 0;
+        float buyliquidity = 0;
         public List<float> averageliquidity = new List<float>();
 
         Holder Holder { get; set; }
@@ -40,9 +40,9 @@ namespace Eco
             }
         }
 
-        private void Holder_StockTraded(object sender, EventArgs e)
+        private void Holder_StockTraded(object sender, StockTradedEventArgs e)
         {
-            liquidity += (1.0f / Master.inst.Traders.Count) * (60.0f/Strategy.ActionTimeDeduction) * (1.0f / Master.inst.SecondsPerTick);
+            buyliquidity += (1.0f / Master.inst.Traders.Count) * (60.0f/Strategy.ActionTimeDeduction) * (1.0f / Master.inst.SecondsPerTick);
         }
 
         public override void RedoInsights()
@@ -62,7 +62,7 @@ namespace Eco
                 //remove first element
                 averageliquidity.RemoveAt(0);
             }
-            averageliquidity.Add(liquidity);
+            averageliquidity.Add(buyliquidity);
             //#warning this is a bodge too!
             #region Price Discovery
             //kijk naar vraag en aanbod
@@ -148,28 +148,14 @@ namespace Eco
             if (Liquiditysurplus > 0)
             {
                 //too much stocks traded, look at demand
-                if (demandsurplus >= 0)
-                {
-                    //increase price
-                    GeneralPrice *= pricemodifier;
-                }
-                else
-                {
-                    //lower price
-                    GeneralPrice /= pricemodifier;
-                }
-            }
-            else
-            {
-                //too few stocks traded, look at demand
-                if (demandsurplus >= 0)
+                if (demandsurplus < 0)
                 {
                     //decrease price
                     GeneralPrice /= pricemodifier;
                 }
                 else
                 {
-                    //increase price
+                    //decrease price
                     GeneralPrice *= pricemodifier;
                 }
             }
@@ -183,11 +169,11 @@ namespace Eco
             Holder.bidask.Bid = GeneralPrice + Spread;
 
             if (Master.rn.NextDouble() < 0.05)
-                Debug.WriteLine(Strategy.trader.name + ", liquidity: " + liquidity);
+                Debug.WriteLine(Strategy.trader.name + ", liquidity: " + buyliquidity);
             //liquidity /= (1.5f/Strategy.ActionTimeDeduction);
             ////liquidity /= 1.5f;
             //if (liquidity < 1)
-                liquidity = 0;
+                buyliquidity = 0;
             return 0;
         }
 

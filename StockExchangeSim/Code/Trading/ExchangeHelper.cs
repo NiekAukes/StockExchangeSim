@@ -25,7 +25,7 @@ namespace Eco
             return "owned by: " + Owner.ToString();
         }
 
-        public virtual void OnStockTraded(EventArgs e)
+        public virtual void OnStockTraded(StockTradedEventArgs e)
         {
             EventHandler handler = StockTraded;
             handler?.Invoke(this, e);
@@ -109,7 +109,13 @@ namespace Eco
     }
     public class StockTradedEventArgs : EventArgs
     {
+        public bool IsSell = false;
         public Stock Stock { get; set; }
+        public StockTradedEventArgs(Stock stock, bool sell)
+        {
+            IsSell = sell;
+            Stock = stock;
+        }
     }
     public class SellOrder
     {
