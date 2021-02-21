@@ -183,8 +183,8 @@ namespace Eco
                         //cp.stockprice = cheapest;
 
                         holders[cheapestholder].Stocks[0].Owner = buyer;
+                        holders[cheapestholder].OnStockTraded(new StockTradedEventArgs(holders[cheapestholder].Stocks[0], false));
                         holders[cheapestholder].Stocks.RemoveAt(0);
-                        holders[cheapestholder].OnStockTraded(null);
                     }
                 }
                 return true;
@@ -328,7 +328,7 @@ namespace Eco
                 stock.Owner = holders[bestholder].Owner;
                 holders[bestholder].Stocks.Add(stock);
 
-                holders[bestholder].OnStockTraded(null);
+                holders[bestholder].OnStockTraded(new StockTradedEventArgs(stock, true));
 
 
                 return;
