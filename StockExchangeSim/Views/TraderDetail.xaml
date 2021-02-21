@@ -41,7 +41,7 @@
                        Text="TestTraderName"/>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="fillerThought" Margin="20,20,0,20" Text="Trader Thought: "/>
+                <TextBlock x:Name="fillerThought" Margin="20,20,0,20" Text="Trader thought: "/>
                 <ComboBox x:Name="companyThoughtSelector" VerticalAlignment="Center" SelectionChanged="companyThoughtSelector_SelectionChanged"
                           Margin="10,0,0,0" MinWidth="100" MaxWidth="300">
                     <ComboBoxItem Content="bruhCompanyTest"/>
