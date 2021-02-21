@@ -138,7 +138,8 @@ namespace Eco
             //{
             //    GeneralPrice = (highestbuyorder.LimitPrice);
             //}
-            GeneralPrice = Holder.bidask.Bid - Spread;
+            //GeneralPrice = Holder.bidask.Bid - Spread;
+            GeneralPrice = cp.stockprice;
             float demandsurplus = buyorders - sellorders;
 
             float avgliq = averagebuyliquidity.Average();
@@ -164,12 +165,12 @@ namespace Eco
                 if (demandsurplus < 0)
                 {
                     //decrease price
-                    GeneralPrice /= (-demandsurplus / 1000) + 1;
+                    GeneralPrice /= 0.005f * Strategy.ActionTimeDeduction + 1;
                 }
                 else
                 {
                     //decrease price
-                    GeneralPrice *= (demandsurplus / 1000) + 1;
+                    GeneralPrice *= 0.005f * Strategy.ActionTimeDeduction + 1;
                 }
             
             //another method 
