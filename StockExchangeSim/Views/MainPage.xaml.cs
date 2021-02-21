@@ -292,6 +292,7 @@ namespace StockExchangeSim.Views
             else
                 ShowInvalidInputMessageBox();
         }
+
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             if(!badInput)
@@ -301,6 +302,8 @@ namespace StockExchangeSim.Views
                 ShowInvalidInputMessageBox();
             }
         }
+
+        private void HFTraderCheckBox_Click(object sender, RoutedEventArgs e) => Master.HFTEnabled = (bool)HFTraderCheckBox.IsChecked;
 
         private void FieldsAm_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -327,11 +330,11 @@ namespace StockExchangeSim.Views
             {
                 trader = val;
             }
-
+            /*
             if (box.Name == "HFTradersAm" && !badInput)
             {
                 hftrader = val;
-            }
+            }*/
         }
     }
 }
