@@ -9,7 +9,7 @@ namespace Eco
     //bid ask implementatie
     public class Holder
     {
-        public event EventHandler StockTraded;
+        public event EventHandler<StockTradedEventArgs> StockTraded;
         public int MaxStockLimit = int.MaxValue;
         public Trader Owner { get; set; }
         public SynchronizedCollection<Stock> Stocks { get; set; }
@@ -27,7 +27,7 @@ namespace Eco
 
         public virtual void OnStockTraded(StockTradedEventArgs e)
         {
-            EventHandler handler = StockTraded;
+            EventHandler<StockTradedEventArgs> handler = StockTraded;
             handler?.Invoke(this, e);
         }
     }

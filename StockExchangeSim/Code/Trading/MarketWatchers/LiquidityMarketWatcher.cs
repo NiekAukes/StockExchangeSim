@@ -17,7 +17,9 @@ namespace Eco
         int LiquidityTarget = Master.fCustomLiquidityTarget ? Master.CustomLiqTarget : 189 ;
 
         float buyliquidity = 0;
-        public List<float> averageliquidity = new List<float>();
+        float sellliquidity = 0;
+        public List<float> averagebuyliquidity = new List<float>();
+        public List<float> averagesellliquidity = new List<float>();
 
         Holder Holder { get; set; }
         StockPriceComparisonTool SPCTool = new StockPriceComparisonTool();
@@ -36,13 +38,20 @@ namespace Eco
 
             for (int i = 0; i < liqcount / Strategy.ActionTimeDeduction; i++ )
             {
-                averageliquidity.Add(0);
+                averagebuyliquidity.Add(0);
             }
         }
 
         private void Holder_StockTraded(object sender, StockTradedEventArgs e)
         {
-            buyliquidity += (1.0f / Master.inst.Traders.Count) * (60.0f/Strategy.ActionTimeDeduction) * (1.0f / Master.inst.SecondsPerTick);
+            if (e.IsSell)
+            {
+                sellliquidity += (1.0f / Master.inst.Traders.Count) * (60.0f / Strategy.ActionTimeDeduction);// * (1.0f / Master.inst.SecondsPerTick);
+            }
+            else
+            {
+                buyliquidity += (1.0f / Master.inst.Traders.Count) * (60.0f / Strategy.ActionTimeDeduction);// * (1.0f / Master.inst.SecondsPerTick);
+            }
         }
 
         public override void RedoInsights()
@@ -57,12 +66,18 @@ namespace Eco
             BuyOrder highestbuyorder = null;
             SellOrder lowestsellorder = null;
 
-            if (averageliquidity.Count > liqcount/Strategy.ActionTimeDeduction)
+            if (averagebuyliquidity.Count > liqcount/Strategy.ActionTimeDeduction)
             {
                 //remove first element
-                averageliquidity.RemoveAt(0);
+                averagebuyliquidity.RemoveAt(0);
             }
-            averageliquidity.Add(buyliquidity);
+            averagebuyliquidity.Add(buyliquidity);
+            if (averagesellliquidity.Count > liqcount / Strategy.ActionTimeDeduction)
+            {
+                //remove first element
+                averagesellliquidity.RemoveAt(0);
+            }
+            averagesellliquidity.Add(sellliquidity);
             //#warning this is a bodge too!
             #region Price Discovery
             //kijk naar vraag en aanbod
@@ -126,7 +141,7 @@ namespace Eco
             GeneralPrice = Holder.bidask.Bid - Spread;
             float demandsurplus = buyorders - sellorders;
 
-            float avgliq = averageliquidity.Average();
+            float avgliq = averagebuyliquidity.Average();
 
             if (demandsurplus > (10 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50))
             {
@@ -141,24 +156,21 @@ namespace Eco
                 }
             }
 
-                float Liquiditysurplus = avgliq - LiquidityTarget;
-            float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ?
-                Liquiditysurplus * Strategy.ActionTimeDeduction / 100.0f :
-                LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) * Strategy.ActionTimeDeduction / 200.0f + 1; 
-            if (Liquiditysurplus > 0)
-            {
+            //    float Liquiditysurplus = avgliq - LiquidityTarget;
+            //float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ?
+            //    Liquiditysurplus * Strategy.ActionTimeDeduction / 100.0f :
+            //    LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) * Strategy.ActionTimeDeduction / 200.0f + 1; 
                 //too much stocks traded, look at demand
                 if (demandsurplus < 0)
                 {
                     //decrease price
-                    GeneralPrice /= pricemodifier;
+                    GeneralPrice /= (-demandsurplus / 1000) + 1;
                 }
                 else
                 {
                     //decrease price
-                    GeneralPrice *= pricemodifier;
+                    GeneralPrice *= (demandsurplus / 1000) + 1;
                 }
-            }
             
             //another method 
 

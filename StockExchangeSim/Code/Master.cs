@@ -101,6 +101,7 @@ namespace Eco
         public int FieldAmount;
         public int TraderAmount;
         public int HFTAmount;
+        public bool HFTEnabled = false;
         //public float TPS = 2103840; //ticks per second. 1577880 = 20s per year
         public double Year;
         //list for fields and traders
@@ -170,8 +171,10 @@ namespace Eco
 
             thread = new System.Threading.Thread(Update);
             thread.Name = "Master Thread";
-            thread.Priority = ThreadPriority.BelowNormal;
+            thread.Priority = ThreadPriority.Highest;
             thread.Start();
+
+            exchange.thread.Start();
         }
         public static long ticks = 0;
 

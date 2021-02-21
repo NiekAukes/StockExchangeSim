@@ -95,18 +95,12 @@ namespace Eco
             name = initName();
 
             //init datathreads
-            dataThread = new Thread(threadstart);
-            dataThread.Name = "thread." + name;
-            dataThread.Priority = ThreadPriority.BelowNormal;
+            
             //dataThread.Start();
 
 
         }
 
-        void threadstart()
-        {
-            Data(0, true);
-        }
 
         public string initName()
         {

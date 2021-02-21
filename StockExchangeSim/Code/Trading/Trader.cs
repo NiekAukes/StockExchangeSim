@@ -319,8 +319,8 @@ namespace Eco
                     buyOrders[index].Amount = amount;
 
                     //reevaluate order
-                    if (rn.NextDouble() > 0.7)
-                        Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
+                    //if (rn.NextDouble() > 0.7)
+                    //    Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
                 }
             }
             else

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Eco
 {
@@ -16,6 +17,7 @@ namespace Eco
         public float Percentage = 0;
         public float Collected = 0;
         public bool isCompanystock = false;
+
         public Stock(Company cp, float percentage)
         {
             //create new stock from company
@@ -85,7 +87,7 @@ namespace Eco
 
         public List<BidAsk> BidAsks { get; set; }
 
-
+        public Thread thread = null;
 
         public List<Company> Companies = new List<Company>(); //lijst van alle geregistreerde bedrijven
         public List<Trader> Traders = new List<Trader>(); //lijst van alle geregistreerde traders
@@ -94,6 +96,26 @@ namespace Eco
         public ECNBroker()
         {
             BidAsks = new List<BidAsk>();
+
+            thread = new Thread(threadstart);
+            //thread.Priority = ThreadPriority.BelowNormal;
+        }
+
+        void threadstart()
+        {
+            while (Master.inst.alive)
+            {
+                foreach (Company cp in Companies)
+                {
+                    if (Master.inst.active)
+                        CheckSortedOrders(cp);
+                    else
+                        Thread.Sleep(10);
+                    
+
+                }
+                //Thread.Sleep(1);
+            }
         }
 
         public float GetCheapestHolderBid(Company cp)
@@ -383,6 +405,32 @@ namespace Eco
                 cp.SellOrders.Add(ret);
             }
             return ret;
+        }
+
+        public void CheckSortedOrders(Company cp)
+        {
+            float cheapest = float.MaxValue;
+            BuyOrder buyOrder = null;
+
+            for (int i = 0; i < cp.BuyOrders.Count; i++)
+            {
+                try
+                {
+                    lock (cp.BuyOrders.SyncRoot)
+                    {
+                        if (cp.BuyOrders[i].LimitPrice < cheapest)
+                        {
+                            cheapest = cp.BuyOrders[i].LimitPrice;
+                            buyOrder = cp.BuyOrders[i];
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            if (buyOrder != null)
+                CheckBuyOrder(buyOrder);
         }
 
         public void CheckBuyOrder(BuyOrder order)
