@@ -39,8 +39,10 @@
                          x:Name="FieldsAm" Style="{StaticResource textBoxSimStyle}"/>
                 <TextBox Header="Traders: " LostFocus="FieldsAm_LostFocus" Text="20"
                          x:Name="TraderAm" Style="{StaticResource textBoxSimStyle}"/>
-                <TextBox Header="HFTraders: " LostFocus="FieldsAm_LostFocus" Text="1"
-                          x:Name="HFTraderAm" Style="{StaticResource textBoxSimStyle}"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <TextBlock Text="HFT enabled:" HorizontalAlignment="Center"/>
+                    <CheckBox Margin="25,5,-100,5" Click="HFTraderCheckBox_Click" HorizontalAlignment="Stretch" x:Name="HFTraderCheckBox" Style="{StaticResource checkBoxSimStyle}"/>
+                </StackPanel>
             </StackPanel>
             <Slider x:Name="slider" Header="Speed (years/second):" 
                 ValueChanged="slider_ValueChanged" Width="300" Height="60"
@@ -50,7 +52,7 @@
                   VerticalScrollBarVisibility="Auto">
                 <TextBlock Text="cp" x:Name="cpinfo"></TextBlock>
             </ScrollViewer>-->
-                    
+
         </StackPanel>
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                     HorizontalScrollBarVisibility="Auto" 
@@ -64,35 +66,37 @@
             </qc:SerialChart.Graphs>
         </qc:SerialChart>-->
         <ScrollViewer Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,-10,0,60">
-        <StackPanel>
-            
+            <StackPanel>
+
                 <TextBlock x:Name="stockpricelabel" Text="Stock Prices of company: "/>
-            
-                <ch:SfChart x:Name="chart" > <!-- chart for company value-->
-                
-                <ch:SfChart.PrimaryAxis>
-                    <ch:NumericalAxis x:Name="axismain" EnableScrollBarResizing="True" EnableScrollBar="True"/>
-                </ch:SfChart.PrimaryAxis>
+
+                <ch:SfChart x:Name="chart" >
+                    <!-- chart for company value-->
+
+                    <ch:SfChart.PrimaryAxis>
+                        <ch:NumericalAxis x:Name="axismain" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                    </ch:SfChart.PrimaryAxis>
 
                     <ch:SfChart.SecondaryAxis>
-                    <ch:NumericalAxis x:Name="axisside" EnableScrollBarResizing="True" EnableScrollBar="True"/>
-                </ch:SfChart.SecondaryAxis>
-            </ch:SfChart>
-            
+                        <ch:NumericalAxis x:Name="axisside" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                    </ch:SfChart.SecondaryAxis>
+                </ch:SfChart>
+
                 <TextBlock x:Name="compvaluelabel" Text="Value of company: "/>
-            
-                <ch:SfChart x:Name="compValChart"> <!-- Chart for stock value-->
 
-                <ch:SfChart.PrimaryAxis>
-                    <ch:NumericalAxis x:Name="VerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
-                </ch:SfChart.PrimaryAxis>
+                <ch:SfChart x:Name="compValChart">
+                    <!-- Chart for stock value-->
 
-                <ch:SfChart.SecondaryAxis>
-                    <ch:NumericalAxis x:Name="HorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
-                </ch:SfChart.SecondaryAxis>
-            </ch:SfChart>
-            
-        </StackPanel>
+                    <ch:SfChart.PrimaryAxis>
+                        <ch:NumericalAxis x:Name="VerticalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                    </ch:SfChart.PrimaryAxis>
+
+                    <ch:SfChart.SecondaryAxis>
+                        <ch:NumericalAxis x:Name="HorizontalAxis" EnableScrollBarResizing="True" EnableScrollBar="True"/>
+                    </ch:SfChart.SecondaryAxis>
+                </ch:SfChart>
+
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </Page>
