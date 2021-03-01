@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
@@ -14,10 +12,10 @@ namespace Eco
         float GeneralPrice = 2;
 
         //LIQUIDITY TARGET
-        int LiquidityTarget = Master.fCustomLiquidityTarget ? Master.CustomLiqTarget : 189 ;
+        int LiquidityTarget = Master.fCustomLiquidityTarget ? Master.CustomLiqTarget : 50;
 
-        float buyliquidity = 0;
-        float sellliquidity = 0;
+        static float buyliquidity = 0;
+        static float sellliquidity = 0;
         public List<float> averagebuyliquidity = new List<float>();
         public List<float> averagesellliquidity = new List<float>();
 
@@ -36,7 +34,7 @@ namespace Eco
 
             Holder.StockTraded += Holder_StockTraded;
 
-            for (int i = 0; i < liqcount / Strategy.ActionTimeDeduction; i++ )
+            for (int i = 0; i < liqcount / Strategy.ActionTimeDeduction; i++)
             {
                 averagebuyliquidity.Add(0);
             }
@@ -66,7 +64,7 @@ namespace Eco
             BuyOrder highestbuyorder = null;
             SellOrder lowestsellorder = null;
 
-            if (averagebuyliquidity.Count > liqcount/Strategy.ActionTimeDeduction)
+            if (averagebuyliquidity.Count > liqcount / Strategy.ActionTimeDeduction)
             {
                 //remove first element
                 averagebuyliquidity.RemoveAt(0);
@@ -142,7 +140,8 @@ namespace Eco
             GeneralPrice = cp.stockprice;
             float demandsurplus = buyorders - sellorders;
 
-            float avgliq = averagebuyliquidity.Average();
+            float avgbuyliq = averagebuyliquidity.Average();
+            float avgsellliq = averagesellliquidity.Average();
 
             if (demandsurplus > (10 * Master.inst.TraderAmount) && (Holder.Stocks.Count < 50))
             {
@@ -157,24 +156,26 @@ namespace Eco
                 }
             }
 
-            //    float Liquiditysurplus = avgliq - LiquidityTarget;
-            //float pricemodifier = MathF.Sqrt(MathF.Abs(Liquiditysurplus > LiquidityTarget ?
-            //    Liquiditysurplus * Strategy.ActionTimeDeduction / 100.0f :
-            //    LiquidityTarget * Strategy.ActionTimeDeduction / 100.0f)) * Strategy.ActionTimeDeduction / 200.0f + 1; 
-                //too much stocks traded, look at demand
-                if (demandsurplus < 0)
-                {
-                    //decrease price
-                    GeneralPrice /= 0.005f * Strategy.ActionTimeDeduction + 1;
-                }
-                else
-                {
-                    //decrease price
-                    GeneralPrice *= 0.005f * Strategy.ActionTimeDeduction + 1;
-                }
-            
-            //another method 
 
+            //too much stocks traded, look at demand
+            float pricemod = MathF.Pow(MathF.Abs(demandsurplus), 1.0f / 4) * Strategy.ActionTimeDeduction / 100.0f;
+            float liquiditysurplus = buyliquidity - sellliquidity;
+            if (demandsurplus < 0)
+            {
+                //decrease price
+                GeneralPrice /= 0.1f * Strategy.ActionTimeDeduction / 60 + 1;
+            }
+            else
+            {
+                //decrease price
+
+                GeneralPrice *= 0.1f * Strategy.ActionTimeDeduction / 60 + 1;
+            }
+
+            //another method
+            
+
+            //GeneralPrice /= MathF.Pow(2,(1.0f/(Holder.Stocks.Count - 100.1f)));
 
             Spread = 0.01f * cp.Value * cp.StockPart;
 
@@ -182,11 +183,11 @@ namespace Eco
             Holder.bidask.Bid = GeneralPrice + Spread;
 
             if (Master.rn.NextDouble() < 0.05)
-                Debug.WriteLine(Strategy.trader.name + ", liquidity: " + buyliquidity);
+                Debug.WriteLine(Strategy.trader.name + ", liquidity: " + avgbuyliq);
             //liquidity /= (1.5f/Strategy.ActionTimeDeduction);
             ////liquidity /= 1.5f;
             //if (liquidity < 1)
-                buyliquidity = 0;
+            buyliquidity = 0;
             return 0;
         }
 

@@ -170,7 +170,7 @@ namespace Eco
         #endregion
 
         long CurrentTick = Master.ticks;
-        float modifier = 3000 / 2629743.8f;
+        float modifier = 300000 / 2629743.8f;
 
         public float money { get; set; }
 

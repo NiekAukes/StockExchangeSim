@@ -435,6 +435,7 @@ namespace Eco
 
         public void CheckBuyOrder(BuyOrder order)
         {
+
             Company cp = order.cp;
             float Limit = order.LimitPrice;
             for (int i = 0; i < holders.Count; i++)
@@ -483,6 +484,43 @@ namespace Eco
             {
                 //directly issue transaction
                 BuyStock(cp, order.Buyer);
+                return;
+            }
+        }
+
+        public void CheckSellOrder(SellOrder Sellorder)
+        {
+            Company cp = Sellorder.cp;
+            int amount = Sellorder.Amount;
+            float Limit = Sellorder.LimitPrice;
+
+            for (int i = 0; i < holders.Count; i++)
+            {
+                while (amount > 0)
+                {
+                    if (holders[i].bidask.Ask > Limit && holders[i].MaxStockLimit < holders[i].Stocks.Count)
+                    {
+                        SellStock(Sellorder.Stock[0]);
+                        amount--;
+                    }
+                    else
+                        break;
+                }
+                if (amount < 1)
+                    return;
+            }
+            float best = float.MaxValue;
+            for (int i = 0; i < cp.BuyOrders.Count; i++)
+            {
+                if (cp.BuyOrders[i].LimitPrice < best)
+                {
+                    best = cp.BuyOrders[i].LimitPrice;
+                }
+            }
+            if (best > Limit && Sellorder.Stock.Count > 0)
+            {
+                //directly issue transaction
+                SellStock(Sellorder.Stock[0]);
                 return;
             }
         }

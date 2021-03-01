@@ -317,10 +317,6 @@ namespace Eco
                     //edit buyorder
                     buyOrders[index].LimitPrice = limit;
                     buyOrders[index].Amount = amount;
-
-                    //reevaluate order
-                    //if (rn.NextDouble() > 0.7)
-                    //    Master.inst.exchange.CheckBuyOrder(buyOrders[index]);
                 }
             }
             else
