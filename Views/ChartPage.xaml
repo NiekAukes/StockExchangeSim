@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="StockExchangeSim.Views.ChartPage"
+    xmlns:local="using:StockExchangeSim.Views"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:syncfusion="using:Syncfusion.UI.Xaml.Charts"
+   x:Name="thispage"
+    Style="{StaticResource PageStyle}"
+    xmlns:tc="using:Telerik.UI.Xaml.Controls.Chart"
+    mc:Ignorable="d"
+    NavigationCacheMode="Disabled">
+
+    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+        <ScrollViewer>
+            <VariableSizedWrapGrid x:Name="fieldGrid" MaximumRowsOrColumns="6" HorizontalAlignment="Center"  FlowDirection="LeftToRight" Orientation="Horizontal">
+
+                
+
+            </VariableSizedWrapGrid>
+        </ScrollViewer>
+        <StackPanel x:Name="insertCompanyDetailHere" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        
+    </Grid>
+</Page>

@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="StockExchangeSim.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:StockExchangeSim.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    xmlns:xaml="using:Windows.UI.Xaml"
+    mc:Ignorable="d" x:Name="settingsPage">
+    <Page.Resources>
+        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
+    </Page.Resources>
+
+    
+
+    <Grid Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="118*"/>
+            <RowDefinition Height="133*"/>
+            <RowDefinition Height="829*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Image Source="/Assets/croppedDarkModeLogo.png" Grid.Row="0" Grid.Column="1" Grid.RowSpan="100"
+        Height="100" Width="auto" Margin="40,0,20,40" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        <StackPanel
+            x:Name="ContentArea" Grid.RowSpan="3" Grid.ColumnSpan="2">
+            <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
+            <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
+                <TextBlock x:Uid="Settings_Theme" />
+
+                <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                    <RadioButton 
+                        x:Uid="Settings_Theme_Light" x:Name="settingsThemeLight"
+                        Checked="ThemeChanged_CheckedAsync" 
+                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                        FontSize="15"
+                        GroupName="AppTheme" >
+                        <RadioButton.CommandParameter>
+                            <xaml:ElementTheme>Light</xaml:ElementTheme>
+                        </RadioButton.CommandParameter>
+                    </RadioButton>
+                    <RadioButton 
+                        x:Uid="Settings_Theme_Dark" x:Name="settingsThemeDark"
+                        Checked="ThemeChanged_CheckedAsync" 
+                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                        FontSize="15"
+                        GroupName="AppTheme">
+                        <RadioButton.CommandParameter>
+                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                        </RadioButton.CommandParameter>
+                    </RadioButton>
+                    <RadioButton 
+                        x:Uid="Settings_Theme_Default" x:Name="settingsThemeDefault"
+                        Checked="ThemeChanged_CheckedAsync"
+                        IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                        FontSize="15"
+                        GroupName="AppTheme">
+                        <RadioButton.CommandParameter>
+                            <xaml:ElementTheme>Default</xaml:ElementTheme>
+                        </RadioButton.CommandParameter>
+                    </RadioButton>
+                    <CheckBox x:Name="asyncFieldFlag" Click="asyncFieldFlag_Click">
+                        <TextBlock Text="Calculate Fields asynchronously (will increase performance on multicore devices, particularly with many fields)"/>
+                    </CheckBox>
+                    <CheckBox x:Name="asyncCompaniesFlag" Click="asyncCompaniesFlag_Click">
+                        <TextBlock Text="Calculate Companies asynchronously (will increase performance with a large amount of companies)"/>
+                    </CheckBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <CheckBox x:Name="CustomSeed" Click="CustomSeed_Click" Margin="0,0,0,0" Width="15" Content="Custom seed"/>
+                <TextBlock Grid.Column="1" Text="Seed:" Height="auto" VerticalAlignment="Center" Margin="75,0,10,0" Padding="0,0,0,5"/>
+                <TextBox BorderThickness="2" Grid.Column="1" x:Name="Seed"  Width="210"  LostFocus="Seed_TextChanged" IsEnabled="{x:Bind (x:Boolean)CustomSeed.IsChecked, Mode=OneWay}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <CheckBox x:Name="ChkbxLiqTarg" Click="ChkbxLiqTarg_Click" Margin="0,0,0,0" Width="auto" Content="Custom Liquidity target"/>
+                <TextBlock Text="Custom liquidity target: " Height="auto" VerticalAlignment="Center" Margin="20,0,10,0" Padding="0,0,0,5"/>
+                <TextBox BorderThickness="2" x:Name="customLiquidityTargetVal" Text="0" Width="100" LostFocus="customLiquidityTargetVal_LostFocus" IsEnabled="{x:Bind (x:Boolean)ChkbxLiqTarg.IsChecked, Mode=OneWay}"/>
+                <TextBlock x:Name="ErrorCustomLiqBox" Text="" Height="auto" VerticalAlignment="Center" Margin="10,0,10,0" Padding="0,0,0,5"/>
+            </StackPanel>
+
+            <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
+
+            <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{x:Bind VersionDescription, Mode=OneWay}" />
+                <TextBlock
+                    x:Uid="Settings_AboutDescription"
+                    Margin="{StaticResource XSmallTopMargin}"
+                    Style="{ThemeResource BodyTextBlockStyle}" />
+
+                <HyperlinkButton x:Uid="Settings_PrivacyTermsLink" Margin="{StaticResource XSmallTopMargin}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
