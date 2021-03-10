@@ -3,7 +3,6 @@ using StockExchangeSim.Helpers;
 using StockExchangeSim.Services;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -105,7 +104,6 @@ namespace StockExchangeSim.Views
             catch (Exception ex)
             {
                 MessageDialog messageDialog = new MessageDialog("Invalid seed");
-                Debug.WriteLine(ex.Message);
                 messageDialog.Commands.Add(new UICommand("Close"));
                 await messageDialog.ShowAsync();
                 return;
@@ -120,7 +118,7 @@ namespace StockExchangeSim.Views
         private void asyncFieldFlag_Click(object sender, RoutedEventArgs e) => Master.fAsyncFields = asyncFieldFlag.IsChecked.Value;
 
         private void ChkbxLiqTarg_Click(object sender, RoutedEventArgs e) => Master.fCustomLiquidityTarget = ChkbxLiqTarg.IsChecked.Value;
-        private void customLiquidityTargetVal_LostFocus(object sender, RoutedEventArgs e)
+        private async void customLiquidityTargetVal_LostFocus(object sender, RoutedEventArgs e)
         {
             int liqtarg = 0;
             if (Int32.TryParse(customLiquidityTargetVal.Text, out liqtarg))

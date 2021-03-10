@@ -116,14 +116,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CsvHelper">
-      <Version>26.0.1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Azure.Amqp">
-      <Version>2.4.11</Version>
+      <Version>2.4.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.12</Version>
+      <Version>6.2.11</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit">
       <Version>6.1.1</Version>
@@ -153,28 +150,28 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Calculate.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.4.0.41</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.PivotChartExport.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.4.0.41</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfChart.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.4.0.41</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfInput.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.3.0.50</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfPivotChart.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.4.0.41</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfSmithChart.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.3.0.50</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfSunburstChart.UWP">
-      <Version>18.4.0.47</Version>
+      <Version>18.3.0.50</Version>
     </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.2.3</Version>
+      <Version>1.0.2.2</Version>
     </PackageReference>
     <PackageReference Include="UWPQuickCharts">
       <Version>1.0.0</Version>
