@@ -1,14 +1,27 @@
-﻿using StockExchangeSim.Views;
+﻿using CsvHelper;
+using StockExchangeSim.Views;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Threading;
 using Windows.UI.Core;
 
 namespace Eco
 {
+    //public static class JSONHelper
+    //{
+    //    public static string ToJSON(this object obj, int recursionDepth)
+    //    {
+    //        JavaScriptSerializer serializer = new JavaScriptSerializer();
+    //        serializer.RecursionLimit = recursionDepth;
+    //        return serializer.Serialize(obj);
+    //    }
+    //}
     public class StockPriceGraph
     {
         public float Year { get; set; }
@@ -83,6 +96,7 @@ namespace Eco
 
         public Thread dataThread = null;
 
+
         public Company(Field f)
         {
             CompanyStock = CreateStock(100);
@@ -95,9 +109,11 @@ namespace Eco
             name = initName();
 
             //init datathreads
-            
+
             //dataThread.Start();
 
+
+            
 
         }
 
@@ -202,6 +218,9 @@ namespace Eco
         {
             return name;
         }
+
+        
+
         public void Update()
         {
 
@@ -223,6 +242,8 @@ namespace Eco
         float open30m, close30m, high30m, low30m;
         int checkModifier = 1;
         System.DateTime oldTime;
+
+        
         public void Data(long tick, bool loop)
         {
             //Stopwatch sw = new Stopwatch();
@@ -266,6 +287,13 @@ namespace Eco
                                 {
                                     StockPriceGraph sp = new StockPriceGraph((float)MainPage.master.Year, open, currentprice, high, low);
                                     ValueGraph vg = new ValueGraph((float)MainPage.master.Year, Value);
+
+                                    //List<Stockprice> prices = new List<StockPriceGraph>();
+                                    //for(stockPrices1m.)
+
+                                    //string jsonstring = stockPrices1m.
+
+
                                     lock (stockPrices1m)
                                     {
                                         if (stockPrices1m.Count > 10000)
@@ -315,11 +343,11 @@ namespace Eco
                                     {
                                         //StockPriceGraph sp = new StockPriceGraph(MainPage.master.Year, open, currentprice, high, low);
 
-
                                         var ignore = MainPage.inst.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                                         {
 
                                             stockViewModel.prices1m.Add(sp);
+                                            //list thing = iets en add sp
                                             ValueviewModel.values.Add(vg);
 
                                             if (stockViewModel.prices1m.Count > 1000)
