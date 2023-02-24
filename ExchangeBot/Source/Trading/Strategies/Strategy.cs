@@ -1,44 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eco
 {
+
     public partial class Trader
     {
-        public abstract class Strategy
-        {
-            Random rn = new Random(Master.Seed);
-            public abstract void StrategyOutcome(Trader trader, Exchange exchange);
-        }
 
-        public class SimpleStrategy : Strategy
+        public class StrategyFactory
         {
-            public override void StrategyOutcome(Trader trader, Exchange exchange)
+            Trader t = null;
+
+            List<Strategy> multistratpool = null;
+            List<Strategy> monostratpool = null;
+            public StrategyFactory(Trader trader)
             {
-                double money = trader.money;
-                Company cp = exchange.Companies[rn.Next(exchange.StocksForSale.Count - 1)]; //invest in this company
-
-                Stock s = exchange.GetCheapestStock(cp);
-                if (s.SellPrice <= cp.Value * 0.01 * s.Percentage) //if stock is right price
+                t = trader;
+                multistratpool = new List<Strategy>()
                 {
-                    exchange.BuyStock(s, trader); //buy the stock
-                    trader.ActionTime -= 3;
-                }
-                trader.ActionTime -= 5;
+                    new BreakoutStrategy(t),
+                    new TrendStrategy(t),
+                    
+                };
+                monostratpool = new List<Strategy>()
+                {
+                    new MarketMakingStrategy(t),
+                    new InvestorStrategy(t),
+                };
+            }
+            public static int StrategyAmount = 2;
+            public Strategy RandomStrategy(bool multistrat)
+            {
 
-                
+                if (multistrat)
+                {
+                    int choice = rn.Next(multistratpool.Count);
+                    Strategy ret = multistratpool[choice];
+                    multistratpool.RemoveAt(choice);
+                    ret.Init();
+                    return ret;
+                }
+                else
+                {
+                    int choice = rn.Next(monostratpool.Count);
+                    Strategy ret = monostratpool[choice];
+                    ret.Init();
+                    return ret;
+                }
+
             }
         }
-        public class PatternStrategy : Strategy
+
+        public class MarketResults
+        {//Float results 0 = will not buy, negative value = sell, positive value = buy
+            public List<Tuple<Company, float>> Results = new List<Tuple<Company, float>>();
+            public static MarketResults operator +(MarketResults a, MarketResults b)
+            {
+                List<Company> lscomp = new List<Company>();
+                List<float> lsfloat = new List<float>();
+                for (int i = 0; i < a.Results.Count; i++)
+                {
+                    lscomp.Add(a.Results[i].Item1);
+                    lsfloat.Add(a.Results[i].Item2);
+                }
+                for (int i = 0; i < b.Results.Count; i++)
+                {
+                    if (!lscomp.Contains(b.Results[i].Item1))
+                    {
+                        lscomp.Add(b.Results[i].Item1);
+                        lsfloat.Add(b.Results[i].Item2);
+                    }
+                    else
+                    {
+                        lsfloat[lscomp.IndexOf(b.Results[i].Item1)] += b.Results[i].Item2;
+                    }
+                }
+
+                MarketResults MR = new MarketResults();
+                for (int i = 0; i < lscomp.Count; i++)
+                {
+                    MR.Results.Add(new Tuple<Company, float>(lscomp[i], lsfloat[i]));
+                }
+                return MR;
+            }
+        }
+        public abstract class Strategy
         {
-            double scale = 1;
+            Random rn = new Random();
+            public Trader trader = null;
+            public abstract MarketResults StrategyOutcome(Trader trader, ECNBroker exchange);
+            public abstract void Init();
+            
+        }
+        [Obsolete]
+        public class SimpleStrategy : Strategy
+        {
+            public override void Init()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MarketResults StrategyOutcome(Trader trader, ECNBroker exchange)
+            {
+                //float money = trader.money;
+                //Company cp = exchange.Companies[rn.Next(exchange.BidAskSpreads.Count - 1)]; //invest in this company
+
+                //Stock s = exchange.GetCheapestStock(cp);
+                //if (s.SellPrice <= cp.Value * 0.01 * s.Percentage) //if stock is right price
+                //{
+                //    exchange.BuyStock(cp, trader); //buy the stock
+                //    trader.ActionTime -= 3;
+                //}
+                //trader.ActionTime -= 5;
+                return null;
+
+            }
+        }
+
+        /*public class PatternStrategy : Strategy
+        {
+            float scale = 1;
             List<Company> interestedCompanies = null;
             public PatternStrategy()
             {
-                interestedCompanies = new List<Company>(Master.exchange.Companies);
+                interestedCompanies = Master.inst.GetAllCompanies();
                 while (interestedCompanies.Count > 10)
                 {
                     interestedCompanies.RemoveAt(rn.Next(interestedCompanies.Count));
@@ -46,7 +131,7 @@ namespace Eco
             }
 
             
-            bool Patterns(Company cp, Trader trader, Exchange exchange)
+            bool Patterns(Company cp, Trader trader, ExchangeBroker exchange)
             {
 
 
@@ -67,7 +152,7 @@ namespace Eco
 
                 bool Traded = false;
                 List<StockPriceGraph> stockPrices = new List<StockPriceGraph>();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < MinimumPriceCount; i++)
                 {
                     StockPriceGraph spg = cp.stockPrices[cp.stockPrices.Count - 1 - (int)(i * scale)];
                     if (spg != null)
@@ -81,7 +166,7 @@ namespace Eco
                 #region price discovery
                 List<StockPriceGraph> highs = new List<StockPriceGraph>();
                 List<StockPriceGraph> lows = new List<StockPriceGraph>();
-                for (int i = 1; i < 99; i++)
+                for (int i = 1; i < MinimumPriceCount - 1; i++)
                 {
                     if (stockPrices[i].Close > stockPrices[i - 1].Close &&
                             stockPrices[i].Close > stockPrices[i + 1].Close) //this is a high
@@ -137,12 +222,13 @@ namespace Eco
                         {
                             //Satisfied, BUY!!
                             Traded = true;
-                            for (int i = 0; i < 10; i++)
-                            {
-                                Stock st = exchange.GetCheapestStock(cp);
-                                if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                    exchange.SellStock(st, st.SellPrice * 1.01);
-                            }
+                            //for (int i = 0; i < 10; i++)
+                            //{
+                            //    Stock st = exchange.GetCheapestStock(cp);
+                            //    if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                            //        exchange.SellStock(st, st.SellPrice * 1.01);
+                            //}
+                            MainPage.Log.Text += "Bought 10 stocks";
                         }
                     }
                 }
@@ -163,12 +249,14 @@ namespace Eco
                         {
                             //probably headnshoulders, try to sell at profit
                             Traded = true;
-                            Stock st = exchange.GetCheapestStock(cp);
-                            if (st != null)
-                            {
-                                foreach (Stock stock in cpstocks)
-                                    exchange.SellStock(stock, st.SellPrice);
-                            }
+                            //Stock st = exchange.GetCheapestStock(cp);
+                            //if (st != null)
+                            //{
+                            //    foreach (Stock stock in cpstocks)
+                            //        exchange.SellStock(stock, st.SellPrice);
+                            //}
+                            MainPage.Log.Text += "sold stocks";
+
                         }
                     }
                 }
@@ -189,9 +277,8 @@ namespace Eco
                         Traded = true;
                         for (int i = 0; i < 100; i++)
                         {
-                            Stock st = exchange.GetCheapestStock(cp);
-                            if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                exchange.SellStock(st, st.SellPrice * 1.02);
+                            //Stock st = exchange.GetCheapestStock(cp);
+                            exchange.BuyStock(cp, trader); //transaction succeeded
                         }
                     }
                 }
@@ -215,12 +302,9 @@ namespace Eco
                             //sell
                             if (OwnsStocks)
                             {
-                                Stock st = exchange.GetCheapestStock(cp);
-                                if (st != null)
-                                {
-                                    foreach (Stock stock in cpstocks)
-                                        exchange.SellStock(stock, st.SellPrice * 1.005);
-                                }
+
+                                foreach (Stock stock in cpstocks)
+                                    exchange.SellStock(stock);
                             }
                         }
                         else
@@ -228,9 +312,8 @@ namespace Eco
                             //buy
                             for (int i = 0; i < 10; i++)
                             {
-                                Stock st = exchange.GetCheapestStock(cp);
-                                if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                    exchange.SellStock(st, st.SellPrice * 1.0015);
+
+                                exchange.BuyStock(cp, trader); //if transaction succeeded
                             }
                         }
                     }
@@ -238,14 +321,16 @@ namespace Eco
                 #endregion
                 return Traded;
             }
-            public override void StrategyOutcome(Trader trader, Exchange exchange)
+            public static int MinimumPriceCount = 50;
+            public override MarketResults StrategyOutcome(Trader trader, ExchangeBroker exchange)
             {
+                return null;
                 //price exploration
-                double money = trader.money;
+                float money = trader.money;
                 Company cp = interestedCompanies[rn.Next(interestedCompanies.Count)]; //invest in this company
                
-                if (cp.stockPrices.Count < 101) //safeguard
-                    return;
+                if (cp.stockPrices.Count < MinimumPriceCount + 1) //safeguard
+                    return null;
 
 
                 bool Traded = false;
@@ -256,24 +341,24 @@ namespace Eco
                 }
                 if (!Traded)
                 {
-                    for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
-                    {
-                        exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 2 +
-                            (cp.Value * trader.Stocks[i].Percentage / trader.Stocks[i].SellPrice) / 2);
-                    }
+                    //for (int i = 0; i < trader.Stocks.Count; i++) //check on stocks
+                    //{
+                    //    exchange.SellStock(trader.Stocks[i], trader.Stocks[i].SellPrice / 2 +
+                    //        (cp.Value * trader.Stocks[i].Percentage / trader.Stocks[i].SellPrice) / 2);
+                    //}
 
-                    Stock st = exchange.GetCheapestStock(cp);
+                    //Stock st = exchange.GetCheapestStock(cp);
 
-                    if ((cp.Competitiveness / 100) * (cp.Value * st.Percentage / st.SellPrice) > 1)
-                    {
+                    //if (1 * (cp.Value * st.Percentage / st.SellPrice) > 1) //competitiveness
+                    //{
 
-                        for (int i = 0; i < 10; i++)
-                        {
+                    //    for (int i = 0; i < 10; i++)
+                    //    {
 
-                            if (exchange.BuyStock(st, trader)) //if transaction succeeded
-                                exchange.SellStock(st, st.SellPrice * 1.01);
-                        }
-                    }
+                    //        if (exchange.BuyStock(st, trader)) //if transaction succeeded
+                    //            exchange.SellStock(st, st.SellPrice * 1.01);
+                    //    }
+                    //}
                     trader.ActionTime -= 150;
                 }
                 else
@@ -282,6 +367,12 @@ namespace Eco
 
                 //breakout fase
             }
-        }
+
+            public override void Observe()
+            {
+                throw new NotImplementedException();
+            }
+        }*/
     }
+
 }
